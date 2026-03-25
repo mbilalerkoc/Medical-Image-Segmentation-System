@@ -2,15 +2,15 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 
-img_dir = 'dataset/brain/images'
-mask_dir = 'dataset/brain/masks'
+img_dir = '../dataset/brain/images'
+mask_dir = '../dataset/brain/masks'
 
 
 resimler = sorted([f for f in os.listdir(img_dir) if f.endswith('.tif')])
 
 print(f"Toplam {len(resimler)} beyin MR görüntüsü bulundu. Görselleştiriliyor...")
 
-for i in range(50):
+for i in range(10):
     resim_adi = resimler[i]
     maske_adi = resim_adi.replace('.tif', '_mask.tif')
 

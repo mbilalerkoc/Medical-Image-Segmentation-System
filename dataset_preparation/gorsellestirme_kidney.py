@@ -2,8 +2,8 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-img_dir = 'dataset/kidney/images'
-mask_dir = 'dataset/kidney/masks'
+img_dir = '../dataset/kidney/images'
+mask_dir = '../dataset/kidney/masks'
 
 resimler = sorted([f for f in os.listdir(img_dir) if f.endswith('.jpg')])
 
@@ -12,7 +12,6 @@ print("Veriler ekrana getiriliyor...")
 for i in range(10):
     resim_adi = resimler[i]
 
-    # O karmaşık kodları falan hiç umursamıyoruz, direkt uzantıyı değiştiriyoruz!
     maske_adi = resim_adi.replace('.jpg', '_mask.png')
 
     resim_yolu = os.path.join(img_dir, resim_adi)
