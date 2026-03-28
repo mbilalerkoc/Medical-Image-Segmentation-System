@@ -7,5 +7,6 @@ dataset/
 
 # Node ve Python gereksiz dosyaları
 node_modules/
+processed_data/
 __pycache__/
 .env
