@@ -4,6 +4,7 @@ dataset/
 *.h5
 !ai_engine/saved_models/en_iyi_model.h5
 *.jpg
+!docs/results/*.png
 *.png
 
 # Node ve Python gereksiz dosyaları
