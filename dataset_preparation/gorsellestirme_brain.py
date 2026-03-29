@@ -8,41 +8,35 @@ mask_dir = '../dataset/brain/masks'
 
 # Kontrol: Klasörler yerinde mi?
 if not os.path.exists(img_dir) or not os.path.exists(mask_dir):
-    print("❌ HATA: '../dataset/brain/' klasör yolları bulunamadı! Lütfen kontrol et.")
+    print("HATA: '../dataset/brain/' klasör yolları bulunamadı!")
     exit()
 
 # Resim listesini al
 resimler = sorted([f for f in os.listdir(img_dir) if f.endswith('.tif')])
 
-print(f"Toplam {len(resimler)} beyin MR görüntüsü bulundu. Görselleştiriliyor...")
+print(f"Toplam {len(resimler)} beyin MR görüntüsü bulundu.")
 
 # İlk 10 resmi göster
 for i in range(min(10, len(resimler))):
     resim_adi = resimler[i]
 
-    # --- KRİTİK DÜZELTME: ARTIK MASKELER DE AYNI İSİMDE ---
-    # Eski Kod: maske_adi = resim_adi.replace('.tif', '_mask.tif')
     maske_adi = resim_adi
-    # --------------------------------------------------
 
     resim_yolu = os.path.join(img_dir, resim_adi)
     maske_yolu = os.path.join(mask_dir, maske_adi)
 
-    # Dosya Varlık Kontrolü
     if os.path.exists(maske_yolu):
         # Oku
         img = cv2.imread(resim_yolu)
         mask = cv2.imread(maske_yolu)
 
-        # Hata Kontrolü
+
         if img is None or mask is None:
-            print(f"⚠️ Uyarı: {resim_adi} veya {maske_adi} okunamadı, bozuk olabilir.")
+            print(f"{resim_adi} veya {maske_adi} okunamadı, bozuk olabilir.")
             continue
 
-        # Renk Çevrimi
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        # Matplotlib Görselleştirme (Mevcut mantık)
         plt.figure(figsize=(10, 5))
 
         plt.subplot(1, 2, 1)
@@ -59,4 +53,3 @@ for i in range(min(10, len(resimler))):
     else:
         print(f"Uyarı: {maske_adi} bulunamadı!")
 
-print("İnceleme tamamlandı.")

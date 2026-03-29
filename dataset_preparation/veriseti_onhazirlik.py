@@ -4,8 +4,6 @@ import numpy as np
 from tqdm import tqdm
 
 IMG_SIZE = 256
-
-# Dosyanın bulunduğu klasörü baz alıyoruz
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DATASETS = {
@@ -18,10 +16,7 @@ DATASETS = {
 OUTPUT_PATH = os.path.join(BASE_PATH, "../processed_data")
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-
-# ==============================
 # CLAHE (Kontrast Artırma)
-# ==============================
 def apply_clahe(img):
     lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
@@ -30,10 +25,7 @@ def apply_clahe(img):
     lab = cv2.merge((l, a, b))
     return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
-
-# ==============================
 # AUGMENTATION (Veri Artırma)
-# ==============================
 def augment(img, mask):
     # 1. Yatay Çevirme (%50 ihtimal)
     if np.random.rand() > 0.5:
@@ -53,16 +45,13 @@ def augment(img, mask):
         img = cv2.warpAffine(img, M, (w, h))
         mask = cv2.warpAffine(mask, M, (w, h), flags=cv2.INTER_NEAREST)  # Maske bozulmasın diye NEAREST
 
-    # Kanal kontrolü (Yine garantiye alıyoruz)
+    # Kanal kontrolü
     if len(mask.shape) == 2:
         mask = np.expand_dims(mask, axis=-1)
 
     return img, mask
 
-
-# ==============================
 # PREPROCESS (Ön İşleme)
-# ==============================
 def preprocess(img_path, mask_path):
     img = cv2.imread(img_path)
     mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
@@ -70,7 +59,6 @@ def preprocess(img_path, mask_path):
     if img is None or mask is None:
         return None, None
 
-    # İşlemler
     img = apply_clahe(img)
     img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
     mask = cv2.resize(mask, (IMG_SIZE, IMG_SIZE))
@@ -86,22 +74,17 @@ def preprocess(img_path, mask_path):
 
     return img, mask
 
-
-# ==============================
 # DATASET HAZIRLA
-# ==============================
+
 def prepare_dataset(dataset_name, config):
-    print(f"\n📂 {dataset_name} hazırlanıyor...")
 
     img_dir = config["img_dir"]
     mask_dir = config["mask_dir"]
 
-    # --- KRİTİK DÜZELTME: images ve masks burada tanımlanmalı ---
     if not os.path.exists(img_dir):
-        print(f"❌ Hata: {img_dir} yolu bulunamadı!")
+        print(f"Hata: {img_dir} yolu bulunamadı!")
         return
 
-    # Sadece .tif dosyalarını al ve sayısal sırala
     images_list = sorted([f for f in os.listdir(img_dir) if f.endswith('.tif')],
                          key=lambda x: int(os.path.splitext(x)[0]))
     mask_files = os.listdir(mask_dir)
@@ -111,7 +94,6 @@ def prepare_dataset(dataset_name, config):
     for file_name in tqdm(images_list):
         img_path = os.path.join(img_dir, file_name)
 
-        # Yeni isimlendirme sistemimize göre maske adı resimle aynı
         if file_name not in mask_files:
             continue
 
@@ -129,23 +111,19 @@ def prepare_dataset(dataset_name, config):
             Y_data.append(aug_mask)
 
     if len(X_data) == 0:
-        print("❌ HATA: Hiç geçerli veri bulunamadı!")
+        print("HATA:geçerli veri bulunamadı!")
         return
 
     # Homojenlik hatasını önlemek için np.stack kullanıyoruz
     X = np.stack(X_data, axis=0).astype(np.float32)
     Y = np.stack(Y_data, axis=0).astype(np.float32)
 
-    print(f"✅ Bitti! X shape: {X.shape} | Y shape: {Y.shape}")
+    print(f"Bitti! X shape: {X.shape} | Y shape: {Y.shape}")
 
     np.save(os.path.join(OUTPUT_PATH, f"{dataset_name}_X.npy"), X)
     np.save(os.path.join(OUTPUT_PATH, f"{dataset_name}_Y.npy"), Y)
-    print(f"💾 Dosyalar '{OUTPUT_PATH}' klasörüne kaydedildi.")
+    print(f"Dosyalar '{OUTPUT_PATH}' klasörüne kaydedildi.")
 
-
-# ==============================
-# ANA ÇALIŞTIRICI
-# ==============================
 if __name__ == "__main__":
     for name, cfg in DATASETS.items():
         prepare_dataset(name, cfg)
