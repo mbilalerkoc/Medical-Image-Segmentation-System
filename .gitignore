@@ -2,7 +2,7 @@
 dataset/
 *.nii.gz
 *.h5
-!ai_engine/saved_models/en_iyi_model.h5
+!ai_engine/saved_models/beyin_v1.h5
 *.jpg
 !docs/results/*.png
 
