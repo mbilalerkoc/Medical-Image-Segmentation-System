@@ -1,0 +1,12 @@
+
+
+       TEST SONUÇLARI
+
+  Accuracy  : 0.9972
+  Dice Score: 0.8951
+  IoU       : 0.8212
+  Precision : 0.9188
+  Recall    : 0.8855
+  Loss      : 0.0789
+
+    

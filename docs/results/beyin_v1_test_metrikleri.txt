@@ -1,0 +1,7 @@
+
+  Accuracy  : 0.9906
+  Dice Score: 0.7820
+  IoU       : 0.6587
+  Precision : 0.8230
+  Recall    : 0.7673
+  Loss      : 0.2589
