@@ -107,15 +107,20 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
             plt.axis('off')
 
             bilgi_gercek = f"Gercek Alan: {gercek_analiz['alan']:.1f} mm²\nBoyut: {gercek_analiz['genislik']:.1f}x{gercek_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_gercek, "yesil")
+            plt.text(0.5, -0.15, bilgi_gercek, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.2, 0.6, 0.2), fc=(0.9, 1.0, 0.9), alpha=0.9))
 
+            # 3. Sütun: Model Tahmini
             plt.subplot(3, secilecek_sayi, i + 1 + 2 * secilecek_sayi)
             plt.imshow(tahminler[i].squeeze() > 0.5, cmap='gray')
             plt.title("Model Tahmini")
             plt.axis('off')
 
             bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
+            plt.text(0.5, -0.15, bilgi_tahmin, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.1, 0.5, 0.8), fc=(0.9, 0.95, 1.0), alpha=0.9))
 
         plt.tight_layout()
 

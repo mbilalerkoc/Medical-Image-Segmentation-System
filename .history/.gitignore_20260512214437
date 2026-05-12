@@ -13,5 +13,3 @@ processed_data/
 __pycache__/
 .env
 .idea/
-
-demo/en_iyileri_kaydet.py

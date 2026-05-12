@@ -8,23 +8,6 @@ from tensorflow.keras.utils import load_img, img_to_array
 from demo.data_ops import gercek_veri_sayisi_bul, metrik_oku, model_yukle, veri_yukle
 from ai_engine.utils import tumor_analizi_yap
 
-def bilgi_kutusu_ekle(metin, renk_tipi="yesil"):
-    """
-    Matplotlib grafiklerinin altina standart ve sik bilgi kutulari ekler.
-    renk_tipi: 'yesil' (Gercek), 'mavi' (Tahmin 1), 'turuncu' (Tahmin 2), 'kirmizi' (Uyari)
-    """
-    renkler = {
-        "yesil": {"ec": (0.2, 0.6, 0.2), "fc": (0.9, 1.0, 0.9)},
-        "mavi": {"ec": (0.1, 0.5, 0.8), "fc": (0.9, 0.95, 1.0)},
-        "turuncu": {"ec": (0.8, 0.5, 0.1), "fc": (1.0, 0.95, 0.9)},
-        "kirmizi": {"ec": (0.8, 0.1, 0.1), "fc": (1.0, 0.9, 0.9)}
-    }
-    stil = renkler.get(renk_tipi, renkler["yesil"])
-    
-    plt.text(0.5, -0.15, metin, size=10, ha="center", va="top", 
-             transform=plt.gca().transAxes,
-             bbox=dict(boxstyle="round,pad=0.3", ec=stil["ec"], fc=stil["fc"], alpha=0.9))
-    
 
 def gorsel_goster(yol, baslik):
     if not os.path.exists(yol):
@@ -107,15 +90,20 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
             plt.axis('off')
 
             bilgi_gercek = f"Gercek Alan: {gercek_analiz['alan']:.1f} mm²\nBoyut: {gercek_analiz['genislik']:.1f}x{gercek_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_gercek, "yesil")
+            plt.text(0.5, -0.15, bilgi_gercek, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.2, 0.6, 0.2), fc=(0.9, 1.0, 0.9), alpha=0.9))
 
+            # 3. Sütun: Model Tahmini
             plt.subplot(3, secilecek_sayi, i + 1 + 2 * secilecek_sayi)
             plt.imshow(tahminler[i].squeeze() > 0.5, cmap='gray')
             plt.title("Model Tahmini")
             plt.axis('off')
 
             bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
+            plt.text(0.5, -0.15, bilgi_tahmin, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.1, 0.5, 0.8), fc=(0.9, 0.95, 1.0), alpha=0.9))
 
         plt.tight_layout()
 
@@ -185,38 +173,44 @@ def karsılastir_tahmin(organ_cfg, organ_ad):
             t1_analiz = tumor_analizi_yap(tahmin1[i])
             t2_analiz = tumor_analizi_yap(tahmin2[i])
 
-            # 1. Sütun: Orijinal MR
             plt.subplot(3, 4, i * 4 + 1)
             plt.imshow(X_test[idx].squeeze(), cmap='gray')
             plt.title(f"Orijinal MR [{idx}]")
             plt.axis('off')
 
-            # 2. Sütun: Gerçek Maske
             plt.subplot(3, 4, i * 4 + 2)
             plt.imshow(y_test[idx].squeeze(), cmap='gray')
             plt.title("Gercek Maske")
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {g_analiz['alan']:.1f} mm²", "yesil")
+            bilgi_g = f"Alan: {g_analiz['alan']:.1f} mm²"
+            plt.text(0.5, -0.15, bilgi_g, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.2, 0.6, 0.2), fc=(0.9, 1.0, 0.9), alpha=0.9))
 
             # 3. Sütun: Model 1 Tahmini
             plt.subplot(3, 4, i * 4 + 3)
             plt.imshow(tahmin1[i].squeeze() > 0.5, cmap='gray')
             plt.title(cfg1["ad"])
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {t1_analiz['alan']:.1f} mm²", "mavi")
+            bilgi_t1 = f"Alan: {t1_analiz['alan']:.1f} mm²"
+            plt.text(0.5, -0.15, bilgi_t1, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.1, 0.5, 0.8), fc=(0.9, 0.95, 1.0), alpha=0.9))
 
             # 4. Sütun: Model 2 Tahmini
             plt.subplot(3, 4, i * 4 + 4)
             plt.imshow(tahmin2[i].squeeze() > 0.5, cmap='gray')
             plt.title(cfg2["ad"])
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {t2_analiz['alan']:.1f} mm²", "turuncu")
+            bilgi_t2 = f"Alan: {t2_analiz['alan']:.1f} mm²"
+            # İkinci modelin kutusunu biraz turuncu/sarımsı yapıyoruz ki fark edilsin
+            plt.text(0.5, -0.15, bilgi_t2, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.8, 0.5, 0.1), fc=(1.0, 0.95, 0.9), alpha=0.9))
 
         plt.tight_layout()
         plt.subplots_adjust(bottom=0.12, hspace=0.4)
         plt.show()
 
-        print("\n  --- HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
+        # Terminalde Yarışma Tablosu
+        print("\n  --- 🩺 HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
         for i, idx in enumerate(idxler):
             g = tumor_analizi_yap(y_test[idx])
             t1 = tumor_analizi_yap(tahmin1[i])

@@ -114,6 +114,7 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
             plt.title("Model Tahmini")
             plt.axis('off')
 
+            # --- TERTEMİZ BİLGİ KUTUSU ÇAĞRISI (MAVİ) ---
             bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
             bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
 

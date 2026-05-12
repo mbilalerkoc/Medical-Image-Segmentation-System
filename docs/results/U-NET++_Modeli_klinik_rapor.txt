@@ -1,0 +1,25 @@
+
+============================================================
+  🩺 GENEL KLINIK DEGERLENDIRME RAPORU — Beyin Tumoru / U-NET++ Modeli
+============================================================
+  --- 📊 TEST SETI GENEL ISTATISTIKLERI ---
+  Toplam Test Vakasi         : 1745
+  Gercek Tumorlu Vaka Sayisi : 1254
+  Modelin Buldugu Vaka Sayisi: 1140
+------------------------------------------------------------
+  Basarili Tespit (TP)       : 1118 vaka
+  Yanlis Alarm (FP)          : 22 vaka (Tumor yokken var dedi)
+  Kacirilan Vaka (FN)        : 136 vaka (Tumor varken gormedi)
+------------------------------------------------------------
+  Klinik Tespit Basarisi     : % 89.15
+
+  --- 📏 KLINIK OLCUM SAPMALARI ---
+  Ortalama Alan Sapmasi      : ± 65.73 mm²
+  Ortalama Genislik Sapmasi  : ± 4.06 mm
+  Ortalama Yukseklik Sapmasi : ± 4.58 mm
+------------------------------------------------------------
+  --- 📐 MATEMATIKSEL HATA METRIKLERI ---
+  Ortalama Kare Hatasi (MSE) : 0.004405
+  Kok Ort. Kare Hatasi (RMSE): 0.066374
+  Ortalama Mutlak Hata (MAE) : 0.004623
+============================================================

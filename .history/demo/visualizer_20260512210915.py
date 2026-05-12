@@ -1,3 +1,5 @@
+# --- demo/visualizer.py ---
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,23 +10,6 @@ from tensorflow.keras.utils import load_img, img_to_array
 from demo.data_ops import gercek_veri_sayisi_bul, metrik_oku, model_yukle, veri_yukle
 from ai_engine.utils import tumor_analizi_yap
 
-def bilgi_kutusu_ekle(metin, renk_tipi="yesil"):
-    """
-    Matplotlib grafiklerinin altina standart ve sik bilgi kutulari ekler.
-    renk_tipi: 'yesil' (Gercek), 'mavi' (Tahmin 1), 'turuncu' (Tahmin 2), 'kirmizi' (Uyari)
-    """
-    renkler = {
-        "yesil": {"ec": (0.2, 0.6, 0.2), "fc": (0.9, 1.0, 0.9)},
-        "mavi": {"ec": (0.1, 0.5, 0.8), "fc": (0.9, 0.95, 1.0)},
-        "turuncu": {"ec": (0.8, 0.5, 0.1), "fc": (1.0, 0.95, 0.9)},
-        "kirmizi": {"ec": (0.8, 0.1, 0.1), "fc": (1.0, 0.9, 0.9)}
-    }
-    stil = renkler.get(renk_tipi, renkler["yesil"])
-    
-    plt.text(0.5, -0.15, metin, size=10, ha="center", va="top", 
-             transform=plt.gca().transAxes,
-             bbox=dict(boxstyle="round,pad=0.3", ec=stil["ec"], fc=stil["fc"], alpha=0.9))
-    
 
 def gorsel_goster(yol, baslik):
     if not os.path.exists(yol):
@@ -82,15 +67,17 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
     tumoru_olan_test = np.where(y_test.max(axis=(1, 2, 3)) > 0)[0]
 
     while True:
-        print("\n Veri setinden rastgele kesitler seciliyor...")
+        print("\n  🎲 Veri setinden rastgele kesitler seciliyor...")
         secilecek_sayi = min(5, len(tumoru_olan_test))
         ornek_idxler = np.random.choice(tumoru_olan_test, secilecek_sayi, replace=False)
         tahminler = model.predict(X_test[ornek_idxler], verbose=0)
 
+        # Figür boyutunu biraz daha açtık (Kutucuklar rahat sığsın diye)
         plt.figure(figsize=(15, 11))
         plt.suptitle(f"Canli Tahmin Sonuclari — {organ_ad} / {model_ad}", fontsize=14, fontweight='bold')
 
         for i, idx in enumerate(ornek_idxler):
+            # Analizleri İki Maske İçin de Yap
             gercek_analiz = tumor_analizi_yap(y_test[idx])
             tahmin_analiz = tumor_analizi_yap(tahminler[i])
 
@@ -100,29 +87,37 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
             plt.title(f"MR [{idx}]")
             plt.axis('off')
 
-            # 2. Sütun: Gerçek Maske
+            # 2. Sütun: Gerçek Maske (Doktorun Çizdiği)
             plt.subplot(3, secilecek_sayi, i + 1 + secilecek_sayi)
             plt.imshow(y_test[idx].squeeze(), cmap='gray')
             plt.title("Gercek Maske")
             plt.axis('off')
 
+            # --- GERÇEK MASKENİN ALTINA BİLGİ KUTUSU (Yeşilimsi) ---
             bilgi_gercek = f"Gercek Alan: {gercek_analiz['alan']:.1f} mm²\nBoyut: {gercek_analiz['genislik']:.1f}x{gercek_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_gercek, "yesil")
+            plt.text(0.5, -0.15, bilgi_gercek, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.2, 0.6, 0.2), fc=(0.9, 1.0, 0.9), alpha=0.9))
 
+            # 3. Sütun: Model Tahmini
             plt.subplot(3, secilecek_sayi, i + 1 + 2 * secilecek_sayi)
             plt.imshow(tahminler[i].squeeze() > 0.5, cmap='gray')
             plt.title("Model Tahmini")
             plt.axis('off')
 
+            # --- TAHMİN EDİLEN MASKENİN ALTINA BİLGİ KUTUSU (Mavimsi) ---
             bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
-            bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
+            plt.text(0.5, -0.15, bilgi_tahmin, size=9, ha="center", va="top",
+                     transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.1, 0.5, 0.8), fc=(0.9, 0.95, 1.0), alpha=0.9))
 
         plt.tight_layout()
-
+        # Kutucukların resimlerin üzerine binmemesi ve alttan kesilmemesi için boşluk ayarı
         plt.subplots_adjust(bottom=0.12, hspace=0.4)
         plt.show()
 
-        print("\n  --- HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
+        # Terminalde de Karşılaştırmalı Gösterim
+        print("\n  --- 🩺 HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
         for i, idx in enumerate(ornek_idxler):
             g = tumor_analizi_yap(y_test[idx])
             t = tumor_analizi_yap(tahminler[i])
@@ -154,7 +149,7 @@ def karsılastir_tahmin(organ_cfg, organ_ad):
     s2 = input("  Ikinci modelin numarasini girin: ").strip()
 
     if s1 not in modeller or s2 not in modeller:
-        print(" Hatali secim!")
+        print("  ❌ Hatali secim!")
         return
 
     cfg1, cfg2 = modeller[s1], modeller[s2]
@@ -162,25 +157,28 @@ def karsılastir_tahmin(organ_cfg, organ_ad):
     model1 = model_yukle(cfg1["model"])
     model2 = model_yukle(cfg2["model"])
 
+    # Ortak test verisini yüklüyoruz
     X_test, y_test = veri_yukle(cfg1)
     if X_test is None:
-        print(" Ortak test verisi yuklenemedi!")
+        print("  ❌ Ortak test verisi yuklenemedi!")
         return
 
     tumoru_olan = np.where(y_test.max(axis=(1, 2, 3)) > 0)[0]
 
     while True:
-        print("\n Ortak test setinden rastgele 3 kesit seciliyor...")
+        print("\n  🎲 Ortak test setinden rastgele 3 kesit seciliyor...")
         idxler = np.random.choice(tumoru_olan, 3, replace=False)
 
         tahmin1 = model1.predict(X_test[idxler], verbose=0)
         tahmin2 = model2.predict(X_test[idxler], verbose=0)
 
+        # 4 sütun olacağı için figürü biraz daha genişletiyoruz
         plt.figure(figsize=(18, 12))
         plt.suptitle(f"Tahmin Karsilastirmasi — {organ_ad} ({cfg1['ad']} vs {cfg2['ad']})", fontsize=14,
                      fontweight='bold')
 
         for i, idx in enumerate(idxler):
+            # Analizleri üç maske için de yap
             g_analiz = tumor_analizi_yap(y_test[idx])
             t1_analiz = tumor_analizi_yap(tahmin1[i])
             t2_analiz = tumor_analizi_yap(tahmin2[i])
@@ -196,27 +194,35 @@ def karsılastir_tahmin(organ_cfg, organ_ad):
             plt.imshow(y_test[idx].squeeze(), cmap='gray')
             plt.title("Gercek Maske")
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {g_analiz['alan']:.1f} mm²", "yesil")
+            bilgi_g = f"Alan: {g_analiz['alan']:.1f} mm²"
+            plt.text(0.5, -0.15, bilgi_g, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.2, 0.6, 0.2), fc=(0.9, 1.0, 0.9), alpha=0.9))
 
             # 3. Sütun: Model 1 Tahmini
             plt.subplot(3, 4, i * 4 + 3)
             plt.imshow(tahmin1[i].squeeze() > 0.5, cmap='gray')
             plt.title(cfg1["ad"])
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {t1_analiz['alan']:.1f} mm²", "mavi")
+            bilgi_t1 = f"Alan: {t1_analiz['alan']:.1f} mm²"
+            plt.text(0.5, -0.15, bilgi_t1, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.1, 0.5, 0.8), fc=(0.9, 0.95, 1.0), alpha=0.9))
 
             # 4. Sütun: Model 2 Tahmini
             plt.subplot(3, 4, i * 4 + 4)
             plt.imshow(tahmin2[i].squeeze() > 0.5, cmap='gray')
             plt.title(cfg2["ad"])
             plt.axis('off')
-            bilgi_kutusu_ekle(f"Alan: {t2_analiz['alan']:.1f} mm²", "turuncu")
+            bilgi_t2 = f"Alan: {t2_analiz['alan']:.1f} mm²"
+            # İkinci modelin kutusunu biraz turuncu/sarımsı yapıyoruz ki fark edilsin
+            plt.text(0.5, -0.15, bilgi_t2, size=10, ha="center", va="top", transform=plt.gca().transAxes,
+                     bbox=dict(boxstyle="round,pad=0.3", ec=(0.8, 0.5, 0.1), fc=(1.0, 0.95, 0.9), alpha=0.9))
 
         plt.tight_layout()
         plt.subplots_adjust(bottom=0.12, hspace=0.4)
         plt.show()
 
-        print("\n  --- HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
+        # Terminalde Yarışma Tablosu
+        print("\n  --- 🩺 HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
         for i, idx in enumerate(idxler):
             g = tumor_analizi_yap(y_test[idx])
             t1 = tumor_analizi_yap(tahmin1[i])
@@ -232,3 +238,94 @@ def karsılastir_tahmin(organ_cfg, organ_ad):
 
         if input("\n  Baska rastgele ornekler karsilastirilsin mi? (e/h): ").strip().lower() != 'e':
             break
+
+
+
+
+def disaridan_mr_tahmin_et(model, organ_ad, model_ad):
+    print("\n" + "=" * 50)
+    print(f"  🏥 CANLI HASTANE SIMULASYONU — {organ_ad} / {model_ad}")
+    print("=" * 50)
+    
+    # 1. Dosya Seçici Penceresini (Arayüzü) Başlat
+    root = tk.Tk()
+    root.withdraw() # Arkada gereksiz boş bir pencere açılmasını engeller
+    root.attributes('-topmost', True) # Pencerenin diğer uygulamaların altında kalmasını önler
+    
+    print("\n  [*] Lutfen acilan pencereden analiz edilecek MR goruntusunu secin...")
+    
+    # 2. Dosya Seçme Ekranını Aç
+    dosya_yolu = filedialog.askopenfilename(
+        title="MR Goruntusu Sec",
+        filetypes=[
+            ("Resim Dosyalari", "*.png;*.jpg;*.jpeg;*.tif;*.tiff"),
+            ("Tum Dosyalar", "*.*")
+        ]
+    )
+    
+    # 3. Eğer kullanıcı pencereyi kapatırsa (İptal derse)
+    if not dosya_yolu:
+        print("  [❌] Islem iptal edildi: Herhangi bir resim secilmedi.")
+        return
+
+    try:
+        print(f"  [*] Secilen Dosya: {dosya_yolu}")
+        print("  [*] MR goruntusu sisteme yukleniyor ve isleniyor...")
+        
+        # Modelin beklediği boyutu otomatik al (Örn: 256x256)
+        _, h, w, c = model.input_shape
+        
+        # Resmi siyah-beyaz (grayscale) oku, yeniden boyutlandır ve normalize et
+        # Modelin kanal sayısına (c) göre renk modunu otomatik belirle
+        renk_modu = "rgb" if c == 3 else "grayscale"
+        img = load_img(dosya_yolu, color_mode=renk_modu, target_size=(h, w))
+        img_array = img_to_array(img) / 255.0
+        
+        # Modele girmesi için paket (batch) boyutunu ekle -> (1, 256, 256, 1)
+        img_batch = np.expand_dims(img_array, axis=0)
+        
+        print("  [*] Yapay zeka lezyon aramasi yapiyor...")
+        # Tahmin üret
+        tahmin = model.predict(img_batch, verbose=0)
+        t_maske = tahmin[0] # Sadece ilk (ve tek) sonucu al
+        
+        # Klinik Analiz (Alan ve Boyut)
+        tahmin_analiz = tumor_analizi_yap(t_maske)
+        tumor_var_mi = np.max(t_maske) > 0.5
+        
+        # Terminal Çıktısı
+        if tumor_var_mi:
+            print(f"\n  [🚨] DIKKAT: Model lezyon tespit etti!")
+            print(f"  -> Hesaplanan Alan: {tahmin_analiz['alan']:.1f} mm²")
+            print(f"  -> Genislik: {tahmin_analiz['genislik']:.1f} mm | Yukseklik: {tahmin_analiz['yukseklik']:.1f} mm")
+        else:
+            print("\n  [✅] TEMIZ: Model herhangi bir tumor lezyonu bulamadi.")
+
+        # Görselleştirme
+        plt.figure(figsize=(12, 6))
+        plt.suptitle(f"Gercek Zamanli Teshis Ekrani — {organ_ad}", fontsize=15, fontweight='bold')
+        
+        # 1. Ham MR Görüntüsü
+        plt.subplot(1, 2, 1)
+        plt.imshow(img_array.squeeze(), cmap='gray')
+        plt.title("Yuklenen Ham MR Goruntusu")
+        plt.axis('off')
+        
+        # 2. Yapay Zeka Çıktısı (Maske)
+        plt.subplot(1, 2, 2)
+        plt.imshow(t_maske.squeeze() > 0.5, cmap='gray')
+        
+        if tumor_var_mi:
+            plt.title("Yapay Zeka Teshisi (Cizilen Maske)", color='red', fontweight='bold')
+            bilgi = f"Teshis Edilen Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f} x {tahmin_analiz['yukseklik']:.1f} mm"
+            plt.text(0.5, -0.15, bilgi, size=12, ha="center", va="top", transform=plt.gca().transAxes, 
+                     bbox=dict(boxstyle="round,pad=0.4", ec=(0.8, 0.1, 0.1), fc=(1.0, 0.9, 0.9), alpha=0.9))
+        else:
+            plt.title("Yapay Zeka Teshisi", color='green', fontweight='bold')
+            plt.text(0.5, -0.15, "LEZYON BULUNAMADI (TEMIZ)", size=12, color='green', ha="center", va="top", transform=plt.gca().transAxes, fontweight='bold')
+            
+        plt.tight_layout()
+        plt.show()
+
+    except Exception as e:
+        print(f"  [❌] Bir hata olustu: Goruntu islenemedi. Detay: {e}")

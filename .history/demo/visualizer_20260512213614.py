@@ -109,11 +109,13 @@ def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
             bilgi_gercek = f"Gercek Alan: {gercek_analiz['alan']:.1f} mm²\nBoyut: {gercek_analiz['genislik']:.1f}x{gercek_analiz['yukseklik']:.1f} mm"
             bilgi_kutusu_ekle(bilgi_gercek, "yesil")
 
+            # 3. Sütun: Model Tahmini
             plt.subplot(3, secilecek_sayi, i + 1 + 2 * secilecek_sayi)
             plt.imshow(tahminler[i].squeeze() > 0.5, cmap='gray')
             plt.title("Model Tahmini")
             plt.axis('off')
 
+            # --- TERTEMİZ BİLGİ KUTUSU ÇAĞRISI (MAVİ) ---
             bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
             bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
 

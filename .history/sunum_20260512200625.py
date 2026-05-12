@@ -112,22 +112,29 @@ def model_menu(organ_cfg, organ_ad):
                 print("  1 -> Veri Seti Analizi")
                 print("  2 -> Model Mimarisi")
                 print("  3 -> Test Sonuclari")
-                print("  4 -> Tahmin Gorselleri (Klinik Analiz Ile)")
+                print("  4 -> Tahmin Gorselleri (Klinik Analiz İle)")
                 print("  5 -> Egitim Grafikleri")
-                print("  6 -> Genel Klinik Degerlendirme Raporu (TUM TEST SETI)")
-                print("  7 -> Disaridan Yeni MR Yukle (CANLI SIMULASYON)") # <--- YENİ
+                print("  6 -> Genel Klinik Degerlendirme Raporu (TUM TEST SETI)")  # <--- YENİ SEÇENEK
                 print("  0 -> Geri")
 
                 alt_secim = input("\n  Seciminiz: ").strip()
-                if alt_secim == '1': bolum_veri(veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'], HAM_VERI_KLASORU)
-                elif alt_secim == '2': bolum_mimari(veri["model"], organ_ad, veri['cfg']['ad'])
-                elif alt_secim == '3': bolum_sonuclar(veri["cfg"], organ_ad, veri['cfg']['ad'])
-                elif alt_secim == '4': bolum_tahminler(veri["model"], veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'])
-                elif alt_secim == '5': bolum_grafik(veri["cfg"], organ_ad, veri['cfg']['ad'])
-                elif alt_secim == '6': genel_klinik_rapor_olustur(veri["model"], veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'])
-                elif alt_secim == '7': disaridan_mr_tahmin_et(veri["model"], organ_ad, veri['cfg']['ad']) # <--- YENİ ÇAĞRI
-                elif alt_secim == '0': break
-                else: print("  Gecersiz secim")
+                if alt_secim == '1':
+                    bolum_veri(veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'], HAM_VERI_KLASORU)
+                elif alt_secim == '2':
+                    bolum_mimari(veri["model"], organ_ad, veri['cfg']['ad'])
+                elif alt_secim == '3':
+                    bolum_sonuclar(veri["cfg"], organ_ad, veri['cfg']['ad'])
+                elif alt_secim == '4':
+                    bolum_tahminler(veri["model"], veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'])
+                elif alt_secim == '5':
+                    bolum_grafik(veri["cfg"], organ_ad, veri['cfg']['ad'])
+                elif alt_secim == '6':
+                    genel_klinik_rapor_olustur(veri["model"], veri["X_test"], veri["y_test"], organ_ad,
+                                               veri['cfg']['ad'])  # <--- YENİ ÇAĞRI
+                elif alt_secim == '0':
+                    break
+                else:
+                    print("  Gecersiz secim")
         else: print("  Gecersiz secim")
 
 def ana_menu():

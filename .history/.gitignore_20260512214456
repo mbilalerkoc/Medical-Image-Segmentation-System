@@ -2,10 +2,16 @@
 dataset/
 *.nii.gz
 *.h5
+!ai_engine/saved_models/beyin_v1.h5
 *.jpg
-*.png
+!docs/results/*.png
+
 
 # Node ve Python gereksiz dosyaları
 node_modules/
+processed_data/
 __pycache__/
 .env
+.idea/
+
+!demo/
