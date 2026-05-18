@@ -76,8 +76,8 @@ ORGANLAR = {
                 "y_test"  : os.path.join(VERI_KLASORU, 'bobrek_v1_Y.npy'),
                 "X_npy"   : None,
                 "y_npy"   : None,
-                "grafik"  : os.path.join(SONUC_KLASOR, 'kidney_v1_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney_v1_tahmin_sonuclari.png'),
+                "grafik"  : os.path.join(SONUC_KLASOR, 'bobrek_v1_egitim_grafikleri.png'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'bobrek_v1_tahmin_sonuclari.png'),
                 "txt"     : os.path.join(SONUC_KLASOR, 'kidney_v1_test_metrikleri.txt'),
             },
         }
@@ -142,7 +142,7 @@ def model_menu(organ_cfg, organ_ad):
                 print("  0 -> Geri")
 
                 alt_secim = input("\n  Seciminiz: ").strip()
-                if alt_secim == '1': bolum_veri(veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'],organ_cfg["ham_veri"])
+                if alt_secim == '1': bolum_veri(veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'], HAM_VERI_KLASORU)
                 elif alt_secim == '2': bolum_mimari(veri["model"], organ_ad, veri['cfg']['ad'])
                 elif alt_secim == '3': bolum_sonuclar(veri["cfg"], organ_ad, veri['cfg']['ad'])
                 elif alt_secim == '4': bolum_tahminler(veri["model"], veri["X_test"], veri["y_test"], organ_ad, veri['cfg']['ad'])

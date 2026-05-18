@@ -46,7 +46,7 @@ def karsılastir_metrik(organ_cfg, organ_ad):
 
 
 def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
-    dosya_adi = f"{organ_ad.replace(' ', '_')}_{model_ad.replace(' ', '_').replace('/', '-')}_klinik_rapor.txt"
+    dosya_adi = f"{model_ad.replace(' ', '_').replace('/', '-')}_klinik_rapor.txt"
     rapor_yolu = os.path.join("docs", "results", dosya_adi)
 
     if os.path.exists(rapor_yolu):

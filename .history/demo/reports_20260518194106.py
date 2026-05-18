@@ -46,26 +46,16 @@ def karsılastir_metrik(organ_cfg, organ_ad):
 
 
 def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
-    dosya_adi = f"{organ_ad.replace(' ', '_')}_{model_ad.replace(' ', '_').replace('/', '-')}_klinik_rapor.txt"
-    rapor_yolu = os.path.join("docs", "results", dosya_adi)
-
-    if os.path.exists(rapor_yolu):
-        with open(rapor_yolu, 'r', encoding='utf-8') as f:
-            print(f.read())
-        input("\n   Devam etmek icin Enter'a basin...")
-        return
-
-    print("\n" + "=" * 60)
-    print(f" GENEL KLINIK DEGERLENDIRME RAPORU — {organ_ad} / {model_ad}")
-    print("=" * 60)
-    print("   Hesaplaniyor...")
-    print("   Model tahminleri uretiyor...")
-
-    # 1. Değişken Tanımları (Hata vermemesi için en üstte ve doğru kapsamda)
+    # Dinamik terim ayarı
     is_beyin = "beyin" in organ_ad.lower()
     hastalik_ad = "Tumor" if is_beyin else "Tas"
     
-    toplam_vaka = len(y_test)
+    dosya_adi = f"{model_ad.replace(' ', '_').replace('/', '-')}_klinik_rapor.txt"
+    rapor_yolu = os.path.join("docs", "results", dosya_adi)
+
+    # ... (Kodun önbellek kontrol kısmı aynen kalıyor) ...
+
+    # İstatistik değişken isimlerini genel bir ada kavuştur (tumorlu_sayisi -> pozitif_sayisi)
     gercek_pozitif_sayisi = 0
     tahmin_edilen_pozitif_sayisi = 0
     dogru_tespit_sayisi = 0
@@ -75,11 +65,7 @@ def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
     toplam_yukseklik_farki = 0.0
     hesaplanan_vaka_sayisi = 0
 
-    # 2. Modelden tahminleri alıyoruz
-    tahminler = model.predict(X_test, batch_size=8, verbose=1)
-
-    # 3. Döngü Bloğu
-    for i in range(toplam_vaka):
+    for i in range(len(y_test)):
         g_maske = y_test[i]
         t_maske = tahminler[i]
 
@@ -90,8 +76,8 @@ def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
             gercek_pozitif_sayisi += 1
             if tahmin_var:
                 dogru_tespit_sayisi += 1
-
-                g_analiz = tumor_analizi_yap(g_maske)
+                # Fonksiyon adını daha genel yapabiliriz (Aşağıda belirttim)
+                g_analiz = tumor_analizi_yap(g_maske) 
                 t_analiz = tumor_analizi_yap(t_maske)
 
                 toplam_alan_farki += abs(g_analiz['alan'] - t_analiz['alan'])
@@ -102,35 +88,21 @@ def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
         if tahmin_var:
             tahmin_edilen_pozitif_sayisi += 1
 
-    # 4. Metrik Hesaplamaları (Döngünün TAMAMEN DIŞINDA, raporun üstünde)
-    tespit_orani = (dogru_tespit_sayisi / gercek_pozitif_sayisi * 100) if gercek_pozitif_sayisi > 0 else 0.0
-    ortalama_alan_sapmasi = (toplam_alan_farki / hesaplanan_vaka_sayisi) if hesaplanan_vaka_sayisi > 0 else 0.0
-    ortalama_genislik_sapmasi = (toplam_genislik_farki / hesaplanan_vaka_sayisi) if hesaplanan_vaka_sayisi > 0 else 0.0
-    ortalama_yukseklik_sapmasi = (toplam_yukseklik_farki / hesaplanan_vaka_sayisi) if hesaplanan_vaka_sayisi > 0 else 0.0
+    # ... (Matematiksel metrik hesapları mse, rmse kısımları aynen kalıyor) ...
 
-    yanlis_alarmlar = tahmin_edilen_pozitif_sayisi - dogru_tespit_sayisi
-    kacirilan_vakalar = gercek_pozitif_sayisi - dogru_tespit_sayisi
-
-    y_gercek_duz = y_test.flatten()
-    y_tahmin_duz = tahminler.flatten()
-
-    mse = np.mean(np.square(y_gercek_duz - y_tahmin_duz))
-    rmse = np.sqrt(mse)
-    mae = np.mean(np.abs(y_gercek_duz - y_tahmin_duz))
-
-    # 5. Rapor Metni Şablonu
+    # 🎯 ŞABLONU DİNAMİK YAPTIK:
     rapor_metni = f"""
 ============================================================
     GENEL KLINIK DEGERLENDIRME RAPORU — {organ_ad} / {model_ad}
 ============================================================
   --- TEST SETI GENEL ISTATISTIKLERI ---
-  Toplam Test Vakasi         : {toplam_vaka}
+  Toplam Test Vakasi         : {len(y_test)}
   Gercek {hastalik_ad}li Vaka Sayisi : {gercek_pozitif_sayisi}
   Modelin Buldugu Vaka Sayisi: {tahmin_edilen_pozitif_sayisi}
 ------------------------------------------------------------
   Basarili Tespit (TP)       : {dogru_tespit_sayisi} vaka
-  Yanlis Alarm (FP)          : {yanlis_alarmlar} vaka ({hastalik_ad.lower()} yokken var dedi)
-  Kacirilan Vaka (FN)        : {kacirilan_vakalar} vaka ({hastalik_ad.lower()} varken gormedi)
+  Yanlis Alarm (FP)          : {tahmin_edilen_pozitif_sayisi - dogru_tespit_sayisi} vaka ({hastalik_ad} yokken var dedi)
+  Kacirilan Vaka (FN)        : {gercek_pozitif_sayisi - dogru_tespit_sayisi} vaka ({hastalik_ad} varken gormedi)
 ------------------------------------------------------------
   Klinik Tespit Basarisi     : % {tespit_orani:.2f}
 
@@ -139,18 +111,4 @@ def genel_klinik_rapor_olustur(model, X_test, y_test, organ_ad, model_ad):
   Ortalama Genislik Sapmasi  : ± {ortalama_genislik_sapmasi:.2f} mm
   Ortalama Yukseklik Sapmasi : ± {ortalama_yukseklik_sapmasi:.2f} mm
 ------------------------------------------------------------
-  --- MATEMATIKSEL HATA METRIKLERI ---
-  Ortalama Kare Hatasi (MSE) : {mse:.6f}
-  Kok Ort. Kare Hatasi (RMSE): {rmse:.6f}
-  Ortalama Mutlak Hata (MAE) : {mae:.6f}
-============================================================
 """
-
-    print(rapor_metni)
-
-    os.makedirs(os.path.dirname(rapor_yolu), exist_ok=True)
-    with open(rapor_yolu, 'w', encoding='utf-8') as f:
-        f.write(rapor_metni)
-
-    print(f"   [ℹ] Rapor hesaplandi ve onbellege kaydedildi: {rapor_yolu}")
-    input("\n   Devam etmek icin Enter'a basin...")

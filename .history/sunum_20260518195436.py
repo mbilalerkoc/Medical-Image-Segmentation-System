@@ -77,7 +77,7 @@ ORGANLAR = {
                 "X_npy"   : None,
                 "y_npy"   : None,
                 "grafik"  : os.path.join(SONUC_KLASOR, 'kidney_v1_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney_v1_tahmin_sonuclari.png'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'bobrek_v1_tahmin_sonuclari.png'),
                 "txt"     : os.path.join(SONUC_KLASOR, 'kidney_v1_test_metrikleri.txt'),
             },
         }

@@ -1,5 +1,4 @@
 import os
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import tkinter as tk
@@ -30,12 +29,9 @@ def bilgi_kutusu_ekle(metin, renk_tipi="yesil"):
 
 def gorsel_goster(yol, baslik):
     if not os.path.exists(yol):
-        print(f"\n   Dosya bulunamadi: {yol}")
+        print(f"\n  Dosya bulunamadi: {yol}")
         return
-    # mpimg yerine doğrudan cv2 ve plt kullanarak yükleme:
-    img = cv2.imread(yol)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    
+    img = mpimg.imread(yol)
     plt.figure(figsize=(16, 6))
     plt.imshow(img)
     plt.title(baslik, fontsize=14, fontweight='bold')
