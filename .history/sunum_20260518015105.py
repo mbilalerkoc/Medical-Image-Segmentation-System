@@ -4,19 +4,14 @@ import tensorflow as tf
 from ai_engine.config_local import PROJE_KLASORU, MODEL_KAYIT, SONUC_KLASOR
 
 from demo.data_ops import veri_yukle, model_yukle
-from demo.reports import (
-    bolum_mimari,
-    bolum_sonuclar,
-    karsılastir_metrik,
-    genel_klinik_rapor_olustur
-)
+from demo.reports import bolum_mimari
 from demo.visualizer import (
-    bolum_veri,
-    bolum_tahminler,
-    bolum_grafik,
-    karsılastir_tahmin, 
+    bolum_veri, bolum_sonuclar,
+    bolum_tahminler, bolum_grafik,
+    karsılastir_metrik, karsılastir_tahmin,
+    genel_klinik_rapor_olustur,
+    disaridan_mr_tahmin_et
 )
-from demo.simulation import disaridan_mr_tahmin_et
 1
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'

@@ -11,12 +11,12 @@ from demo.reports import (
     genel_klinik_rapor_olustur
 )
 from demo.visualizer import (
-    bolum_veri,
-    bolum_tahminler,
-    bolum_grafik,
-    karsılastir_tahmin, 
+    bolum_veri, bolum_sonuclar,
+    bolum_tahminler, bolum_grafik,
+    karsılastir_metrik, karsılastir_tahmin,
+    genel_klinik_rapor_olustur,
+    disaridan_mr_tahmin_et
 )
-from demo.simulation import disaridan_mr_tahmin_et
 1
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'

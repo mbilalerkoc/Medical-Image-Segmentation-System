@@ -14,7 +14,8 @@ from demo.visualizer import (
     bolum_veri,
     bolum_tahminler,
     bolum_grafik,
-    karsılastir_tahmin, 
+    karsılastir_tahmin,
+    
 )
 from demo.simulation import disaridan_mr_tahmin_et
 1

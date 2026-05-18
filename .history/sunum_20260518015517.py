@@ -14,9 +14,10 @@ from demo.visualizer import (
     bolum_veri,
     bolum_tahminler,
     bolum_grafik,
-    karsılastir_tahmin, 
+    karsılastir_tahmin,
+    disaridan_mr_tahmin_et
 )
-from demo.simulation import disaridan_mr_tahmin_et
+from demo.simulation import 
 1
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
