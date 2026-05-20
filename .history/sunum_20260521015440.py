@@ -65,19 +65,19 @@ ORGANLAR = {
                 "X_npy"   : None,
                 "y_npy"   : None,
                 "grafik"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_ornek_tahminler.png'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_tahmin_sonuclari.png'),
                 "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_test_metrikleri.txt'),
             },
             "2": {
                 "ad"      : "U-NET++ Modeli",
                 "model"   : os.path.join(MODEL_KAYIT, 'bobrek_U-Net++.h5'),
                 "X_test"  : os.path.join(VERI_KLASORU,'kidney', 'bobrek_U-Net++_X.npy'),
-                "y_test"  : os.path.join(VERI_KLASORU,'kidney','bobrek_U-Net++_Y.npy'),
+                "y_test"  : os.path.join(VERI_KLASORU, 'kidney','bobrek_U-Net++_Y.npy'),
                 "X_npy"   : None,
                 "y_npy"   : None,
                 "grafik"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_ornek_tahminler.png'),
-                "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_test_metrikleri.txt'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_tahmin_sonuclari.png'),
+                "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_test_metrikleri.txt'),
             },
         }
     }

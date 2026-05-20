@@ -101,14 +101,18 @@ def karsılastir_menu(organ_cfg, organ_ad):
 def model_menu(organ_cfg, organ_ad):
     yuklenen = {}
     for key, cfg in organ_cfg["modeller"].items():
+        # 🎯 HATA AYIKLAMA (DEBUG) SATIRLARI EKLENDİ
+        print(f"\n🔍 ARANAN MODEL: {cfg['model']}")
+        print(f"🔍 ARANAN X_TEST: {cfg['X_test']}")
+        
         if not os.path.exists(cfg["model"]):
-            print(f"  {cfg['ad']} model dosyasi eksik, atlaniyor.")
+            print(f" ❌ {cfg['ad']} model dosyasi eksik, atlaniyor.")
             continue
         X_test, y_test = veri_yukle(cfg)
         if X_test is None:
-            print(f"  {cfg['ad']} veri dosyasi eksik, atlaniyor.")
+            print(f" ❌ {cfg['ad']} veri dosyasi eksik, atlaniyor.")
             continue
-        print(f"  {cfg['ad']} yukleniyor...")
+        print(f" ✅ {cfg['ad']} yukleniyor...")
         yuklenen[key] = {
             "cfg": cfg, "model": model_yukle(cfg["model"]),
             "X_test": X_test, "y_test": y_test,

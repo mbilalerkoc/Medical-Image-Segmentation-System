@@ -3,23 +3,23 @@
     GENEL KLINIK DEGERLENDIRME RAPORU — Böbrek taşı / U-NET++ Modeli
 ============================================================
   --- TEST SETI GENEL ISTATISTIKLERI ---
-  Toplam Test Vakasi         : 211
-  Gercek Tasli Vaka Sayisi : 142
-  Modelin Buldugu Vaka Sayisi: 137
+  Toplam Test Vakasi         : 126
+  Gercek Tasli Vaka Sayisi : 125
+  Modelin Buldugu Vaka Sayisi: 125
 ------------------------------------------------------------
-  Basarili Tespit (TP)       : 137 vaka
+  Basarili Tespit (TP)       : 125 vaka
   Yanlis Alarm (FP)          : 0 vaka (tas yokken var dedi)
-  Kacirilan Vaka (FN)        : 5 vaka (tas varken gormedi)
+  Kacirilan Vaka (FN)        : 0 vaka (tas varken gormedi)
 ------------------------------------------------------------
-  Klinik Tespit Basarisi     : % 96.48
+  Klinik Tespit Basarisi     : % 100.00
 
   --- KLINIK OLCUM SAPMALARI ---
-  Ortalama Alan Sapmasi      : ± 9.23 mm²
-  Ortalama Genislik Sapmasi  : ± 7.99 mm
-  Ortalama Yukseklik Sapmasi : ± 4.17 mm
+  Ortalama Alan Sapmasi      : ± 0.46 mm²
+  Ortalama Genislik Sapmasi  : ± 2.22 mm
+  Ortalama Yukseklik Sapmasi : ± 0.32 mm
 ------------------------------------------------------------
   --- MATEMATIKSEL HATA METRIKLERI ---
-  Ortalama Kare Hatasi (MSE) : 0.000559
-  Kok Ort. Kare Hatasi (RMSE): 0.023643
-  Ortalama Mutlak Hata (MAE) : 0.000592
+  Ortalama Kare Hatasi (MSE) : 0.000061
+  Kok Ort. Kare Hatasi (RMSE): 0.007805
+  Ortalama Mutlak Hata (MAE) : 0.000069
 ============================================================

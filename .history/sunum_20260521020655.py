@@ -71,7 +71,7 @@ ORGANLAR = {
             "2": {
                 "ad"      : "U-NET++ Modeli",
                 "model"   : os.path.join(MODEL_KAYIT, 'bobrek_U-Net++.h5'),
-                "X_test"  : os.path.join(VERI_KLASORU,'kidney', 'bobrek_U-Net++_X.npy'),
+                "X_test"  : os.path.join(VERI_KLASORU,'kidney', 'bobrek_U-Net++_X .npy'),
                 "y_test"  : os.path.join(VERI_KLASORU,'kidney','bobrek_U-Net++_Y.npy'),
                 "X_npy"   : None,
                 "y_npy"   : None,

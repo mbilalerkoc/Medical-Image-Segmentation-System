@@ -72,11 +72,11 @@ ORGANLAR = {
                 "ad"      : "U-NET++ Modeli",
                 "model"   : os.path.join(MODEL_KAYIT, 'bobrek_U-Net++.h5'),
                 "X_test"  : os.path.join(VERI_KLASORU,'kidney', 'bobrek_U-Net++_X.npy'),
-                "y_test"  : os.path.join(VERI_KLASORU,'kidney','bobrek_U-Net++_Y.npy'),
+                "y_test"  : os.path.join(VERI_KLASORU, 'kidney','bobrek_U-Net++_Y.npy'),
                 "X_npy"   : None,
                 "y_npy"   : None,
                 "grafik"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_ornek_tahminler.png'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_tahmin_sonuclari.png'),
                 "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_test_metrikleri.txt'),
             },
         }
