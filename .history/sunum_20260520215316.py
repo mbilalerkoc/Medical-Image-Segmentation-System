@@ -64,9 +64,9 @@ ORGANLAR = {
                 "y_test"  : os.path.join(VERI_KLASORU, 'kidney','bobrek_U-Net_Y.npy'),
                 "X_npy"   : None,
                 "y_npy"   : None,
-                "grafik"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_egitim_grafikleri.png'),
-                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_tahmin_sonuclari.png'),
-                "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net_test_metrikleri.txt'),
+                "grafik"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_egitim_grafikleri.png'),
+                "tahmin"  : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_tahmin_sonuclari.png'),
+                "txt"     : os.path.join(SONUC_KLASOR, 'kidney','bobrek_U-Net++_test_metrikleri.txt'),
             },
         }
     }

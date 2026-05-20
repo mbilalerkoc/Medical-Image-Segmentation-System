@@ -5,21 +5,21 @@
   --- TEST SETI GENEL ISTATISTIKLERI ---
   Toplam Test Vakasi         : 211
   Gercek Tasli Vaka Sayisi : 142
-  Modelin Buldugu Vaka Sayisi: 142
+  Modelin Buldugu Vaka Sayisi: 137
 ------------------------------------------------------------
-  Basarili Tespit (TP)       : 142 vaka
+  Basarili Tespit (TP)       : 137 vaka
   Yanlis Alarm (FP)          : 0 vaka (tas yokken var dedi)
-  Kacirilan Vaka (FN)        : 0 vaka (tas varken gormedi)
+  Kacirilan Vaka (FN)        : 5 vaka (tas varken gormedi)
 ------------------------------------------------------------
-  Klinik Tespit Basarisi     : % 100.00
+  Klinik Tespit Basarisi     : % 96.48
 
   --- KLINIK OLCUM SAPMALARI ---
-  Ortalama Alan Sapmasi      : ± 26.08 mm²
-  Ortalama Genislik Sapmasi  : ± 17.56 mm
-  Ortalama Yukseklik Sapmasi : ± 11.37 mm
+  Ortalama Alan Sapmasi      : ± 9.23 mm²
+  Ortalama Genislik Sapmasi  : ± 7.99 mm
+  Ortalama Yukseklik Sapmasi : ± 4.17 mm
 ------------------------------------------------------------
   --- MATEMATIKSEL HATA METRIKLERI ---
-  Ortalama Kare Hatasi (MSE) : 0.001073
-  Kok Ort. Kare Hatasi (RMSE): 0.032753
-  Ortalama Mutlak Hata (MAE) : 0.009303
+  Ortalama Kare Hatasi (MSE) : 0.000559
+  Kok Ort. Kare Hatasi (RMSE): 0.023643
+  Ortalama Mutlak Hata (MAE) : 0.000592
 ============================================================
