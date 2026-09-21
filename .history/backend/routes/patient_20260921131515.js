@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+// Süslü parantezlerle doğru import edildiğinden emin ol:
+const { addPatient, getPatients } = require('../controllers/patientController');
+const { protect, authorize } = require('../middleware/auth');
+
+// 12. satır veya civarındaki şu tanımı kontrol et:
+router.post('/add', protect, authorize('doktor', 'superadmin'), addPatient);
+router.get('/', protect, authorize('doktor', 'superadmin'), getPatients);
+
+module.exports = router;

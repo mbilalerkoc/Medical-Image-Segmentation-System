@@ -17,9 +17,17 @@
   Ortalama Alan Sapmasi      : ± 0.46 mm²
   Ortalama Genislik Sapmasi  : ± 2.22 mm
   Ortalama Yukseklik Sapmasi : ± 0.32 mm
+Ortalama Sinir (Cevre) Sapmasi: ± 5.72 piksel
 ------------------------------------------------------------
   --- MATEMATIKSEL HATA METRIKLERI ---
+  
   Ortalama Kare Hatasi (MSE) : 0.000061
   Kok Ort. Kare Hatasi (RMSE): 0.007805
   Ortalama Mutlak Hata (MAE) : 0.000069
 ============================================================
+
+Dice Score: 0.9445                     
+  IoU       : 0.9020                     
+  Precision : 0.9495                     
+  Recall    : 0.9474                     
+  Loss      : 0.0170    

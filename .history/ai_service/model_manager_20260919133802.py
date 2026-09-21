@@ -1,0 +1,1 @@
+# model yüklemek ve yönetmek için gerekli sınıfları ve fonksiyonları içerir.

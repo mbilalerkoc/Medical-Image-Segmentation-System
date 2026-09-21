@@ -1,0 +1,5 @@
+ MR [178] -> GERCEK: 710.8 mm² | TAHMIN: 939.8 mm² | FARK: 229.0 mm² | SINIR SAPMASI: 13.9 px
+  MR [210] -> GERCEK: 385.2 mm² | TAHMIN: 65.8 mm² | FARK: 319.5 mm² | SINIR SAPMASI: 62.0 px
+  MR [200] -> GERCEK: 110.8 mm² | TAHMIN: 105.0 mm² | FARK: 5.8 mm² | SINIR SAPMASI: 2.8 px
+  MR [85] -> GERCEK: 141.2 mm² | TAHMIN: 143.2 mm² | FARK: 2.0 mm² | SINIR SAPMASI: 2.0 px
+  MR [25] -> GERCEK: 99.8 mm² | TAHMIN: 109.0 mm² | FARK: 9.2 mm² | SINIR SAPMASI: 74.0 px

@@ -1,0 +1,304 @@
+import os
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog
+import matplotlib.image as mpimg
+from tensorflow.keras.utils import load_img, img_to_array
+from scipy.spatial.distance import directed_hausdorff
+
+from demo.data_ops import gercek_veri_sayisi_bul, metrik_oku, model_yukle, veri_yukle
+from ai_engine.utils import tumor_analizi_yap
+
+def bilgi_kutusu_ekle(metin, renk_tipi="yesil"):
+    """
+    Matplotlib grafiklerinin altina standart ve sik bilgi kutulari ekler.
+    renk_tipi: 'yesil' (Gercek), 'mavi' (Tahmin 1), 'turuncu' (Tahmin 2), 'kirmizi' (Uyari)
+    """
+    renkler = {
+        "yesil": {"ec": (0.2, 0.6, 0.2), "fc": (0.9, 1.0, 0.9)},
+        "mavi": {"ec": (0.1, 0.5, 0.8), "fc": (0.9, 0.95, 1.0)},
+        "turuncu": {"ec": (0.8, 0.5, 0.1), "fc": (1.0, 0.95, 0.9)},
+        "kirmizi": {"ec": (0.8, 0.1, 0.1), "fc": (1.0, 0.9, 0.9)}
+    }
+    stil = renkler.get(renk_tipi, renkler["yesil"])
+    
+    plt.text(0.5, -0.15, metin, size=10, ha="center", va="top", 
+             transform=plt.gca().transAxes,
+             bbox=dict(boxstyle="round,pad=0.3", ec=stil["ec"], fc=stil["fc"], alpha=0.9))
+    
+def cevre_hata_hesapla(y_gercek, y_tahmin):
+    """
+    Gerçek maske ile tahmin edilen maskenin Sınır/Çevre (Boundary) 
+    hatasını Hausdorff Mesafesi kullanarak piksel cinsinden hesaplar.
+    """
+    # 1. Maskeleri 0-255 formatına (resim formatına) çevir
+    y_g = (y_gercek.squeeze() * 255).astype(np.uint8)
+    # Tahminler olasılık (0.0-1.0) olduğu için önce 0.5 eşiğinden geçirip binary yapıyoruz
+    y_t = ((y_tahmin.squeeze() > 0.5) * 255).astype(np.uint8)
+
+    # 2. Çevre Çizgilerini (Konturları) Bul
+    kontur_g, _ = cv2.findContours(y_g, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    kontur_t, _ = cv2.findContours(y_t, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    # Eğer ikisinden biri boşsa (tümör yoksa veya model bulamadıysa) hata 0 döner
+    if len(kontur_g) == 0 or len(kontur_t) == 0:
+        return 0.0 
+
+    # 3. Kontur koordinatlarını tek bir diziye topla
+    noktalar_g = np.vstack(kontur_g).squeeze()
+    noktalar_t = np.vstack(kontur_t).squeeze()
+
+    # Boyut düzeltmesi (tek piksellik hatalara karşı güvenlik kalkanı)
+    if len(noktalar_g.shape) == 1: noktalar_g = noktalar_g.reshape(-1, 2)
+    if len(noktalar_t.shape) == 1: noktalar_t = noktalar_t.reshape(-1, 2)
+
+    # 4. Hausdorff Mesafesi Hesaplama (Gerçekten tahmine ve Tahminden gerçeğe)
+    h1 = directed_hausdorff(noktalar_g, noktalar_t)[0]
+    h2 = directed_hausdorff(noktalar_t, noktalar_g)[0]
+    
+    # İki yönlü sapmanın en büyüğünü (maksimum hatayı) al
+    maksimum_sinir_hatasi = max(h1, h2)
+    
+    return maksimum_sinir_hatasi
+
+def gorsel_goster(yol, baslik):
+    if not os.path.exists(yol):
+        print(f"\n   Dosya bulunamadi: {yol}")
+        return
+    # mpimg yerine doğrudan cv2 ve plt kullanarak yükleme:
+    img = cv2.imread(yol)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    
+    plt.figure(figsize=(16, 6))
+    plt.imshow(img)
+    plt.title(baslik, fontsize=14, fontweight='bold')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+
+def bolum_veri(X_test, y_test, organ_ad, model_ad, ham_veri_klasoru):
+    import os
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    print("\n" + "=" * 50)
+    print(f"   VERI SETI — {organ_ad} / {model_ad}")
+    print("=" * 50)
+    
+    is_beyin = "beyin" in organ_ad.lower()
+    
+    pozitif_etiket = "Tumorlu" if is_beyin else "Tas Iceren"
+    negatif_etiket = "Tumorsuz" if is_beyin else "Tas Icermeyen"
+    goruntu_turu = "MR" if is_beyin else "CT"
+    
+    # 🎯 1. ÇÖZÜM: HATA VERMEYEN DİNAMİK VERİ HESAPLAYICI
+    gercek_toplam_veri = 0
+    if os.path.exists(ham_veri_klasoru):
+        for root, dirs, files in os.walk(ham_veri_klasoru):
+            for dosya in files:
+                if dosya.lower().endswith(('.png', '.jpg', '.jpeg', '.dcm', '.tif')):
+                    gercek_toplam_veri += 1
+                    
+    # Klasör yoksa çökmez, test sayısından formülle ana havuzu bulur (Test = %15)
+    if gercek_toplam_veri == 0:
+        gercek_toplam_veri = int(len(X_test) / 0.15)
+
+    pozitif_vaka = np.sum(y_test.max(axis=(1, 2, 3)) > 0)
+    negatif_vaka = len(y_test) - pozitif_vaka
+
+    print(f"\n   Ham Veri Havuzu          : ~{gercek_toplam_veri} goruntu (Dinamik)")
+    print(f"   Kritik Test Seti         : {len(X_test)} goruntu")
+    print(f"   Goruntu boyutu           : {X_test.shape[1]}x{X_test.shape[2]} piksel")
+    print(f"\n   --- Test Seti Icerigi ---")
+    print(f"   {pozitif_etiket} (Pozitif) Vaka   : {pozitif_vaka} adet")
+    print(f"   {negatif_etiket} (Negatif) Vaka  : {negatif_vaka} adet")
+
+    # 🎯 2. ÇÖZÜM: ÇÖKMEYİ ENGELLEYEN GÜVENLİK KALKANI (if len > 0)
+    pozitif_idx = np.where(y_test.max(axis=(1, 2, 3)) > 0)[0]
+    
+    if len(pozitif_idx) > 0:
+        ornekler = pozitif_idx[np.linspace(0, len(pozitif_idx) - 1, min(5, len(pozitif_idx)), dtype=int)]
+        
+        plt.figure(figsize=(15, 6))
+        plt.suptitle(f"Ornek {goruntu_turu} Goruntuleri — {organ_ad} / {model_ad}", fontsize=14, fontweight='bold')
+        
+        for i, idx in enumerate(ornekler):
+            plt.subplot(2, len(ornekler), i + 1)
+            plt.imshow(X_test[idx].squeeze(), cmap='gray')
+            plt.title(f"{goruntu_turu} [{idx}]")
+            plt.axis('off')
+            
+            plt.subplot(2, len(ornekler), i + 1 + len(ornekler))
+            plt.imshow(y_test[idx].squeeze(), cmap='gray')
+            plt.title(f"Maske [{idx}]")
+            plt.axis('off')
+            
+        plt.tight_layout()
+        plt.show()
+    else:
+        # Şans eseri hiç taşlı vaka yoksa çökmek yerine zarifçe uyarı verir
+        print(f"\n   [!] Ekrana cizdirilecek {pozitif_etiket} vaka bulunamadi.")
+
+
+
+def bolum_tahminler(model, X_test, y_test, organ_ad, model_ad):
+    print("\n" + "=" * 50)
+    print(f"  TAHMIN GORSELLESTIRME VE KLINIK ANALIZ — {organ_ad} / {model_ad}")
+    print("=" * 50)
+
+    tumoru_olan_test = np.where(y_test.max(axis=(1, 2, 3)) > 0)[0]
+
+    while True:
+        print("\n Veri setinden rastgele kesitler seciliyor...")
+        secilecek_sayi = min(5, len(tumoru_olan_test))
+        ornek_idxler = np.random.choice(tumoru_olan_test, secilecek_sayi, replace=False)
+        tahminler = model.predict(X_test[ornek_idxler], verbose=0)
+
+        plt.figure(figsize=(15, 11))
+        plt.suptitle(f"Canli Tahmin Sonuclari — {organ_ad} / {model_ad}", fontsize=14, fontweight='bold')
+
+        for i, idx in enumerate(ornek_idxler):
+            gercek_analiz = tumor_analizi_yap(y_test[idx])
+            tahmin_analiz = tumor_analizi_yap(tahminler[i])
+
+            # 1. Sütun: Orijinal MR
+            plt.subplot(3, secilecek_sayi, i + 1)
+            plt.imshow(X_test[idx].squeeze(), cmap='gray')
+            plt.title(f"MR [{idx}]")
+            plt.axis('off')
+
+            # 2. Sütun: Gerçek Maske
+            plt.subplot(3, secilecek_sayi, i + 1 + secilecek_sayi)
+            plt.imshow(y_test[idx].squeeze(), cmap='gray')
+            plt.title("Gercek Maske")
+            plt.axis('off')
+
+            bilgi_gercek = f"Gercek Alan: {gercek_analiz['alan']:.1f} mm²\nBoyut: {gercek_analiz['genislik']:.1f}x{gercek_analiz['yukseklik']:.1f} mm"
+            bilgi_kutusu_ekle(bilgi_gercek, "yesil")
+
+            plt.subplot(3, secilecek_sayi, i + 1 + 2 * secilecek_sayi)
+            plt.imshow(tahminler[i].squeeze() > 0.5, cmap='gray')
+            plt.title("Model Tahmini")
+            plt.axis('off')
+
+            bilgi_tahmin = f"Tahmini Alan: {tahmin_analiz['alan']:.1f} mm²\nBoyut: {tahmin_analiz['genislik']:.1f}x{tahmin_analiz['yukseklik']:.1f} mm"
+            bilgi_kutusu_ekle(bilgi_tahmin, "mavi")
+
+        plt.tight_layout()
+
+        plt.subplots_adjust(bottom=0.12, hspace=0.4)
+        plt.show()
+
+        print("\n  --- HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
+        for i, idx in enumerate(ornek_idxler):
+            g = tumor_analizi_yap(y_test[idx])
+            t = tumor_analizi_yap(tahminler[i])
+            fark_mm2 = abs(g['alan'] - t['alan'])
+            print(
+                f"  MR [{idx}] -> GERCEK: {g['alan']:.1f} mm² | TAHMIN: {t['alan']:.1f} mm² | FARK: {fark_mm2:.1f} mm²")
+
+        secim = input("\n  Baska rastgele ornekler uretilsin mi? (e/h): ").strip().lower()
+        if secim != 'e':
+            break
+
+def bolum_grafik(cfg, organ_ad, model_ad):
+    print("\n" + "=" * 50)
+    print(f"  EGITIM GRAFIKLERI — {organ_ad} / {model_ad}")
+    print("=" * 50)
+    gorsel_goster(cfg["grafik"], f"Egitim Grafikleri — {organ_ad} / {model_ad}")
+
+
+def karsılastir_tahmin(organ_cfg, organ_ad):
+    print("\n" + "=" * 50)
+    print(f"  TAHMIN KARSILASTIRMASI VE KLINIK ANALIZ — {organ_ad}")
+    print("=" * 50)
+    modeller = organ_cfg["modeller"]
+
+    print("\n  Hangi modelleri karsilastirmak istersiniz?")
+    for key, cfg in modeller.items():
+        print(f"  [{key}] -> {cfg['ad']}")
+    s1 = input("  Birinci modelin numarasini girin: ").strip()
+    s2 = input("  Ikinci modelin numarasini girin: ").strip()
+
+    if s1 not in modeller or s2 not in modeller:
+        print(" Hatali secim!")
+        return
+
+    cfg1, cfg2 = modeller[s1], modeller[s2]
+    print(f"  Modeller yukleniyor ({cfg1['ad']} vs {cfg2['ad']})... Lutfen bekleyin.")
+    model1 = model_yukle(cfg1["model"])
+    model2 = model_yukle(cfg2["model"])
+
+    X_test, y_test = veri_yukle(cfg1)
+    if X_test is None:
+        print(" Ortak test verisi yuklenemedi!")
+        return
+
+    tumoru_olan = np.where(y_test.max(axis=(1, 2, 3)) > 0)[0]
+
+    while True:
+        print("\n Ortak test setinden rastgele 3 kesit seciliyor...")
+        idxler = np.random.choice(tumoru_olan, 3, replace=False)
+
+        tahmin1 = model1.predict(X_test[idxler], verbose=0)
+        tahmin2 = model2.predict(X_test[idxler], verbose=0)
+
+        plt.figure(figsize=(18, 12))
+        plt.suptitle(f"Tahmin Karsilastirmasi — {organ_ad} ({cfg1['ad']} vs {cfg2['ad']})", fontsize=14,
+                     fontweight='bold')
+
+        for i, idx in enumerate(idxler):
+            g_analiz = tumor_analizi_yap(y_test[idx])
+            t1_analiz = tumor_analizi_yap(tahmin1[i])
+            t2_analiz = tumor_analizi_yap(tahmin2[i])
+
+            # 1. Sütun: Orijinal MR
+            plt.subplot(3, 4, i * 4 + 1)
+            plt.imshow(X_test[idx].squeeze(), cmap='gray')
+            plt.title(f"Orijinal MR [{idx}]")
+            plt.axis('off')
+
+            # 2. Sütun: Gerçek Maske
+            plt.subplot(3, 4, i * 4 + 2)
+            plt.imshow(y_test[idx].squeeze(), cmap='gray')
+            plt.title("Gercek Maske")
+            plt.axis('off')
+            bilgi_kutusu_ekle(f"Alan: {g_analiz['alan']:.1f} mm²", "yesil")
+
+            # 3. Sütun: Model 1 Tahmini
+            plt.subplot(3, 4, i * 4 + 3)
+            plt.imshow(tahmin1[i].squeeze() > 0.5, cmap='gray')
+            plt.title(cfg1["ad"])
+            plt.axis('off')
+            bilgi_kutusu_ekle(f"Alan: {t1_analiz['alan']:.1f} mm²", "mavi")
+
+            # 4. Sütun: Model 2 Tahmini
+            plt.subplot(3, 4, i * 4 + 4)
+            plt.imshow(tahmin2[i].squeeze() > 0.5, cmap='gray')
+            plt.title(cfg2["ad"])
+            plt.axis('off')
+            bilgi_kutusu_ekle(f"Alan: {t2_analiz['alan']:.1f} mm²", "turuncu")
+
+        plt.tight_layout()
+        plt.subplots_adjust(bottom=0.12, hspace=0.4)
+        plt.show()
+
+        print("\n  --- HESAPLANAN KLINIK TUMOR VERILERI KARSILASTIRMASI ---")
+        for i, idx in enumerate(idxler):
+            g = tumor_analizi_yap(y_test[idx])
+            t1 = tumor_analizi_yap(tahmin1[i])
+            t2 = tumor_analizi_yap(tahmin2[i])
+
+            fark1 = abs(g['alan'] - t1['alan'])
+            fark2 = abs(g['alan'] - t2['alan'])
+
+            kazanan = cfg1['ad'] if fark1 < fark2 else cfg2['ad']
+
+            print(
+                f"  MR [{idx}] -> GERCEK: {g['alan']:.1f} mm² | {cfg1['ad']}: {t1['alan']:.1f} mm² (Sapma: {fark1:.1f}) | {cfg2['ad']}: {t2['alan']:.1f} mm² (Sapma: {fark2:.1f}) -> DAHA YAKIN: {kazanan}")
+
+        if input("\n  Baska rastgele ornekler karsilastirilsin mi? (e/h): ").strip().lower() != 'e':
+            break

@@ -1,0 +1,5 @@
+CT [117] -> GERCEK: 15.2 mm² | TAHMIN: 15.8 mm² | FARK: 0.5 mm² | SINIR SAPMASI: 1.0 px
+  CT [21] -> GERCEK: 8.8 mm² | TAHMIN: 7.5 mm² | FARK: 1.2 mm² | SINIR SAPMASI: 1.0 px
+  CT [90] -> GERCEK: 0.5 mm² | TAHMIN: 0.5 mm² | FARK: 0.0 mm² | SINIR SAPMASI: 5.0 px
+  CT [45] -> GERCEK: 14.2 mm² | TAHMIN: 14.2 mm² | FARK: 0.0 mm² | SINIR SAPMASI: 74.0 px
+  CT [105] -> GERCEK: 0.5 mm² | TAHMIN: 0.5 mm² | FARK: 0.0 mm² | SINIR SAPMASI: 1.0 px
