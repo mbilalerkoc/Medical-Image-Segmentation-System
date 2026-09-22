@@ -1,0 +1,160 @@
+/* Arka Plan ve Taşıyıcı */
+.container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0a1128;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Arkadaki grid deseni ve ışıklar */
+.gridBackground {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: linear-gradient(rgba(56, 189, 248, 0.5) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(56, 189, 248, 0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* Ana İçerik Alanı */
+.contentWrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem 1.25rem;
+}
+
+/* Logo Alanı */
+.logoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.logoImage {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.4));
+  margin-bottom: 1rem;
+}
+
+.brandTitle {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.brandHighlight {
+  color: #22d3ee;
+}
+
+/* Form Kartı (Glassmorphism Etkisi) */
+.loginCard {
+  background-color: rgba(13, 27, 62, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.cardSubtitle {
+  font-size: 0.875rem;
+  color: rgba(191, 219, 254, 0.6);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Form Elemanları */
+.inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(165, 243, 252, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background-color: rgba(6, 13, 35, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.inputField:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
+  background-color: #060d23;
+}
+
+/* Buton */
+.submitBtn {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  background-color: #06b6d4;
+  color: #0a1128;
+  font-weight: bold;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #22d3ee;
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+}
+
+.submitBtn:disabled {
+  background-color: rgba(30, 58, 138, 0.5);
+  color: #60a5fa;
+  cursor: not-allowed;
+  box-shadow: none;
+  border: 1px solid rgba(30, 64, 175, 0.5);
+}
+
+/* Hata Mesajı Kutus */
+.errorMessage {
+  background-color: rgba(127, 29, 29, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}

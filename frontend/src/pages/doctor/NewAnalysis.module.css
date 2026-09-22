@@ -1,0 +1,278 @@
+/* Ana Düzen */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    flex-direction: row;
+  }
+}
+
+/* Kolon Genişlikleri */
+.formColumn {
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .formColumn { width: 33.333333%; }
+}
+
+.previewColumn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 1024px) {
+  .previewColumn { width: 66.666667%; }
+}
+
+/* Ortak Kart Stilleri */
+.card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.formCard {
+  border-top: 4px solid #2563eb;
+}
+
+.previewCard {
+  border-top: 4px solid #10b981;
+  min-height: 400px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form Elemanları */
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.375rem;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus, .select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.fileInput {
+  width: 100%;
+  font-size: 0.875rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.fileInput::file-selector-button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.fileInput::file-selector-button:hover {
+  background-color: #dbeafe;
+}
+
+/* Butonlar */
+.submitBtn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  transition: all 0.2s;
+  background-color: #2563eb;
+  margin-top: 0.5rem;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.submitBtn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.approveBtn {
+  width: 100%;
+  margin-top: 1rem;
+  background-color: #16a34a;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+  transition: all 0.2s;
+}
+
+.approveBtn:hover {
+  background-color: #15803d;
+}
+
+/* Hata ve Durum Mesajları */
+.errorBox {
+  padding: 0.75rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.emptyState {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.emptyStateIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #2563eb;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.loadingIcon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+/* Sonuç Ekranı Alanları */
+.resultLayout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .resultLayout { flex-direction: row; }
+}
+
+.imageColumn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .imageColumn { width: 50%; }
+}
+
+.metricsColumn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .metricsColumn { width: 50%; }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.previewImg {
+  max-height: 250px;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  object-fit: contain;
+}
+
+.imageTag {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.tagOriginal { background-color: rgba(0, 0, 0, 0.6); }
+.tagMask { background-color: #2563eb; }
+
+/* Rapor Metrikleri */
+.reportTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #f1f5f9;
+}
+
+.metricLabel {
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.metricValueRed { font-size: 1.25rem; font-weight: 700; color: #dc2626; }
+.metricValueGreen { font-size: 1.125rem; font-weight: 700; color: #16a34a; }
+.metricValueBlue { font-size: 1.125rem; font-weight: 700; color: #1d4ed8; }
