@@ -38,11 +38,7 @@ const App = () => {
         <Route path="/patients/:id" element={<PatientDetail />} />
 
         <Route path="/analyses/:id" element={<AnalysisDetail />} />
-
-        <Route path="/settings" element={<Settings />} />
-
         <Route path="*" element={<Navigate to="/" replace />} />
-        
       </Route>
     </Routes>
   );

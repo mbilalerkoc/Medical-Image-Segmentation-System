@@ -21,7 +21,9 @@ const Sidebar = () => {
     console.error("Kullanıcı bilgisi okunamadı:", error);
   }
 
-  const fullName = `${user.ad || ""} ${user.soyad || ""}`.trim() || "Doktor";
+  const fullName =
+    `${user.ad || ""} ${user.soyad || ""}`.trim() ||
+    "Doktor";
 
   const title = user.unvan || "Dr.";
 
@@ -160,18 +162,33 @@ const Sidebar = () => {
 
   return (
     <aside className="w-64 h-full min-h-screen bg-slate-950 text-white flex flex-col border-r border-slate-800 shadow-xl">
+
       {/* ================================================= */}
       {/* LOGO */}
       {/* ================================================= */}
 
       <div className="px-5 py-6 border-b border-slate-800">
+
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 flex items-center justify-center">
-            <img
-              src="/logo_pathovision.png"
-              alt="PathoVision Logo"
-              className="w-full h-full object-contain"
-            />
+
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-950/40">
+
+            <svg
+              width="26"
+              height="26"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              className="text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+                d="M9 3h6m-3 0v4m-5 4h10m-8 4h6m-3-8v12m-7-4a7 7 0 1014 0"
+              />
+            </svg>
+
           </div>
 
           <div>
@@ -183,6 +200,7 @@ const Sidebar = () => {
               AI Medical Imaging
             </p>
           </div>
+
         </div>
       </div>
 
@@ -191,19 +209,25 @@ const Sidebar = () => {
       {/* ================================================= */}
 
       <nav className="flex-1 px-3 py-6">
+
         <p className="px-3 mb-3 text-[10px] font-bold tracking-[0.18em] uppercase text-slate-500">
           Menü
         </p>
 
         <ul className="space-y-1.5">
+
           {menuItems.map((item) => {
-            const active = isMenuActive(item.path);
+            const active =
+              isMenuActive(item.path);
 
             return (
               <li key={item.path}>
+
                 <button
                   type="button"
-                  onClick={() => navigate(item.path)}
+                  onClick={() =>
+                    navigate(item.path)
+                  }
                   className={`
                     relative
                     w-full
@@ -226,6 +250,7 @@ const Sidebar = () => {
                     }
                   `}
                 >
+
                   {/* Aktif çizgi */}
 
                   {active && (
@@ -254,17 +279,22 @@ const Sidebar = () => {
                     {item.icon}
                   </span>
 
-                  <span>{item.name}</span>
+                  <span>
+                    {item.name}
+                  </span>
 
                   {/* Aktif nokta */}
 
                   {active && (
                     <span className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span>
                   )}
+
                 </button>
+
               </li>
             );
           })}
+
         </ul>
       </nav>
 
@@ -273,10 +303,13 @@ const Sidebar = () => {
       {/* ================================================= */}
 
       <div className="px-3 pb-4">
+
         {/* DOKTOR */}
 
         <div className="p-3 mb-2 rounded-xl border border-slate-800 bg-slate-900/70">
+
           <div className="flex items-center gap-3">
+
             {/* AVATAR */}
 
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
@@ -286,6 +319,7 @@ const Sidebar = () => {
             {/* BİLGİ */}
 
             <div className="min-w-0 flex-1">
+
               <p className="text-sm font-semibold text-slate-200 truncate">
                 {title} {fullName}
               </p>
@@ -293,7 +327,9 @@ const Sidebar = () => {
               <p className="text-[11px] text-slate-500 truncate">
                 {user.email || "Doktor hesabı"}
               </p>
+
             </div>
+
           </div>
         </div>
 
@@ -319,6 +355,7 @@ const Sidebar = () => {
             duration-200
           "
         >
+
           <svg
             width="19"
             height="19"
@@ -333,6 +370,7 @@ const Sidebar = () => {
               d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
             />
           </svg>
+
           Çıkış Yap
         </button>
 
@@ -343,7 +381,9 @@ const Sidebar = () => {
             PathoVision v1.0
           </span>
         </div>
+
       </div>
+
     </aside>
   );
 };

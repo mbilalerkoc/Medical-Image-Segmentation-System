@@ -1,0 +1,443 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.pageHeader {
+  margin-bottom: 28px;
+}
+
+.pageLabel {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #0891b2;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.pageHeader h1 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.pageHeader p {
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+/* ============================= */
+/* GRID */
+/* ============================= */
+
+.settingsGrid {
+  display: grid;
+
+  grid-template-columns: 320px 1fr;
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+/* ============================= */
+/* PROFILE CARD */
+/* ============================= */
+
+.profileCard {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  padding: 28px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+}
+
+.avatar {
+  width: 82px;
+  height: 82px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    #22d3ee,
+    #2563eb
+  );
+
+  color: #ffffff;
+
+  font-size: 24px;
+  font-weight: 800;
+
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.18);
+}
+
+.profileCard h2 {
+  margin: 17px 0 0;
+
+  color: #0f172a;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.profileEmail {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.profileDivider {
+  height: 1px;
+
+  background: #f1f5f9;
+
+  margin: 24px 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  text-align: left;
+}
+
+.profileInfo > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.profileInfo span {
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.profileInfo strong {
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.doctorBadge {
+  display: inline-flex;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #ecfeff;
+
+  border: 1px solid #cffafe;
+
+  color: #0891b2 !important;
+
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+/* ============================= */
+/* CONTENT */
+/* ============================= */
+
+.contentColumn {
+  display: flex;
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ============================= */
+/* CARD */
+/* ============================= */
+
+.settingsCard {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+}
+
+.cardHeader {
+  padding: 21px 24px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cardHeader h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.cardHeader p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.cardBody {
+  padding: 24px;
+}
+
+/* ============================= */
+/* FORM */
+/* ============================= */
+
+.formGrid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 18px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 18px;
+}
+
+.formGrid .formGroup {
+  margin-bottom: 0;
+}
+
+.formGroup label {
+  margin-bottom: 8px;
+
+  color: #475569;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.formGroup input {
+  width: 100%;
+  height: 44px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 11px;
+
+  background: #f8fafc;
+
+  color: #0f172a;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.formGroup input::placeholder {
+  color: #94a3b8;
+}
+
+.formGroup input:focus {
+  background: #ffffff;
+
+  border-color: #06b6d4;
+
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+}
+
+.disabledInput {
+  background: #f1f5f9 !important;
+
+  color: #94a3b8 !important;
+
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
+
+.buttonArea {
+  display: flex;
+
+  justify-content: flex-end;
+
+  margin-top: 24px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.saveButton,
+.passwordButton {
+  border: none;
+
+  padding: 11px 19px;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.saveButton {
+  background: #0891b2;
+
+  box-shadow: 0 6px 16px rgba(8, 145, 178, 0.18);
+}
+
+.saveButton:hover {
+  background: #0e7490;
+
+  transform: translateY(-1px);
+}
+
+.passwordButton {
+  background: #0f172a;
+
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+}
+
+.passwordButton:hover {
+  background: #1e293b;
+
+  transform: translateY(-1px);
+}
+/* ============================= */
+/* PROFILE SAVE MESSAGES */
+/* ============================= */
+
+.successMessage {
+  margin-top: 20px;
+  padding: 12px 14px;
+
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+
+  background: #ecfdf5;
+  color: #047857;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.errorMessage {
+  margin-top: 20px;
+  padding: 12px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 1000px) {
+  .settingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .profileCard {
+    max-width: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardBody {
+    padding: 18px;
+  }
+
+  .cardHeader {
+    padding: 18px;
+  }
+
+  .profileCard {
+    padding: 22px;
+  }
+
+  .buttonArea {
+    justify-content: stretch;
+  }
+
+  .saveButton,
+  .passwordButton {
+    width: 100%;
+  }
+}

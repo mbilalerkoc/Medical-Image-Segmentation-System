@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { getDashboard } from "../../services/dashboardService";
+import {
+  getPatients,
+  getPatientById,
+} from "../../services/patientService";
 
 import styles from "./Dashboard.module.css";
 
@@ -12,14 +15,8 @@ const Dashboard = () => {
   const [klinikAdi, setKlinikAdi] = useState("Klinik");
   const [doktorBilgisi, setDoktorBilgisi] = useState("Doktor");
 
-  const [stats, setStats] = useState({
-    toplam_hasta: 0,
-    toplam_analiz: 0,
-    tamamlanan_analiz: 0,
-    bekleyen_analiz: 0,
-  });
-
-  const [recentAnalyses, setRecentAnalyses] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [analyses, setAnalyses] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,10 +43,11 @@ const Dashboard = () => {
       const ad = userObj.ad || "";
       const soyad = userObj.soyad || "";
 
-      const doktorAdi = `${unvan} ${ad} ${soyad}`.trim();
+      const fullDoctorName =
+        `${unvan} ${ad} ${soyad}`.trim();
 
-      if (doktorAdi) {
-        setDoktorBilgisi(doktorAdi);
+      if (fullDoctorName) {
+        setDoktorBilgisi(fullDoctorName);
       }
     } catch (err) {
       console.error("Kullanıcı bilgisi okunamadı:", err);
@@ -66,38 +64,85 @@ const Dashboard = () => {
         setLoading(true);
         setError(null);
 
-        const data = await getDashboard();
+        // Önce doktora ait hastaları getir
+        const patientResponse = await getPatients();
 
-        if (!data.basarili) {
-          setError(
-            data.mesaj ||
-              "Dashboard bilgileri alınamadı."
-          );
-
+        if (!patientResponse.basarili) {
+          setError("Hasta bilgileri alınamadı.");
           return;
         }
 
-        setStats(
-          data.istatistikler || {
-            toplam_hasta: 0,
-            toplam_analiz: 0,
-            tamamlanan_analiz: 0,
-            bekleyen_analiz: 0,
-          }
+        const patientList =
+          patientResponse.hastalar || [];
+
+        setPatients(patientList);
+
+        // Her hastanın analizlerini getir
+        const patientDetails = await Promise.all(
+          patientList.map(async (patient) => {
+            try {
+              const detail =
+                await getPatientById(patient.id);
+
+              return {
+                patient,
+                detail,
+              };
+            } catch (err) {
+              console.error(
+                `Hasta #${patient.id} analizleri alınamadı:`,
+                err,
+              );
+
+              return {
+                patient,
+                detail: null,
+              };
+            }
+          }),
         );
 
-        setRecentAnalyses(
-          data.son_analizler || []
+        // Tüm analizleri tek listede birleştir
+        const allAnalyses = [];
+
+        patientDetails.forEach(({ patient, detail }) => {
+          if (!detail?.basarili) return;
+
+          const patientAnalyses =
+            detail.analizler || [];
+
+          patientAnalyses.forEach((analysis) => {
+            allAnalyses.push({
+              ...analysis,
+
+              patientId: patient.id,
+
+              hasta:
+                `${patient.ad || ""} ${patient.soyad || ""}`.trim() ||
+                patient.tc_kimlik,
+
+              tc_kimlik:
+                patient.tc_kimlik,
+            });
+          });
+        });
+
+        // ID'ye göre en yeniden eskiye
+        allAnalyses.sort(
+          (a, b) =>
+            Number(b.id) - Number(a.id),
         );
+
+        setAnalyses(allAnalyses);
       } catch (err) {
         console.error(
           "Dashboard yükleme hatası:",
-          err
+          err,
         );
 
         setError(
           err.response?.data?.mesaj ||
-            "Dashboard bilgileri yüklenirken bir hata oluştu."
+            "Dashboard bilgileri yüklenirken bir hata oluştu.",
         );
       } finally {
         setLoading(false);
@@ -108,12 +153,33 @@ const Dashboard = () => {
   }, []);
 
   // =====================================================
+  // İSTATİSTİKLER
+  // =====================================================
+
+  const totalPatients = patients.length;
+
+  const totalAnalyses = analyses.length;
+
+  const completedAnalyses = analyses.filter(
+    (analysis) =>
+      analysis.durum === "tamamlandi" ||
+      analysis.durum === "onaylandi",
+  ).length;
+
+  const pendingAnalyses = analyses.filter(
+    (analysis) =>
+      analysis.durum === "bekliyor",
+  ).length;
+
+  const recentAnalyses =
+    analyses.slice(0, 6);
+
+  // =====================================================
   // LABEL FONKSİYONLARI
   // =====================================================
 
   const getOrganLabel = (organ) => {
     if (organ === "beyin") return "Beyin";
-
     if (organ === "bobrek") return "Böbrek";
 
     return organ || "-";
@@ -121,7 +187,6 @@ const Dashboard = () => {
 
   const getModelLabel = (model) => {
     if (model === "unet") return "U-Net";
-
     if (model === "unet_plus") return "U-Net++";
 
     return model || "-";
@@ -154,14 +219,13 @@ const Dashboard = () => {
       <div className={styles.dashboardWrapper}>
 
         {/* ARKA PLAN */}
-
         <div className={styles.backgroundDecor}>
           <div className={styles.gridPattern}></div>
           <div className={styles.glowCyan}></div>
           <div className={styles.glowBlue}></div>
         </div>
 
-        {/* KARŞILAMA */}
+        {/* ÜST KARŞILAMA */}
 
         <div className={styles.welcomeArea}>
           <div>
@@ -174,8 +238,8 @@ const Dashboard = () => {
             </h1>
 
             <p className={styles.welcomeDescription}>
-              Hasta ve yapay zeka analizlerinize ait
-              güncel durumu buradan takip edebilirsiniz.
+              Hasta ve yapay zeka analizlerinize ait güncel
+              durumu buradan takip edebilirsiniz.
             </p>
           </div>
 
@@ -212,7 +276,7 @@ const Dashboard = () => {
 
         <div className={styles.statsGrid}>
 
-          {/* TOPLAM HASTA */}
+          {/* HASTA */}
 
           <div
             className={`${styles.statCard} ${styles.cardBlue}`}
@@ -230,7 +294,7 @@ const Dashboard = () => {
                 <h3 className={styles.statValue}>
                   {loading
                     ? "..."
-                    : stats.toplam_hasta}
+                    : totalPatients}
                 </h3>
               </div>
 
@@ -277,7 +341,7 @@ const Dashboard = () => {
                 <h3 className={styles.statValue}>
                   {loading
                     ? "..."
-                    : stats.toplam_analiz}
+                    : totalAnalyses}
                 </h3>
               </div>
 
@@ -324,7 +388,7 @@ const Dashboard = () => {
                 <h3 className={styles.statValue}>
                   {loading
                     ? "..."
-                    : stats.tamamlanan_analiz}
+                    : completedAnalyses}
                 </h3>
               </div>
 
@@ -371,7 +435,7 @@ const Dashboard = () => {
                 <h3 className={styles.statValue}>
                   {loading
                     ? "..."
-                    : stats.bekleyen_analiz}
+                    : pendingAnalyses}
                 </h3>
               </div>
 
@@ -407,7 +471,6 @@ const Dashboard = () => {
         <div className={styles.tableCard}>
 
           <div className={styles.tableHeaderArea}>
-
             <div className={styles.tableTitleWrapper}>
 
               <div
@@ -435,7 +498,7 @@ const Dashboard = () => {
                 </h2>
 
                 <p className={styles.tableSubtitle}>
-                  Son oluşturulan 6 analiz kaydı
+                  Son oluşturulan analiz kayıtları
                 </p>
               </div>
 
@@ -447,9 +510,8 @@ const Dashboard = () => {
                 navigate("/analyze")
               }
             >
-              + Yeni Analiz
+              <span>+ Yeni Analiz</span>
             </button>
-
           </div>
 
           <div className={styles.tableContainer}>
@@ -460,7 +522,6 @@ const Dashboard = () => {
               </div>
             ) : recentAnalyses.length === 0 ? (
               <div className={styles.emptyState}>
-
                 <h3>
                   Henüz analiz bulunmuyor
                 </h3>
@@ -478,11 +539,9 @@ const Dashboard = () => {
                 >
                   Yeni Analiz Başlat
                 </button>
-
               </div>
             ) : (
               <table className={styles.dataTable}>
-
                 <thead>
                   <tr>
                     <th>Analiz</th>
@@ -498,8 +557,6 @@ const Dashboard = () => {
                   {recentAnalyses.map(
                     (analysis) => (
                       <tr key={analysis.id}>
-
-                        {/* ANALİZ */}
 
                         <td>
                           <div
@@ -518,8 +575,6 @@ const Dashboard = () => {
                           </div>
                         </td>
 
-                        {/* HASTA */}
-
                         <td>
                           <div
                             className={
@@ -527,18 +582,14 @@ const Dashboard = () => {
                             }
                           >
                             <strong>
-                              {analysis.hasta ||
-                                "-"}
+                              {analysis.hasta}
                             </strong>
 
                             <span>
-                              {analysis.tc_kimlik ||
-                                "-"}
+                              {analysis.tc_kimlik}
                             </span>
                           </div>
                         </td>
-
-                        {/* ORGAN MODEL */}
 
                         <td>
                           <span
@@ -547,7 +598,7 @@ const Dashboard = () => {
                             }
                           >
                             {getOrganLabel(
-                              analysis.organ
+                              analysis.organ,
                             )}
                           </span>
 
@@ -557,12 +608,10 @@ const Dashboard = () => {
                             }
                           >
                             {getModelLabel(
-                              analysis.model
+                              analysis.model,
                             )}
                           </span>
                         </td>
-
-                        {/* TARİH */}
 
                         <td
                           className={
@@ -571,14 +620,12 @@ const Dashboard = () => {
                         >
                           {analysis.tarih
                             ? new Date(
-                                analysis.tarih
+                                analysis.tarih,
                               ).toLocaleString(
-                                "tr-TR"
+                                "tr-TR",
                               )
                             : "-"}
                         </td>
-
-                        {/* DURUM */}
 
                         <td>
                           <span
@@ -599,12 +646,10 @@ const Dashboard = () => {
                             ></span>
 
                             {getStatusLabel(
-                              analysis.durum
+                              analysis.durum,
                             )}
                           </span>
                         </td>
-
-                        {/* İŞLEM */}
 
                         <td>
                           <button
@@ -613,7 +658,7 @@ const Dashboard = () => {
                             }
                             onClick={() =>
                               navigate(
-                                `/analyses/${analysis.id}`
+                                `/analyses/${analysis.id}`,
                               )
                             }
                           >
@@ -622,16 +667,13 @@ const Dashboard = () => {
                         </td>
 
                       </tr>
-                    )
+                    ),
                   )}
                 </tbody>
-
               </table>
             )}
 
           </div>
-
-          {/* ALT DURUM */}
 
           <div className={styles.systemStatusFooter}>
 
@@ -639,7 +681,6 @@ const Dashboard = () => {
               <span
                 className={`${styles.dot} ${styles.dotOnline}`}
               ></span>
-
               AI Analiz Sistemi
             </span>
 
@@ -647,7 +688,6 @@ const Dashboard = () => {
               <span
                 className={`${styles.dot} ${styles.dotOnline}`}
               ></span>
-
               Veriler Senkronize
             </span>
 

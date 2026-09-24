@@ -168,7 +168,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 flex items-center justify-center">
             <img
-              src="/logo_pathovision.png"
+              src="/logo_patho.png"
               alt="PathoVision Logo"
               className="w-full h-full object-contain"
             />

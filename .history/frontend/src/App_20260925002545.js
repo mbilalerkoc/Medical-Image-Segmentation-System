@@ -40,9 +40,8 @@ const App = () => {
         <Route path="/analyses/:id" element={<AnalysisDetail />} />
 
         <Route path="/settings" element={<Settings />} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
         
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   );

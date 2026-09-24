@@ -30,7 +30,6 @@ app.use('/api/analyze', analyzeRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/reports', require('./routes/report'));
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/settings", settingsRoutes);
 
 // Sunucuyu Başlat
 app.listen(PORT, () => {

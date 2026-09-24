@@ -9,7 +9,6 @@ import NewAnalysis from "./features/analysis/NewAnalysis";
 import AnalysisDetail from "./features/analysis/AnalysisDetail";
 import PatientDetail from "./features/patients/PatientDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Settings from "./features/settings/Settings";
 
 const App = () => {
   return (
@@ -38,11 +37,7 @@ const App = () => {
         <Route path="/patients/:id" element={<PatientDetail />} />
 
         <Route path="/analyses/:id" element={<AnalysisDetail />} />
-
-        <Route path="/settings" element={<Settings />} />
-
         <Route path="*" element={<Navigate to="/" replace />} />
-        
       </Route>
     </Routes>
   );
