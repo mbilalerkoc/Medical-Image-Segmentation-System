@@ -1,0 +1,589 @@
+/* Ana Düzen */
+.container {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modern Kartlar */
+.modernCard {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  padding: 2rem;
+}
+
+.cardHeader {
+  margin-bottom: 2rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+}
+
+.cardDesc {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Form Elemanları */
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.modernInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.modernInput:focus {
+  background-color: white;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.rowGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modernSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modernSelect:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Sürükle ve Bırak (Drag & Drop) */
+.fileHidden {
+  display: none;
+}
+
+.dragDropZone {
+  position: relative;
+  width: 100%;
+  height: 10rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 1rem;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.dragActive {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.hasFile {
+  border-style: solid;
+  border-color: #e2e8f0;
+  background-color: #000;
+}
+
+.dragDropContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.cloudIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.dragDropZone:hover .cloudIcon {
+  color: #3b82f6;
+}
+
+.dragText {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.highlightText {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.fileHint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.miniPreviewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.miniPreviewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.changeImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.miniPreviewContainer:hover .changeImageOverlay {
+  opacity: 1;
+}
+
+.changeImageOverlay span {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+}
+
+.submitBtnPremium {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.25);
+  transition: all 0.3s ease;
+}
+
+.submitBtnPremium:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+}
+
+.submitBtnPremium:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.errorBox {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+/* SAĞ TARAF: SONUÇ VE ÖNİZLEME */
+.resultCard {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid #f1f5f9;
+  min-height: calc(100vh - 8rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+}
+
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.emptyIconPulse {
+  width: 4rem;
+  height: 4rem;
+  background: #f1f5f9;
+  border-radius: 50%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .7; transform: scale(0.95); }
+}
+
+.standbyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.standbyTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 1.5rem;
+}
+
+.standbyImageWrapper {
+  width: 100%;
+  max-width: 400px;
+  background: #000;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.standbyImg {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+}
+
+.standbyText {
+  margin-top: 1.5rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.loadingState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #f8fafc;
+}
+
+.scannerWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 350px;
+  background: #000;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.scanningImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.6;
+}
+
+.scannerLaser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #3b82f6;
+  box-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 50px 20px -10px rgba(59, 130, 246, 0.2) inset;
+  animation: scan 2.5s infinite linear;
+}
+
+@keyframes scan {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.loadingText {
+  margin-top: 1.5rem;
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 1.125rem;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.resultLayout {
+  padding: 2rem;
+}
+
+.resultMainTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+/* YAN YANA GÖRÜNÜM EKLENTİSİ */
+.sideBySideContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sideImageWrapper {
+  flex: 1;
+  position: relative;
+  background: #000;
+  border-radius: 1rem;
+  overflow: hidden;
+  height: 250px;
+  border: 1px solid #e2e8f0;
+}
+
+.sideImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.imageTag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+/* ÖRTÜŞTÜR BUTONU */
+.overlayBtn {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+}
+
+.overlayBtn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* BEFORE/AFTER SLIDER (MODAL İÇİ KUSURSUZ HİZALAMA VE SAYDAMLIK) */
+.sliderContainer {
+  position: relative;
+  width: 100%;
+  max-width: 600px; 
+  height: 500px;
+  background: #000;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
+}
+
+.sliderImgBase {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.sliderOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.sliderImgMask {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen; 
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+}
+
+.sliderLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #3b82f6;
+  z-index: 3;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+  pointer-events: none;
+}
+
+.sliderControl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  opacity: 0; 
+  cursor: ew-resize;
+}
+
+.sliderLabels {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.labelOrijinal, .labelMaske {
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+.labelMaske {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* Metrikler Grid'i */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metricCard {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.metricValueRed { font-size: 1.5rem; font-weight: 900; color: #ef4444; }
+.metricValueGreen { font-size: 1.5rem; font-weight: 900; color: #10b981; }
+.metricValueBlue { font-size: 1.5rem; font-weight: 900; color: #0f172a; }
+
+.approveBtn {
+  width: 100%;
+  padding: 1rem;
+  background-color: #10b981;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.approveBtn:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}

@@ -1,0 +1,441 @@
+.container {
+  padding: 32px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.breadcrumb {
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.pageTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.pageDescription {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+.primaryButton,
+.secondaryButton {
+  border: none;
+  border-radius: 10px;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.primaryButton {
+  background: #2563eb;
+  color: white;
+}
+
+.primaryButton:hover {
+  background: #1d4ed8;
+}
+
+.secondaryButton {
+  background: white;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.secondaryButton:hover {
+  background: #f8fafc;
+}
+
+.sectionCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+}
+
+.sectionHeader p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.infoCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.infoLabel {
+  display: block;
+  margin-bottom: 7px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.infoValue {
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.addressBox {
+  margin-top: 16px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.addressBox p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.badgeActive,
+.badgePending {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badgeActive {
+  color: #047857;
+  background: #d1fae5;
+}
+
+.badgePending {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.analysisCount {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 13px 14px;
+  text-align: left;
+  font-size: 12px;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.table td {
+  padding: 15px 14px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.detailButton {
+  border: none;
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 8px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.detailButton:hover {
+  background: #dbeafe;
+}
+
+.statusCompleted,
+.statusApproved,
+.statusWaiting {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.statusCompleted {
+  color: #0369a1;
+  background: #e0f2fe;
+}
+
+.statusApproved {
+  color: #047857;
+  background: #d1fae5;
+}
+
+.statusWaiting {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.noAnalysis {
+  text-align: center;
+  padding: 55px 20px;
+}
+
+.noAnalysis h3 {
+  margin: 10px 0 6px;
+  color: #0f172a;
+}
+
+.noAnalysis p {
+  margin: 0 0 20px;
+  color: #64748b;
+}
+
+.emptyCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 70px 30px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.loadingSpinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+/* ============================= */
+/* ANALİZ ARAMA */
+/* ============================= */
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  max-width: 520px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  width: 19px;
+  height: 19px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 44px;
+  padding: 0 42px 0 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 11px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.searchInput::placeholder {
+  color: #94a3b8;
+}
+
+.searchInput:focus {
+  background: white;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.clearSearch {
+  position: absolute;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.clearSearch:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+
+/* ============================= */
+/* ANALİZ LİSTESİ SCROLL */
+/* ============================= */
+
+.analysisScrollArea {
+  max-height: 390px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+/* Tablo başlığı kaydırırken sabit kalsın */
+
+.analysisScrollArea .table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f8fafc;
+}
+
+
+/* Scrollbar */
+
+.analysisScrollArea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.analysisScrollArea::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.analysisScrollArea::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.analysisScrollArea::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+/* ============================= */
+/* ANALİZ ADI */
+/* ============================= */
+
+.analysisNameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+}
+
+.analysisNameCell strong {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.analysisNameCell span {
+  color: #94a3b8;
+  font-size: 11px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 18px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .headerActions button {
+    width: 100%;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}

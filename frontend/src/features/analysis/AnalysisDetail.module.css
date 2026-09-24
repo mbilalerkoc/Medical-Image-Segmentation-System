@@ -1,0 +1,294 @@
+.container {
+  padding: 32px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pageDescription {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.newAnalysisButton,
+.primaryButton {
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.newAnalysisButton:hover,
+.primaryButton:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* INFO */
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.infoCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.infoLabel {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.infoValue {
+  color: #0f172a;
+  font-size: 16px;
+}
+
+/* SECTION */
+
+.sectionCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 19px;
+  color: #0f172a;
+}
+
+.sectionHeader p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* IMAGES */
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.imageCard {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.imageCardHeader {
+  padding: 13px 15px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.imageWrapper {
+  background: #020617;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* METRICS */
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metricCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.metricLabel {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.metricValue,
+.metricDanger,
+.metricSuccess {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.metricValue {
+  color: #0f172a;
+}
+
+.metricDanger {
+  color: #ef4444;
+}
+
+.metricSuccess {
+  color: #10b981;
+}
+
+/* NOTE */
+
+.doctorNote {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  min-height: 100px;
+}
+
+.doctorNote p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.noNote {
+  color: #94a3b8 !important;
+}
+
+/* EMPTY */
+
+.emptyCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  text-align: center;
+  padding: 70px 30px;
+}
+
+.emptyIcon {
+  width: 55px;
+  height: 55px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.emptyCard h2 {
+  color: #0f172a;
+}
+
+.emptyCard p {
+  color: #64748b;
+  margin-bottom: 22px;
+}
+.loadingSpinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .infoGrid,
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .imageGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .container {
+    padding: 18px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .infoGrid,
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .newAnalysisButton {
+    width: 100%;
+  }
+}
