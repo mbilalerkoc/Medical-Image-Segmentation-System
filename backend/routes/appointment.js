@@ -1,0 +1,72 @@
+const express = require("express");
+
+const router = express.Router();
+
+const {
+  getAppointments,
+  createAppointment,
+  updateStatus,
+  getAvailability,
+  saveAvailability,
+  getAvailableSlots,
+} = require("../controllers/appointmentController");
+
+const {
+  protect,
+  authorize,
+} = require("../middlewares/authMiddleware");
+
+router.use(
+  protect,
+  authorize("doktor", "superadmin")
+);
+
+// =====================================================
+// DOKTOR MÜSAİTLİĞİ
+// =====================================================
+
+// GET /api/appointments/availability
+router.get(
+  "/availability",
+  getAvailability
+);
+
+// GET /api/appointments/availability/slots
+router.get(
+  "/availability/slots",
+  getAvailableSlots
+);
+
+// PUT /api/appointments/availability
+router.put(
+  "/availability",
+  saveAvailability
+);
+
+// GET /api/appointments
+//
+// Filtre örnekleri:
+// ?filter=today
+// ?filter=upcoming
+// ?filter=past
+// ?filter=cancelled
+// ?filter=all
+
+router.get(
+  "/",
+  getAppointments
+);
+
+// POST /api/appointments
+router.post(
+  "/",
+  createAppointment
+);
+
+// PATCH /api/appointments/15/status
+router.patch(
+  "/:id/status",
+  updateStatus
+);
+
+module.exports = router;

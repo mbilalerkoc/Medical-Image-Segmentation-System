@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patient');
 const dashboardRoutes = require("./routes/dashboard");
 const settingsRoutes = require("./routes/settings");
+const appointmentRoutes = require("./routes/appointment");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +32,8 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/reports', require('./routes/report'));
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/appointments", appointmentRoutes);
+
 
 // Sunucuyu Başlat
 app.listen(PORT, () => {

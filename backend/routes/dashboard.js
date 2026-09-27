@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getDashboard,
-} = require("../controllers/dashboardController");
+} = require("../controllers/dashboardController.js");
 
 const {
   protect,
