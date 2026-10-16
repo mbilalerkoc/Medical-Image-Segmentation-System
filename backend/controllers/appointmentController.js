@@ -2,10 +2,7 @@ const appointmentService = require(
   "../services/appointmentService"
 );
 
-// =====================================================
 // ORTAK HATA RESPONSE
-// =====================================================
-
 const handleError = (
   res,
   error
@@ -27,11 +24,8 @@ const handleError = (
     });
 };
 
-// =====================================================
 // RANDEVULARIM
 // GET /api/appointments
-// =====================================================
-
 exports.getAppointments =
   async (req, res) => {
     try {
@@ -84,11 +78,8 @@ exports.getAppointments =
     }
   };
 
-// =====================================================
 // YENİ RANDEVU
 // POST /api/appointments
-// =====================================================
-
 exports.createAppointment =
   async (req, res) => {
     try {
@@ -117,11 +108,8 @@ exports.createAppointment =
     }
   };
 
-// =====================================================
 // RANDEVU DURUMU
 // PATCH /api/appointments/:id/status
-// =====================================================
-
 exports.updateStatus =
   async (req, res) => {
     try {
@@ -163,11 +151,8 @@ exports.updateStatus =
     }
   };
 
-// =====================================================
 // MÜSAİTLİĞİ GETİR
 // GET /api/appointments/availability
-// =====================================================
-
 exports.getAvailability =
   async (req, res) => {
     try {
@@ -190,11 +175,8 @@ exports.getAvailability =
     }
   };
 
-// =====================================================
 // MÜSAİTLİĞİ KAYDET
 // PUT /api/appointments/availability
-// =====================================================
-
 exports.saveAvailability =
   async (req, res) => {
     try {

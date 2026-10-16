@@ -9,6 +9,7 @@ const patientRoutes = require('./routes/patient');
 const dashboardRoutes = require("./routes/dashboard");
 const settingsRoutes = require("./routes/settings");
 const appointmentRoutes = require("./routes/appointment");
+const notificationRoutes = require("./routes/notification");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use('/api/reports', require('./routes/report'));
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 // Sunucuyu Başlat

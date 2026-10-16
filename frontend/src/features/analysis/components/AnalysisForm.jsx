@@ -4,16 +4,12 @@ import styles from "../NewAnalysis.module.css";
 const AnalysisForm = ({
   tcKimlik,
   setTcKimlik,
-
   analizAdi,
   setAnalizAdi,
-
   organ,
   setOrgan,
-
   model,
   setModel,
-
   preview,
   loading,
   error,
@@ -22,14 +18,12 @@ const AnalysisForm = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
+  // DRAG & DROP
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (
-      e.type === "dragenter" ||
-      e.type === "dragover"
-    ) {
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
     } else if (e.type === "dragleave") {
       setDragActive(false);
@@ -39,13 +33,9 @@ const AnalysisForm = ({
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     setDragActive(false);
 
-    if (
-      e.dataTransfer.files &&
-      e.dataTransfer.files[0]
-    ) {
+    if (e.dataTransfer.files?.[0]) {
       processFile(e.dataTransfer.files[0]);
     }
   };
@@ -53,36 +43,22 @@ const AnalysisForm = ({
   return (
     <div className={styles.formColumn}>
       <div className={styles.modernCard}>
-
+        {/* HEADER */}
         <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>
-            Yeni Analiz
-          </h2>
-
+          <h2 className={styles.cardTitle}>Yeni Analiz</h2>
           <p className={styles.cardDesc}>
-            Hastanın MR/CT görüntüsünü yükleyerek yapay
-            zeka analizini başlatın.
+            Hastanın MR/CT görüntüsünü yükleyerek yapay zeka analizini başlatın.
           </p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className={styles.formBody}
-        >
-
+        <form onSubmit={handleSubmit} className={styles.formBody}>
           {/* HASTA TC */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Hasta TC Kimlik
-            </label>
+            <label className={styles.label}>Hasta TC Kimlik</label>
 
             <div className={styles.inputWrapper}>
               <div className={styles.inputIcon}>
-                <svg
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -96,11 +72,7 @@ const AnalysisForm = ({
                 type="text"
                 maxLength="11"
                 value={tcKimlik}
-                onChange={(e) =>
-                  setTcKimlik(
-                    e.target.value.replace(/\D/g, "")
-                  )
-                }
+                onChange={(e) => setTcKimlik(e.target.value.replace(/\D/g, ""))}
                 className={styles.modernInput}
                 placeholder="11 Haneli TC Numarası"
               />
@@ -109,127 +81,68 @@ const AnalysisForm = ({
 
           {/* ANALİZ ADI */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Analiz Adı
-            </label>
+            <label className={styles.label}>Analiz Adı</label>
 
             <input
               type="text"
               value={analizAdi}
-              onChange={(e) =>
-                setAnalizAdi(e.target.value)
-              }
+              onChange={(e) => setAnalizAdi(e.target.value)}
               maxLength="150"
               className={styles.modernInput}
               placeholder="Örn: Eylül Kontrol MR"
             />
 
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#94a3b8",
-                marginTop: "6px",
-                marginBottom: 0,
-              }}
-            >
-              Analizi daha sonra kolay bulabilmek için
-              açıklayıcı bir isim verebilirsiniz.
+            <p className={styles.helperText}>
+              Analizi daha sonra kolay bulabilmek için açıklayıcı bir isim verebilirsiniz.
             </p>
           </div>
 
           {/* ORGAN + MODEL */}
           <div className={styles.rowGroup}>
             <div className={styles.formGroup}>
-              <label className={styles.label}>
-                İncelenen Organ
-              </label>
+              <label className={styles.label}>İncelenen Organ</label>
 
-              <select
-                value={organ}
-                onChange={(e) =>
-                  setOrgan(e.target.value)
-                }
-                className={styles.modernSelect}
-              >
-                <option value="beyin">
-                  Beyin (Brain)
-                </option>
-
-                <option value="bobrek">
-                  Böbrek (Kidney)
-                </option>
+              <select value={organ} onChange={(e) => setOrgan(e.target.value)} className={styles.modernSelect}>
+                <option value="beyin">Beyin (Brain)</option>
+                <option value="bobrek">Böbrek (Kidney)</option>
               </select>
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.label}>
-                Yapay Zeka Modeli
-              </label>
+              <label className={styles.label}>Yapay Zeka Modeli</label>
 
-              <select
-                value={model}
-                onChange={(e) =>
-                  setModel(e.target.value)
-                }
-                className={styles.modernSelect}
-              >
-                <option value="unet">
-                  U-Net (Hızlı)
-                </option>
-
-                <option value="unet_plus">
-                  U-Net++ (Detaylı)
-                </option>
+              <select value={model} onChange={(e) => setModel(e.target.value)} className={styles.modernSelect}>
+                <option value="unet">U-Net (Hızlı)</option>
+                <option value="unet_plus">U-Net++ (Detaylı)</option>
               </select>
             </div>
           </div>
 
           {/* GÖRÜNTÜ YÜKLE */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Görüntü Yükle (MR / CT)
-            </label>
+            <label className={styles.label}>Görüntü Yükle (MR / CT)</label>
 
             <div
-              className={`${styles.dragDropZone} ${
-                dragActive
-                  ? styles.dragActive
-                  : ""
-              } ${
-                preview
-                  ? styles.hasFile
-                  : ""
+              className={`${styles.dragDropZone} ${dragActive ? styles.dragActive : ""} ${
+                preview ? styles.hasFile : ""
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
               onDrop={handleDrop}
             >
-
               <input
                 type="file"
                 accept="image/*,.tif,.tiff"
-                onChange={(e) =>
-                  processFile(
-                    e.target.files[0]
-                  )
-                }
+                onChange={(e) => processFile(e.target.files?.[0] || null)}
                 className={styles.fileHidden}
                 id="fileUpload"
               />
 
-              <label
-                htmlFor="fileUpload"
-                className={styles.dragDropContent}
-              >
+              <label htmlFor="fileUpload" className={styles.dragDropContent}>
                 {!preview ? (
                   <>
-                    <svg
-                      className={styles.cloudIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className={styles.cloudIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -239,67 +152,30 @@ const AnalysisForm = ({
                     </svg>
 
                     <p className={styles.dragText}>
-                      <span
-                        className={
-                          styles.highlightText
-                        }
-                      >
-                        Tıklayın
-                      </span>{" "}
-                      veya sürükleyin
+                      <span className={styles.highlightText}>Tıklayın</span> veya sürükleyin
                     </p>
 
-                    <p className={styles.fileHint}>
-                      TIFF, PNG, JPG desteklenir
-                    </p>
+                    <p className={styles.fileHint}>TIFF, PNG, JPG desteklenir</p>
                   </>
                 ) : (
-                  <div
-                    className={
-                      styles.miniPreviewContainer
-                    }
-                  >
-                    <img
-                      src={preview}
-                      alt="Seçilen"
-                      className={
-                        styles.miniPreviewImg
-                      }
-                    />
+                  <div className={styles.miniPreviewContainer}>
+                    <img src={preview} alt="Seçilen" className={styles.miniPreviewImg} />
 
-                    <div
-                      className={
-                        styles.changeImageOverlay
-                      }
-                    >
-                      <span>
-                        Resmi Değiştir
-                      </span>
+                    <div className={styles.changeImageOverlay}>
+                      <span>Resmi Değiştir</span>
                     </div>
                   </div>
                 )}
               </label>
-
             </div>
           </div>
 
           {/* SUBMIT */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={styles.submitBtnPremium}
-          >
-            {loading
-              ? "AI Modeli Analiz Ediyor..."
-              : "Segmentasyonu Başlat"}
+          <button type="submit" disabled={loading} className={styles.submitBtnPremium}>
+            {loading ? "AI Modeli Analiz Ediyor..." : "Segmentasyonu Başlat"}
           </button>
 
-          {error && (
-            <div className={styles.errorBox}>
-              {error}
-            </div>
-          )}
-
+          {error && <div className={styles.errorBox}>{error}</div>}
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-/* Ana Düzen */
+/* LAYOUT */
 .container {
   display: grid;
   grid-template-columns: 400px 1fr;
@@ -14,9 +14,9 @@
   }
 }
 
-/* Modern Kartlar */
+/* CARDS */
 .modernCard {
-  background: white;
+  background: var(--surface-white);
   border-radius: 1.5rem;
   border: 1px solid #f1f5f9;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
@@ -29,18 +29,18 @@
 
 .cardTitle {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: var(--font-extrabold);
   color: #0f172a;
   letter-spacing: -0.025em;
 }
 
 .cardDesc {
-  color: #64748b;
-  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
   margin-top: 0.5rem;
 }
 
-/* Form Elemanları */
+/* FORM */
 .formBody {
   display: flex;
   flex-direction: column;
@@ -49,8 +49,8 @@
 
 .label {
   display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-semibold);
   color: #334155;
   margin-bottom: 0.5rem;
 }
@@ -73,16 +73,16 @@
 .modernInput {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.75rem;
-  background-color: #f8fafc;
+  background-color: var(--input-bg);
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-lg);
+  transition: all var(--transition-normal);
   outline: none;
 }
 
 .modernInput:focus {
-  background-color: white;
+  background-color: var(--surface-white);
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
@@ -96,14 +96,14 @@
 .modernSelect {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #f8fafc;
+  background-color: var(--input-bg);
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
   color: #1e293b;
   outline: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .modernSelect:focus {
@@ -111,7 +111,14 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Sürükle ve Bırak (Drag & Drop) */
+.helperText {
+  margin: 6px 0 0;
+  color: var(--text-subtle);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+/* FILE UPLOAD */
 .fileHidden {
   display: none;
 }
@@ -121,8 +128,8 @@
   width: 100%;
   height: 10rem;
   border: 2px dashed #cbd5e1;
-  border-radius: 1rem;
-  background-color: #f8fafc;
+  border-radius: var(--radius-xl);
+  background-color: var(--input-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,18 +171,18 @@
 }
 
 .dragText {
-  font-size: 0.875rem;
-  color: #64748b;
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
 
 .highlightText {
   color: #3b82f6;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .fileHint {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm);
   color: #94a3b8;
 }
 
@@ -194,12 +201,12 @@
 .changeImageOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-normal);
 }
 
 .miniPreviewContainer:hover .changeImageOverlay {
@@ -207,31 +214,32 @@
 }
 
 .changeImageOverlay span {
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background: rgba(255,255,255,0.2);
+  color: var(--text-white);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-semibold);
+  background: rgba(255, 255, 255, 0.2);
   padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   backdrop-filter: blur(4px);
 }
 
+/* SUBMIT */
 .submitBtnPremium {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
+  background: linear-gradient(135deg, var(--button-dark) 0%, var(--button-dark-hover) 100%);
+  color: var(--text-white);
+  font-weight: var(--font-bold);
+  font-size: var(--font-size-lg);
   border: none;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.25);
   transition: all 0.3s ease;
 }
 
 .submitBtnPremium:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #2563eb 0%, var(--info) 100%);
   box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.3);
   transform: translateY(-2px);
 }
@@ -246,14 +254,14 @@
   padding: 1rem;
   background-color: #fef2f2;
   border-left: 4px solid #ef4444;
-  color: #991b1b;
-  font-size: 0.875rem;
-  border-radius: 0.5rem;
+  color: var(--danger-hover);
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-sm);
 }
 
-/* SAĞ TARAF: SONUÇ VE ÖNİZLEME */
+/* RESULTS */
 .resultCard {
-  background: white;
+  background: var(--surface-white);
   border-radius: 1.5rem;
   border: 1px solid #f1f5f9;
   min-height: calc(100vh - 8rem);
@@ -284,7 +292,7 @@
 
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .7; transform: scale(0.95); }
+  50% { opacity: 0.7; transform: scale(0.95); }
 }
 
 .standbyState {
@@ -297,7 +305,7 @@
 
 .standbyTitle {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: var(--font-bold);
   color: #334155;
   margin-bottom: 1.5rem;
 }
@@ -306,7 +314,7 @@
   width: 100%;
   max-width: 400px;
   background: #000;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
@@ -319,8 +327,8 @@
 
 .standbyText {
   margin-top: 1.5rem;
-  color: #64748b;
-  font-weight: 500;
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
 }
 
 .loadingState {
@@ -330,7 +338,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: #f8fafc;
+  background: var(--input-bg);
 }
 
 .scannerWrapper {
@@ -339,7 +347,7 @@
   max-width: 400px;
   height: 350px;
   background: #000;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   border: 2px solid #3b82f6;
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
@@ -372,12 +380,15 @@
 .loadingText {
   margin-top: 1.5rem;
   color: #3b82f6;
-  font-weight: 700;
-  font-size: 1.125rem;
+  font-weight: var(--font-bold);
+  font-size: var(--font-size-xl);
   animation: blink 1.5s infinite;
 }
 
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
 
 .resultLayout {
   padding: 2rem;
@@ -385,14 +396,14 @@
 
 .resultMainTitle {
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: var(--font-extrabold);
   color: #0f172a;
   margin-bottom: 1.5rem;
   border-bottom: 2px solid #f1f5f9;
   padding-bottom: 0.5rem;
 }
 
-/* YAN YANA GÖRÜNÜM EKLENTİSİ */
+/* IMAGES */
 .sideBySideContainer {
   display: flex;
   gap: 1rem;
@@ -403,7 +414,7 @@
   flex: 1;
   position: relative;
   background: #000;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   height: 250px;
   border: 1px solid #e2e8f0;
@@ -419,28 +430,28 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  background: rgba(0,0,0,0.6);
-  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-white);
   padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
   backdrop-filter: blur(4px);
   z-index: 10;
 }
 
-/* ÖRTÜŞTÜR BUTONU */
+/* OVERLAY BUTTON */
 .overlayBtn {
   width: 100%;
   padding: 0.875rem;
   background-color: #3b82f6;
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
+  color: var(--text-white);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-bold);
   border: none;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
@@ -454,14 +465,20 @@
   transform: translateY(-1px);
 }
 
-/* BEFORE/AFTER SLIDER (MODAL İÇİ KUSURSUZ HİZALAMA VE SAYDAMLIK) */
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* SLIDER */
 .sliderContainer {
   position: relative;
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
   height: 500px;
   background: #000;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
   margin: 0 auto;
@@ -512,7 +529,7 @@
   width: 100%;
   height: 100%;
   z-index: 4;
-  opacity: 0; 
+  opacity: 0;
   cursor: ew-resize;
 }
 
@@ -527,20 +544,22 @@
   pointer-events: none;
 }
 
-.labelOrijinal, .labelMaske {
-  background: rgba(0,0,0,0.6);
-  color: white;
+.labelOrijinal,
+.labelMaske {
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-white);
   padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
   backdrop-filter: blur(4px);
 }
+
 .labelMaske {
   background: rgba(59, 130, 246, 0.8);
 }
 
-/* Metrikler Grid'i */
+/* METRICS */
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -549,40 +568,172 @@
 }
 
 .metricCard {
-  background: #f8fafc;
+  background: var(--input-bg);
   padding: 1rem;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   border: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
 }
 
 .metricLabel {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
   margin-bottom: 0.25rem;
 }
 
-.metricValueRed { font-size: 1.5rem; font-weight: 900; color: #ef4444; }
-.metricValueGreen { font-size: 1.5rem; font-weight: 900; color: #10b981; }
-.metricValueBlue { font-size: 1.5rem; font-weight: 900; color: #0f172a; }
+.metricValueRed {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ef4444;
+}
+
+.metricValueGreen {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #10b981;
+}
+
+.metricValueBlue {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+}
 
 .approveBtn {
   width: 100%;
   padding: 1rem;
   background-color: #10b981;
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
+  color: var(--text-white);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-bold);
   border: none;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
 }
 
 .approveBtn:hover {
   background-color: #059669;
   transform: translateY(-1px);
+}
+
+/* OVERLAY MODAL */
+.overlayModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+.overlayModalCard {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.overlayModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  background: var(--surface-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.overlayModalHeader h2 {
+  margin: 0;
+  color: var(--text-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+}
+
+.overlayModalClose {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+.overlayModalClose:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.overlayModalClose svg {
+  width: 26px;
+  height: 26px;
+}
+
+.overlayModalStage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: #000;
+}
+
+.overlayModalFooter {
+  padding: 16px 20px;
+  background: var(--surface-secondary);
+  border-top: 1px solid var(--border-light);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.overlayModalFooter p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+}
+
+.overlayModalFooter span {
+  display: block;
+  margin-top: 5px;
+  font-size: var(--font-size-sm);
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .overlayModal {
+    padding: 10px;
+  }
+
+  .overlayModalStage {
+    padding: 16px;
+  }
+
+  .overlayModalHeader {
+    padding: 15px 16px;
+  }
+
+  .overlayModalHeader h2 {
+    font-size: var(--font-size-lg);
+  }
+
+  .overlayModalFooter {
+    padding: 14px 16px;
+  }
 }

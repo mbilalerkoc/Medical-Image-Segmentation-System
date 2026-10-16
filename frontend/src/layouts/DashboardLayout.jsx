@@ -1,16 +1,16 @@
-import React from 'react';
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import React from "react";
+import Sidebar from "./components/sidebar/Sidebar";
+import Navbar from "./components/navbar/Navbar";
+import styles from "./DashboardLayout.module.css";
 
 const DashboardLayout = ({ children, title }) => {
   return (
-    <div className="flex h-screen bg-slate-50 font-sans">
+    <div className={styles.layout}>
       <Sidebar />
-      <main className="flex-1 flex flex-col overflow-y-auto">
+
+      <main className={styles.main}>
         <Navbar title={title} />
-        <div className="p-8">
-          {children}
-        </div>
+        <div className={styles.content}>{children}</div>
       </main>
     </div>
   );

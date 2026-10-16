@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createReport } from "../../../services/analysisService";
+import useToast from "../../../hooks/useToast";
+import styles from "./ReportModal.module.css";
 
 const ReportModal = ({
   isOpen,
@@ -13,16 +15,13 @@ const ReportModal = ({
   analizId,
   onViewAnalysis,
 }) => {
+  const toast = useToast();
+
   const [doktorNotu, setDoktorNotu] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const reportRef = useRef();
-
-  /*
-    Yeni bir analiz açıldığında önceki raporun
-    "kaydedildi" durumu temizlensin.
-  */
+  // YENİ ANALİZDE RAPORU SIFIRLA
   useEffect(() => {
     setSaved(false);
     setDoktorNotu("");
@@ -34,26 +33,31 @@ const ReportModal = ({
     window.print();
   };
 
+  // RAPORU KAYDET
   const handleSaveAndShare = async () => {
     if (!analizId) {
-      alert(
-        "Hata: Analiz ID bulunamadı. Lütfen önce analiz işlemini tamamlayın.",
-      );
+      toast.error("Analiz ID bulunamadı. Lütfen önce analiz işlemini tamamlayın.");
       return;
     }
 
-    const userStr = localStorage.getItem("user");
-    const userObj = userStr ? JSON.parse(userStr) : null;
-    const doktorId = userObj?.id;
-
-    if (!doktorId) {
-      alert("Doktor bilgisi bulunamadı. Lütfen tekrar giriş yapın.");
-      return;
-    }
-
-    setIsSaving(true);
+    let doktorId = null;
 
     try {
+      const userStr = localStorage.getItem("user");
+      const userObj = userStr ? JSON.parse(userStr) : null;
+      doktorId = userObj?.id;
+    } catch (error) {
+      console.error("Kullanıcı bilgisi okunamadı:", error);
+    }
+
+    if (!doktorId) {
+      toast.error("Doktor bilgisi bulunamadı. Lütfen tekrar giriş yapın.");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
       const payload = {
         tc_kimlik: tcKimlik,
         analiz_id: analizId,
@@ -64,20 +68,18 @@ const ReportModal = ({
 
       const data = await createReport(payload);
 
-      if (data.basarili) {
-        /*
-          Modalı artık kapatmıyoruz.
-          Kullanıcıya başarılı kayıt ekranını gösteriyoruz.
-        */
-        setSaved(true);
-      } else {
-        alert(data.mesaj || "Rapor kaydedilirken bir hata oluştu.");
+      if (!data.basarili) {
+        toast.error(data.mesaj || "Rapor kaydedilirken bir hata oluştu.");
+        return;
       }
-    } catch (err) {
-      console.error("Rapor kayıt hatası:", err);
 
-      alert(
-        err.response?.data?.mesaj || "Rapor kaydı sırasında bir hata oluştu.",
+      setSaved(true);
+      toast.success("Rapor başarıyla kaydedildi.");
+    } catch (error) {
+      console.error("Rapor kayıt hatası:", error);
+      toast.error(
+        error.response?.data?.mesaj ||
+          "Rapor kaydı sırasında bir hata oluştu.",
       );
     } finally {
       setIsSaving(false);
@@ -85,36 +87,33 @@ const ReportModal = ({
   };
 
   const handleViewAnalysis = () => {
-    if (onViewAnalysis) {
-      onViewAnalysis(doktorNotu);
-    }
+    if (onViewAnalysis) onViewAnalysis(doktorNotu);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 print:bg-white print:p-0">
-      <div className="bg-white rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col print:shadow-none print:w-full print:max-w-none print:h-auto">
-        {/* MODAL HEADER */}
-        <div className="flex justify-between items-center p-6 border-b border-slate-200 print:hidden">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-800">
-              PathoVision Tıbbi Analiz Raporu
-            </h2>
+  const organLabel =
+    organ === "beyin" ? "Beyin" : organ === "bobrek" ? "Böbrek" : organ || "-";
 
-            <p className="text-sm text-slate-500 mt-1">
-              Analiz sonuçlarını değerlendirin ve raporu kaydedin.
-            </p>
+  return (
+    <div
+      className={styles.modalOverlay}
+      onMouseDown={() => !isSaving && onClose()}
+    >
+      <div className={styles.modalCard} onMouseDown={(e) => e.stopPropagation()}>
+        {/* HEADER */}
+        <div className={styles.modalHeader}>
+          <div>
+            <h2>PathoVision Tıbbi Analiz Raporu</h2>
+            <p>Analiz sonuçlarını değerlendirin ve raporu kaydedin.</p>
           </div>
 
           <button
+            type="button"
+            className={styles.closeButton}
             onClick={onClose}
-            className="text-slate-400 hover:text-red-500 transition"
+            disabled={isSaving}
+            aria-label="Kapat"
           >
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -125,93 +124,74 @@ const ReportModal = ({
           </button>
         </div>
 
-        {/* RAPOR İÇERİĞİ */}
-        <div ref={reportRef} className="p-8 flex-1 print:p-0">
+        {/* RAPOR */}
+        <div className={styles.reportContent}>
           {/* RAPOR BAŞLIĞI */}
-          <div className="mb-8 border-b-2 border-slate-800 pb-4 flex justify-between items-end">
+          <div className={styles.reportHeader}>
             <div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-                PathoVision
-              </h1>
-
-              <p className="text-sm text-slate-500 font-medium mt-1">
-                Yapay Zeka Destekli Tıbbi Görüntüleme Raporu
-              </p>
+              <h1>PathoVision</h1>
+              <p>Yapay Zeka Destekli Tıbbi Görüntüleme Raporu</p>
             </div>
 
-            <div className="text-right">
-              <p className="text-sm font-bold text-slate-700">
-                Analiz No: <span className="font-normal">#{analizId}</span>
+            <div className={styles.reportMeta}>
+              <p>
+                Analiz No: <span>#{analizId}</span>
               </p>
-
-              <p className="text-sm font-bold text-slate-700">
-                Hasta TC: <span className="font-normal">{tcKimlik}</span>
+              <p>
+                Hasta TC: <span>{tcKimlik}</span>
               </p>
-
-              <p className="text-sm font-bold text-slate-700">
-                Tarih:{" "}
-                <span className="font-normal">
-                  {new Date().toLocaleDateString("tr-TR")}
-                </span>
+              <p>
+                Tarih: <span>{new Date().toLocaleDateString("tr-TR")}</span>
               </p>
-
-              <p className="text-sm font-bold text-slate-700">
-                İncelenen Organ:{" "}
-                <span className="font-normal uppercase">{organ}</span>
+              <p>
+                İncelenen Organ: <span>{organLabel}</span>
               </p>
             </div>
           </div>
 
           {/* GÖRÜNTÜLER */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold text-slate-800 border-b pb-2 mb-5">
-              Görüntüleme Sonuçları
-            </h3>
+          <div className={styles.reportSection}>
+            <h3>Görüntüleme Sonuçları</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* ORİJİNAL */}
-              <div>
-                <p className="text-xs font-semibold text-slate-500 mb-2">
-                  Orijinal Tarama
-                </p>
+            <div className={styles.imageGrid}>
+              <div className={styles.imageItem}>
+                <p>Orijinal Tarama</p>
 
-                <img
-                  src={preview}
-                  alt="Orijinal MR"
-                  className="w-full h-52 object-contain bg-black rounded-lg border border-slate-200"
-                />
+                {preview ? (
+                  <img src={preview} alt="Orijinal MR" className={styles.originalImage} />
+                ) : (
+                  <div className={styles.imageEmpty}>Görüntü bulunamadı</div>
+                )}
               </div>
 
-              {/* MASKE */}
-              <div>
-                <p className="text-xs font-semibold text-blue-600 mb-2">
-                  AI Segmentasyon
-                </p>
+              <div className={styles.imageItem}>
+                <p className={styles.maskLabel}>AI Segmentasyon</p>
 
-                <img
-                  src={
-                    processedMask ||
-                    `data:image/png;base64,${result?.maske_base64}`
-                  }
-                  alt="AI Segmentasyon Maskesi"
-                  className="w-full h-52 object-contain bg-black rounded-lg border-2 border-blue-500"
-                />
+                {processedMask || result?.maske_base64 ? (
+                  <img
+                    src={
+                      processedMask ||
+                      `data:image/png;base64,${result?.maske_base64}`
+                    }
+                    alt="AI Segmentasyon Maskesi"
+                    className={styles.maskImage}
+                  />
+                ) : (
+                  <div className={styles.imageEmpty}>Maske bulunamadı</div>
+                )}
               </div>
 
-              {/* OVERLAY */}
-              <div>
-                <p className="text-xs font-semibold text-emerald-600 mb-2">
-                  MR + AI Örtüşmesi
-                </p>
+              <div className={styles.imageItem}>
+                <p className={styles.overlayLabel}>MR + AI Örtüşmesi</p>
 
                 {overlayImage ? (
                   <img
                     src={overlayImage}
                     alt="MR ve AI Segmentasyon Örtüşmesi"
-                    className="w-full h-52 object-contain bg-black rounded-lg border-2 border-emerald-500"
+                    className={styles.overlayImage}
                   />
                 ) : (
-                  <div className="w-full h-52 flex items-center justify-center bg-slate-100 rounded-lg border border-slate-200 text-sm text-slate-400">
+                  <div className={styles.imageEmpty}>
                     Örtüşme görüntüsü hazırlanıyor...
                   </div>
                 )}
@@ -220,157 +200,79 @@ const ReportModal = ({
           </div>
 
           {/* SAYISAL BULGULAR */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold text-slate-800 border-b pb-2 mb-5">
-              Sayısal Bulgular
-            </h3>
+          <div className={styles.reportSection}>
+            <h3>Sayısal Bulgular</h3>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* TÜMÖR */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium">
-                  Patoloji / Tümör
-                </p>
-
-                <p className="text-2xl font-black text-red-600 mt-1">
-                  %{result?.metrikler?.patoloji_yuzdesi || 0}
-                </p>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCard}>
+                <span>Patoloji / Tümör</span>
+                <strong className={styles.metricDanger}>
+                  %{result?.metrikler?.patoloji_yuzdesi ?? 0}
+                </strong>
               </div>
 
-              {/* GÜVEN */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium">
-                  AI Güven Skoru
-                </p>
-
-                <p className="text-2xl font-black text-emerald-600 mt-1">
-                  %{result?.metrikler?.guven_skoru || 0}
-                </p>
+              <div className={styles.metricCard}>
+                <span>AI Güven Skoru</span>
+                <strong className={styles.metricSuccess}>
+                  %{result?.metrikler?.guven_skoru ?? 0}
+                </strong>
               </div>
 
-              {/* ALAN */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium">
-                  Fiziksel Alan
-                </p>
-
-                <p className="text-xl font-bold text-slate-800 mt-1">
-                  {result?.metrikler?.alan_mm2 || 0} mm²
-                </p>
+              <div className={styles.metricCard}>
+                <span>Fiziksel Alan</span>
+                <strong>{result?.metrikler?.alan_mm2 ?? 0} mm²</strong>
               </div>
 
-              {/* ÇEVRE */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p className="text-xs text-slate-500 font-medium">
-                  Çevre Uzunluğu
-                </p>
-
-                <p className="text-xl font-bold text-slate-800 mt-1">
-                  {result?.metrikler?.cevre_mm || 0} mm
-                </p>
+              <div className={styles.metricCard}>
+                <span>Çevre Uzunluğu</span>
+                <strong>{result?.metrikler?.cevre_mm ?? 0} mm</strong>
               </div>
             </div>
           </div>
 
           {/* DOKTOR NOTU */}
-          <div className="mt-6">
-            <h3 className="text-lg font-bold text-slate-800 border-b pb-2 mb-4">
-              Doktor Değerlendirmesi ve Teşhis
-            </h3>
+          <div className={styles.reportSection}>
+            <h3>Doktor Değerlendirmesi ve Teşhis</h3>
 
             <textarea
               value={doktorNotu}
               onChange={(e) => setDoktorNotu(e.target.value)}
               disabled={saved}
               placeholder="Tıbbi değerlendirmenizi ve notlarınızı buraya giriniz..."
-              className={`w-full h-32 p-4 bg-slate-50 border border-slate-300 rounded-xl outline-none resize-none print:hidden
-                ${
-                  saved
-                    ? "opacity-70 cursor-not-allowed"
-                    : "focus:ring-2 focus:ring-blue-500"
-                }
-              `}
+              className={styles.doctorNote}
             />
 
-            <p className="hidden print:block text-slate-800 whitespace-pre-wrap">
+            <p className={styles.printDoctorNote}>
               {doktorNotu || "Doktor tarafından henüz not girilmemiştir."}
             </p>
           </div>
-
-          {/* BAŞARILI KAYIT */}
-          {saved && (
-            <div className="mt-8 print:hidden">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 shrink-0 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-emerald-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2.5"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-
-                  <div>
-                    <h4 className="text-emerald-900 font-bold text-lg">
-                      Rapor başarıyla kaydedildi
-                    </h4>
-
-                    <p className="text-sm text-emerald-700 mt-1">
-                      Analiz ve rapor bilgileri sisteme başarıyla kaydedildi.
-                      Analizin detaylarını görüntüleyebilirsiniz.
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleViewAnalysis}
-                  className="shrink-0 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition shadow-md"
-                >
-                  Analizi Görüntüle →
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* ALT BUTONLAR */}
-        <div className="p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-end gap-3 rounded-b-2xl print:hidden">
-          <button
-            onClick={handlePrintPDF}
-            className="flex items-center justify-center gap-2 px-6 py-2.5 bg-white border border-slate-300 text-slate-700 font-bold rounded-xl hover:bg-slate-100 transition shadow-sm"
-          >
+        {/* FOOTER */}
+        <div className={styles.modalFooter}>
+          <button type="button" onClick={handlePrintPDF} className={styles.printButton}>
             PDF Olarak İndir / Yazdır
           </button>
 
           {!saved ? (
             <button
+              type="button"
               onClick={handleSaveAndShare}
               disabled={isSaving}
-              className={`flex items-center justify-center gap-2 px-6 py-2.5 text-white font-bold rounded-xl transition shadow-md ${
-                isSaving
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 shadow-blue-600/20"
-              }`}
+              className={styles.saveButton}
             >
               {isSaving ? "Kaydediliyor..." : "Veritabanına Kaydet"}
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition"
-            >
-              Kapat
-            </button>
+            <>
+              <button type="button" onClick={handleViewAnalysis} className={styles.viewButton}>
+                Analizi Görüntüle →
+              </button>
+
+              <button type="button" onClick={onClose} className={styles.closeFooterButton}>
+                Kapat
+              </button>
+            </>
           )}
         </div>
       </div>

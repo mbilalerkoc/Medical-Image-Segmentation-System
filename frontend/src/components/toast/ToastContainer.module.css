@@ -1,0 +1,143 @@
+/* CONTAINER */
+.container {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  z-index: 10000;
+  width: min(440px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* TOAST */
+.toast {
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+  animation: toastIn 0.22s ease;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-extrabold);
+}
+
+.content {
+  min-width: 0;
+  flex: 1;
+}
+
+.content span {
+  display: block;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-bold);
+  line-height: 1.45;
+}
+
+.closeButton {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: currentColor;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+
+/* TYPES */
+.success {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.success .icon {
+  background: var(--success);
+  color: var(--text-white);
+}
+
+.error {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+.error .icon {
+  background: var(--danger);
+  color: var(--text-white);
+}
+
+.warning {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning);
+}
+
+.warning .icon {
+  background: var(--warning);
+  color: var(--text-white);
+}
+
+.info {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info);
+}
+
+.info .icon {
+  background: var(--info);
+  color: var(--text-white);
+}
+
+/* ANIMATION */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .container {
+    top: 12px;
+    width: calc(100% - 24px);
+  }
+
+  .toast {
+    min-height: 52px;
+    padding: 10px 12px;
+  }
+}

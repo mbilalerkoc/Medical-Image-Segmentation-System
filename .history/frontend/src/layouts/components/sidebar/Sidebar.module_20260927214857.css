@@ -1,0 +1,288 @@
+/* SIDEBAR */
+.sidebar {
+  width: 256px;
+  min-width: 256px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar-bg);
+  color: var(--text-white);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: var(--shadow-lg);
+}
+
+/* LOGO */
+.logoSection {
+  padding: 22px 18px;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoImage {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoText {
+  min-width: 0;
+}
+
+.logoText h1 {
+  margin: 0;
+  color: var(--text-white);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-extrabold);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.logoText p {
+  margin: 4px 0 0;
+  color: var(--sidebar-accent);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+}
+
+/* NAVIGATION */
+.navigation {
+  flex: 1;
+  padding: 24px 12px;
+}
+
+.menuTitle {
+  margin: 0 0 12px;
+  padding: 0 12px;
+  color: var(--sidebar-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.menuList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* MENU BUTTON */
+.menuButton {
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--sidebar-text-secondary);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-semibold);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.menuButton:hover {
+  background: var(--sidebar-hover);
+  color: var(--text-white);
+}
+
+.menuButtonActive {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-accent-text);
+}
+
+.menuButtonActive:hover {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-accent-text);
+}
+
+.menuText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ACTIVE LINE */
+.activeLine {
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 4px;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  background: var(--sidebar-accent);
+}
+
+/* ICON */
+.menuIcon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--sidebar-surface);
+  color: var(--sidebar-text-muted);
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.menuButton:hover .menuIcon {
+  color: var(--text-white);
+}
+
+.menuIconActive {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-accent);
+}
+
+/* ACTIVE DOT */
+.activeDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--sidebar-accent);
+  box-shadow: 0 0 9px var(--sidebar-accent-glow);
+}
+
+/* BOTTOM */
+.bottomSection {
+  padding: 0 12px 15px;
+}
+
+/* DOCTOR CARD */
+.doctorCard {
+  margin-bottom: 9px;
+  padding: 11px;
+  border: 1px solid var(--sidebar-border);
+  border-radius: var(--radius-lg);
+  background: var(--sidebar-surface);
+}
+
+.doctorContent {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sidebar-accent), var(--info));
+  color: var(--text-white);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-extrabold);
+}
+
+.doctorInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.doctorName {
+  margin: 0;
+  overflow: hidden;
+  color: var(--sidebar-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-bold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.doctorEmail {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: var(--sidebar-text-secondary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* LOGOUT */
+.logoutButton {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--sidebar-text-secondary);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.logoutButton:hover {
+  background: var(--sidebar-danger-bg);
+  color: var(--sidebar-danger);
+}
+
+/* VERSION */
+.version {
+  padding-top: 12px;
+  color: var(--sidebar-text-muted);
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 230px;
+    min-width: 230px;
+  }
+
+  .logoSection {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .menuButton {
+    font-size: var(--font-size-md);
+  }
+}

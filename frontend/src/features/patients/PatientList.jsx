@@ -1,67 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import DashboardLayout from "../../layouts/DashboardLayout";
 import { getPatients } from "../../services/patientService";
 import PatientModal from "./components/PatientModal";
+import useToast from "../../hooks/useToast";
 import styles from "./PatientList.module.css";
 
 const PatientList = () => {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [patients, setPatients] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
-
-  const fetchPatients = async () => {
+  // HASTALARI GETİR
+  const fetchPatients = useCallback(async () => {
     try {
       setLoading(true);
 
       const data = await getPatients();
 
-      if (data.basarili) {
-        setPatients(data.hastalar);
+      if (!data.basarili) {
+        toast.error(data.mesaj || "Hastalar alınamadı.");
+        return;
       }
+
+      setPatients(data.hastalar || []);
     } catch (error) {
-      console.error(
-        "Hastalar yüklenirken hata:",
-        error
+      console.error("Hastalar yüklenirken hata:", error);
+      toast.error(
+        error.response?.data?.mesaj ||
+          "Hastalar yüklenirken bir hata oluştu.",
       );
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const handleAddSuccess = () => {
-    setShowModal(false);
+  useEffect(() => {
     fetchPatients();
+  }, [fetchPatients]);
+
+  // HASTA EKLEME BAŞARILI
+  const handleAddSuccess = async () => {
+    setShowModal(false);
+    toast.success("Hasta başarıyla eklendi.");
+    await fetchPatients();
   };
 
+  // HASTA DETAY
   const handlePatientDetail = (hasta) => {
     navigate(`/patients/${hasta.id}`, {
-      state: {
-        patient: hasta,
-      },
+      state: { patient: hasta },
     });
   };
 
   return (
     <DashboardLayout title="Hastalarım">
       <div className={styles.card}>
-
         {/* HEADER */}
         <div className={styles.header}>
           <div>
-            <h2 className={styles.title}>
-              Kayıtlı Hastalar
-            </h2>
+            <h2 className={styles.title}>Kayıtlı Hastalar</h2>
           </div>
 
           <button
+            type="button"
             onClick={() => setShowModal(true)}
             className={styles.addBtn}
           >
@@ -72,96 +77,43 @@ const PatientList = () => {
         {/* TABLO */}
         <div className={styles.tableContainer}>
           <table className={styles.table}>
-
             <thead>
               <tr>
-                <th className={styles.th}>
-                  TC Kimlik
-                </th>
-
-                <th className={styles.th}>
-                  Ad Soyad
-                </th>
-
-                <th className={styles.th}>
-                  E-posta
-                </th>
-
-                <th className={styles.th}>
-                  Telefon
-                </th>
-
-                <th
-                  className={`${styles.th} text-center`}
-                >
-                  Durum
-                </th>
-
-                <th
-                  className={`${styles.th} text-right`}
-                >
-                  İşlem
-                </th>
+                <th className={styles.th}>TC Kimlik</th>
+                <th className={styles.th}>Ad Soyad</th>
+                <th className={styles.th}>E-posta</th>
+                <th className={styles.th}>Telefon</th>
+                <th className={`${styles.th} ${styles.textCenter}`}>Durum</th>
+                <th className={`${styles.th} ${styles.textRight}`}>İşlem</th>
               </tr>
             </thead>
 
             <tbody>
-
-              {/* YÜKLENİYOR */}
               {loading ? (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="p-8 text-center text-slate-400"
-                  >
+                  <td colSpan="6" className={styles.tableMessage}>
                     Hastalar yükleniyor...
                   </td>
                 </tr>
               ) : patients.length === 0 ? (
-
-                /* HASTA YOK */
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="p-8 text-center text-slate-400"
-                  >
+                  <td colSpan="6" className={styles.tableMessage}>
                     Henüz kayıtlı hasta bulunmuyor.
                   </td>
                 </tr>
-
               ) : (
-
-                /* HASTALAR */
                 patients.map((hasta) => (
-                  <tr
-                    key={hasta.id}
-                    className={styles.tr}
-                  >
+                  <tr key={hasta.id} className={styles.tr}>
+                    <td className={styles.td}>{hasta.tc_kimlik}</td>
 
-                    <td className={styles.td}>
-                      {hasta.tc_kimlik}
-                    </td>
-
-                    <td
-                      className={styles.td}
-                      style={{
-                        fontWeight: "600",
-                      }}
-                    >
+                    <td className={`${styles.td} ${styles.patientName}`}>
                       {hasta.ad} {hasta.soyad}
                     </td>
 
-                    <td className={styles.td}>
-                      {hasta.email || "-"}
-                    </td>
+                    <td className={styles.td}>{hasta.email || "-"}</td>
+                    <td className={styles.td}>{hasta.telefon || "-"}</td>
 
-                    <td className={styles.td}>
-                      {hasta.telefon || "-"}
-                    </td>
-
-                    <td
-                      className={`${styles.td} text-center`}
-                    >
+                    <td className={`${styles.td} ${styles.textCenter}`}>
                       <span
                         className={
                           hasta.User?.aktif
@@ -169,31 +121,23 @@ const PatientList = () => {
                             : styles.badgePending
                         }
                       >
-                        {hasta.User?.aktif
-                          ? "Aktif"
-                          : "Şifre Bekliyor"}
+                        {hasta.User?.aktif ? "Aktif" : "Şifre Bekliyor"}
                       </span>
                     </td>
 
-                    <td
-                      className={`${styles.td} text-right`}
-                    >
+                    <td className={`${styles.td} ${styles.textRight}`}>
                       <button
+                        type="button"
                         className={styles.detailBtn}
-                        onClick={() =>
-                          handlePatientDetail(hasta)
-                        }
+                        onClick={() => handlePatientDetail(hasta)}
                       >
                         Detay
                       </button>
                     </td>
-
                   </tr>
                 ))
               )}
-
             </tbody>
-
           </table>
         </div>
       </div>
@@ -203,7 +147,6 @@ const PatientList = () => {
         onClose={() => setShowModal(false)}
         onSuccess={handleAddSuccess}
       />
-
     </DashboardLayout>
   );
 };

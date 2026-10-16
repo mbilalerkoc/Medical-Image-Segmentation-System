@@ -39,11 +39,11 @@
 .primaryButton,
 .secondaryButton {
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 11px 18px;
   cursor: pointer;
   font-weight: 700;
-  transition: 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 .primaryButton {
@@ -68,7 +68,7 @@
 .sectionCard {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: var(--radius-2xl);
   padding: 24px;
   margin-bottom: 24px;
 }
@@ -136,7 +136,7 @@
 .badgeActive,
 .badgePending {
   padding: 7px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 700;
 }
@@ -155,7 +155,7 @@
   background: #eff6ff;
   color: #2563eb;
   padding: 7px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 700;
 }
@@ -194,7 +194,7 @@
   background: #eff6ff;
   color: #2563eb;
   padding: 8px 13px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 700;
 }
@@ -208,7 +208,7 @@
 .statusWaiting {
   display: inline-block;
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   font-size: 11px;
   font-weight: 700;
 }
@@ -246,7 +246,7 @@
 .emptyCard {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: var(--radius-2xl);
   padding: 70px 30px;
   text-align: center;
 }
@@ -305,7 +305,7 @@
   color: #0f172a;
   font-size: 14px;
   outline: none;
-  transition: 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 .searchInput::placeholder {
@@ -348,7 +348,7 @@
   overflow-x: auto;
 
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 
 /* Tablo başlığı kaydırırken sabit kalsın */
@@ -370,12 +370,12 @@
 
 .analysisScrollArea::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .analysisScrollArea::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .analysisScrollArea::-webkit-scrollbar-thumb:hover {

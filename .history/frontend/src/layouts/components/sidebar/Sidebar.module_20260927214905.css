@@ -1,0 +1,471 @@
+/* ========================================= */
+/* SIDEBAR */
+/* ========================================= */
+
+.sidebar {
+  width: 256px;
+  min-width: 256px;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #020817;
+  color: #ffffff;
+
+  border-right: 1px solid #1e293b;
+
+  box-shadow:
+    4px 0 18px
+    rgba(15, 23, 42, 0.08);
+}
+
+/* ========================================= */
+/* LOGO */
+/* ========================================= */
+
+.logoSection {
+  padding: 22px 18px;
+
+  border-bottom:
+    1px solid #1e293b;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.logoImage {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImage img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.logoText {
+  min-width: 0;
+}
+
+.logoText h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.02em;
+}
+
+.logoText p {
+  margin: 4px 0 0;
+
+  color: #22d3ee;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.15em;
+
+  white-space: nowrap;
+}
+
+/* ========================================= */
+/* NAVIGATION */
+/* ========================================= */
+
+.navigation {
+  flex: 1;
+
+  padding: 24px 12px;
+}
+
+.menuTitle {
+  margin: 0 0 12px;
+
+  padding: 0 12px;
+
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.15em;
+}
+
+.menuList {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+/* ========================================= */
+/* MENU BUTTON */
+/* ========================================= */
+
+.menuButton {
+  position: relative;
+
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 7px 12px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: #94a3b8;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.menuButton:hover {
+  background: rgba(
+    30,
+    41,
+    59,
+    0.75
+  );
+
+  color: #ffffff;
+}
+
+.menuButtonActive {
+  background: rgba(
+    6,
+    182,
+    212,
+    0.1
+  );
+
+  color: #67e8f9;
+}
+
+.menuButtonActive:hover {
+  background: rgba(
+    6,
+    182,
+    212,
+    0.14
+  );
+
+  color: #67e8f9;
+}
+
+.menuText {
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+/* ========================================= */
+/* ACTIVE LINE */
+/* ========================================= */
+
+.activeLine {
+  position: absolute;
+
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+
+  width: 4px;
+
+  border-radius:
+    0 999px 999px 0;
+
+  background: #22d3ee;
+}
+
+/* ========================================= */
+/* ICON */
+/* ========================================= */
+
+.menuIcon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #0f172a;
+
+  color: #64748b;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.menuButton:hover
+  .menuIcon {
+  color: #ffffff;
+}
+
+.menuIconActive {
+  background: rgba(
+    34,
+    211,
+    238,
+    0.1
+  );
+
+  color: #22d3ee;
+}
+
+/* ========================================= */
+/* ACTIVE DOT */
+/* ========================================= */
+
+.activeDot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  margin-left: auto;
+
+  border-radius: 50%;
+
+  background: #22d3ee;
+
+  box-shadow:
+    0 0 9px
+    rgba(34, 211, 238, 0.85);
+}
+
+/* ========================================= */
+/* BOTTOM */
+/* ========================================= */
+
+.bottomSection {
+  padding: 0 12px 15px;
+}
+
+/* ========================================= */
+/* DOCTOR CARD */
+/* ========================================= */
+
+.doctorCard {
+  margin-bottom: 9px;
+
+  padding: 11px;
+
+  border: 1px solid #1e293b;
+
+  border-radius: 12px;
+
+  background: rgba(
+    15,
+    23,
+    42,
+    0.7
+  );
+}
+
+.doctorContent {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #22d3ee,
+      #2563eb
+    );
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.doctorInfo {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.doctorName {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+.doctorEmail {
+  margin: 4px 0 0;
+
+  overflow: hidden;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+/* ========================================= */
+/* LOGOUT */
+/* ========================================= */
+
+.logoutButton {
+  width: 100%;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 9px 12px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #94a3b8;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.logoutButton:hover {
+  background: rgba(
+    239,
+    68,
+    68,
+    0.1
+  );
+
+  color: #f87171;
+}
+
+/* ========================================= */
+/* VERSION */
+/* ========================================= */
+
+.version {
+  padding-top: 12px;
+
+  color: #475569;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: center;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.12em;
+}
+
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
+
+@media (
+  max-width: 900px
+) {
+  .sidebar {
+    width: 230px;
+    min-width: 230px;
+  }
+
+  .logoSection {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .menuButton {
+    font-size: 13px;
+  }
+}

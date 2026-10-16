@@ -1,60 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  useNavigate,
+} from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { getDashboard } from "../../services/dashboardService";
+
+import {
+  getDashboard,
+} from "../../services/dashboardService";
 
 import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const [klinikAdi, setKlinikAdi] = useState("Klinik");
-  const [doktorBilgisi, setDoktorBilgisi] = useState("Doktor");
+  const [data, setData] =
+    useState(null);
 
-  const [stats, setStats] = useState({
-    toplam_hasta: 0,
-    toplam_analiz: 0,
-    tamamlanan_analiz: 0,
-    bekleyen_analiz: 0,
-  });
+  const [loading, setLoading] =
+    useState(true);
 
-  const [recentAnalyses, setRecentAnalyses] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // =====================================================
-  // KULLANICI BİLGİSİ
-  // =====================================================
-
-  useEffect(() => {
-    const userStr = localStorage.getItem("user");
-
-    if (!userStr) return;
-
-    try {
-      const userObj = JSON.parse(userStr);
-
-      if (userObj.klinik_adi) {
-        setKlinikAdi(userObj.klinik_adi);
-      } else if (userObj.klinik_id) {
-        setKlinikAdi(`Klinik ${userObj.klinik_id}`);
-      }
-
-      const unvan = userObj.unvan || "";
-      const ad = userObj.ad || "";
-      const soyad = userObj.soyad || "";
-
-      const doktorAdi = `${unvan} ${ad} ${soyad}`.trim();
-
-      if (doktorAdi) {
-        setDoktorBilgisi(doktorAdi);
-      }
-    } catch (err) {
-      console.error("Kullanıcı bilgisi okunamadı:", err);
-    }
-  }, []);
+  const [error, setError] =
+    useState("");
 
   // =====================================================
   // DASHBOARD VERİLERİNİ GETİR
@@ -64,40 +35,30 @@ const Dashboard = () => {
     const loadDashboard = async () => {
       try {
         setLoading(true);
-        setError(null);
+        setError("");
 
-        const data = await getDashboard();
+        const response =
+          await getDashboard();
 
-        if (!data.basarili) {
+        if (!response.basarili) {
           setError(
-            data.mesaj ||
+            response.mesaj ||
               "Dashboard bilgileri alınamadı."
           );
 
           return;
         }
 
-        setStats(
-          data.istatistikler || {
-            toplam_hasta: 0,
-            toplam_analiz: 0,
-            tamamlanan_analiz: 0,
-            bekleyen_analiz: 0,
-          }
-        );
-
-        setRecentAnalyses(
-          data.son_analizler || []
-        );
-      } catch (err) {
+        setData(response);
+      } catch (error) {
         console.error(
           "Dashboard yükleme hatası:",
-          err
+          error
         );
 
         setError(
-          err.response?.data?.mesaj ||
-            "Dashboard bilgileri yüklenirken bir hata oluştu."
+          error.response?.data?.mesaj ||
+            "Dashboard yüklenirken bir hata oluştu."
         );
       } finally {
         setLoading(false);
@@ -108,399 +69,572 @@ const Dashboard = () => {
   }, []);
 
   // =====================================================
-  // LABEL FONKSİYONLARI
+  // TARİH
   // =====================================================
 
-  const getOrganLabel = (organ) => {
-    if (organ === "beyin") return "Beyin";
+  const formatDate = (value) => {
+    if (!value) return "-";
 
-    if (organ === "bobrek") return "Böbrek";
-
-    return organ || "-";
+    return new Date(
+      value
+    ).toLocaleDateString(
+      "tr-TR",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
   };
 
-  const getModelLabel = (model) => {
-    if (model === "unet") return "U-Net";
+  const formatTime = (value) => {
+    if (!value) return "-";
 
-    if (model === "unet_plus") return "U-Net++";
-
-    return model || "-";
-  };
-
-  const getStatusLabel = (status) => {
-    if (status === "tamamlandi") {
-      return "Tamamlandı";
-    }
-
-    if (status === "onaylandi") {
-      return "Onaylandı";
-    }
-
-    if (status === "bekliyor") {
-      return "Bekliyor";
-    }
-
-    return status || "-";
+    return new Date(
+      value
+    ).toLocaleTimeString(
+      "tr-TR",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
   };
 
   // =====================================================
-  // UI
+  // DURUM
   // =====================================================
+
+  const getStatusLabel = (
+    status
+  ) => {
+    switch (status) {
+      case "bekliyor":
+        return "Bekliyor";
+
+      case "onaylandi":
+        return "Onaylandı";
+
+      case "tamamlandi":
+        return "Tamamlandı";
+
+      case "iptal_edildi":
+        return "İptal Edildi";
+
+      case "gelmedi":
+        return "Gelmedi";
+
+      default:
+        return status || "-";
+    }
+  };
+
+  const getStatusClass = (
+    status
+  ) => {
+    switch (status) {
+      case "onaylandi":
+        return styles.statusApproved;
+
+      case "tamamlandi":
+        return styles.statusCompleted;
+
+      case "iptal_edildi":
+        return styles.statusCancelled;
+
+      case "gelmedi":
+        return styles.statusNoShow;
+
+      default:
+        return styles.statusPending;
+    }
+  };
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+    return (
+      <DashboardLayout title="Dashboard">
+        <div
+          className={
+            styles.loadingArea
+          }
+        >
+          <div
+            className={
+              styles.spinner
+            }
+          />
+
+          <p>
+            Dashboard yükleniyor...
+          </p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // =====================================================
+  // ERROR
+  // =====================================================
+
+  if (error) {
+    return (
+      <DashboardLayout title="Dashboard">
+        <div
+          className={
+            styles.errorMessage
+          }
+        >
+          {error}
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const statistics =
+    data?.istatistikler || {};
+
+  const analyses =
+    data?.son_analizler || [];
+
+  const appointments =
+    data?.bugunku_randevular ||
+    [];
 
   return (
-    <DashboardLayout
-      title={`${doktorBilgisi} | ${klinikAdi}`}
-    >
-      <div className={styles.dashboardWrapper}>
+    <DashboardLayout title="Dashboard">
+      <div
+        className={
+          styles.dashboardContainer
+        }
+      >
 
-        {/* ARKA PLAN */}
+        {/* ========================= */}
+        {/* HEADER */}
+        {/* ========================= */}
 
-        <div className={styles.backgroundDecor}>
-          <div className={styles.gridPattern}></div>
-          <div className={styles.glowCyan}></div>
-          <div className={styles.glowBlue}></div>
-        </div>
-
-        {/* KARŞILAMA */}
-
-        <div className={styles.welcomeArea}>
+        <div
+          className={
+            styles.pageHeader
+          }
+        >
           <div>
-            <p className={styles.welcomeLabel}>
-              PathoVision
-            </p>
+            <span
+              className={
+                styles.pageLabel
+              }
+            >
+              Genel Bakış
+            </span>
 
-            <h1 className={styles.welcomeTitle}>
-              Hoş geldiniz, {doktorBilgisi}
+            <h1>
+              Dashboard
             </h1>
 
-            <p className={styles.welcomeDescription}>
-              Hasta ve yapay zeka analizlerinize ait
-              güncel durumu buradan takip edebilirsiniz.
+            <p>
+              Hasta, analiz ve
+              randevu süreçlerinizi
+              tek ekrandan takip edin.
             </p>
           </div>
 
-          <div className={styles.quickActions}>
+          <button
+            type="button"
+            className={
+              styles.newAnalysisButton
+            }
+            onClick={() =>
+              navigate("/analyze")
+            }
+          >
+            + Yeni Analiz
+          </button>
+        </div>
+
+        {/* ========================= */}
+        {/* İSTATİSTİKLER */}
+        {/* ========================= */}
+
+        <div
+          className={
+            styles.statsGrid
+          }
+        >
+          <StatCard
+            title="Toplam Hasta"
+            value={
+              statistics.toplam_hasta ||
+              0
+            }
+            description="Kayıtlı hastalarınız"
+            icon="👥"
+          />
+
+          <StatCard
+            title="Toplam Analiz"
+            value={
+              statistics.toplam_analiz ||
+              0
+            }
+            description="Gerçekleştirilen analiz"
+            icon="🧠"
+          />
+
+          <StatCard
+            title="Tamamlanan"
+            value={
+              statistics.tamamlanan_analiz ||
+              0
+            }
+            description="Tamamlanan analizler"
+            icon="✓"
+          />
+
+          <StatCard
+            title="Bekleyen"
+            value={
+              statistics.bekleyen_analiz ||
+              0
+            }
+            description="Bekleyen analizler"
+            icon="⌛"
+          />
+
+          <StatCard
+            title="Bugünkü Randevu"
+            value={
+              statistics.bugunku_randevu ||
+              0
+            }
+            description="Bugünün randevuları"
+            icon="📅"
+            onClick={() =>
+              navigate(
+                "/appointments"
+              )
+            }
+          />
+
+          <StatCard
+            title="Yaklaşan Randevu"
+            value={
+              statistics.yaklasan_randevu ||
+              0
+            }
+            description="Planlanan randevular"
+            icon="🕒"
+            onClick={() =>
+              navigate(
+                "/appointments"
+              )
+            }
+          />
+        </div>
+
+        {/* ========================= */}
+        {/* BUGÜNKÜ RANDEVULAR */}
+        {/* ========================= */}
+
+        <div
+          className={
+            styles.sectionCard
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div>
+              <span
+                className={
+                  styles.sectionLabel
+                }
+              >
+                Randevular
+              </span>
+
+              <h2>
+                Bugünkü Randevular
+              </h2>
+
+              <p>
+                Bugün planlanan hasta
+                görüşmeleri
+              </p>
+            </div>
+
             <button
-              className={styles.secondaryAction}
+              type="button"
+              className={
+                styles.viewAllButton
+              }
               onClick={() =>
-                navigate("/patients")
+                navigate(
+                  "/appointments"
+                )
+              }
+            >
+              Tüm Randevular
+              <span>→</span>
+            </button>
+          </div>
+
+          {appointments.length ===
+          0 ? (
+            <div
+              className={
+                styles.emptyState
+              }
+            >
+              <div>
+                📅
+              </div>
+
+              <h3>
+                Bugün randevu yok
+              </h3>
+
+              <p>
+                Bugün için planlanmış
+                aktif bir randevu
+                bulunmuyor.
+              </p>
+
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(
+                    "/appointments"
+                  )
+                }
+              >
+                Randevulara Git
+              </button>
+            </div>
+          ) : (
+            <div
+              className={
+                styles.appointmentList
+              }
+            >
+              {appointments.map(
+                (appointment) => (
+                  <div
+                    key={
+                      appointment.id
+                    }
+                    className={
+                      styles.appointmentItem
+                    }
+                  >
+                    {/* SAAT */}
+
+                    <div
+                      className={
+                        styles.appointmentTime
+                      }
+                    >
+                      <strong>
+                        {formatTime(
+                          appointment.tarih_saat
+                        )}
+                      </strong>
+
+                      <span>
+                        {
+                          appointment.sure_dakika
+                        }{" "}
+                        dk
+                      </span>
+                    </div>
+
+                    {/* HASTA */}
+
+                    <div
+                      className={
+                        styles.appointmentPatient
+                      }
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/patients/${appointment.hasta_id}`
+                          )
+                        }
+                      >
+                        {
+                          appointment.hasta_adi
+                        }
+                      </button>
+
+                      <span>
+                        TC:{" "}
+                        {
+                          appointment.tc_kimlik
+                        }
+                      </span>
+                    </div>
+
+                    {/* NEDEN */}
+
+                    <div
+                      className={
+                        styles.appointmentReason
+                      }
+                    >
+                      <strong>
+                        {appointment.randevu_nedeni ||
+                          "Genel Muayene"}
+                      </strong>
+
+                      <span>
+                        {formatDate(
+                          appointment.tarih_saat
+                        )}
+                      </span>
+                    </div>
+
+                    {/* DURUM */}
+
+                    <span
+                      className={`${styles.statusBadge} ${getStatusClass(
+                        appointment.durum
+                      )}`}
+                    >
+                      {getStatusLabel(
+                        appointment.durum
+                      )}
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* ========================= */}
+        {/* SON ANALİZLER */}
+        {/* ========================= */}
+
+        <div
+          className={
+            styles.sectionCard
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div>
+              <span
+                className={
+                  styles.sectionLabel
+                }
+              >
+                Analizler
+              </span>
+
+              <h2>
+                Son Analizler
+              </h2>
+
+              <p>
+                En son gerçekleştirilen
+                analizler
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className={
+                styles.viewAllButton
+              }
+              onClick={() =>
+                navigate(
+                  "/patients"
+                )
               }
             >
               Hastaları Gör
+              <span>→</span>
             </button>
+          </div>
 
-            <button
-              className={styles.primaryAction}
-              onClick={() =>
-                navigate("/analyze")
+          {analyses.length === 0 ? (
+            <div
+              className={
+                styles.emptyState
               }
             >
-              + Yeni Analiz
-            </button>
-          </div>
-        </div>
+              <div>
+                🧠
+              </div>
 
-        {/* HATA */}
+              <h3>
+                Henüz analiz yok
+              </h3>
 
-        {error && (
-          <div className={styles.errorBox}>
-            {error}
-          </div>
-        )}
-
-        {/* İSTATİSTİKLER */}
-
-        <div className={styles.statsGrid}>
-
-          {/* TOPLAM HASTA */}
-
-          <div
-            className={`${styles.statCard} ${styles.cardBlue}`}
-          >
+              <p>
+                Gerçekleştirilen
+                analizler burada
+                görüntülenecek.
+              </p>
+            </div>
+          ) : (
             <div
-              className={`${styles.cardGlow} ${styles.bgGlowBlue}`}
-            ></div>
-
-            <div className={styles.statHeader}>
-              <div>
-                <p className={styles.statTitle}>
-                  Toplam Hasta
-                </p>
-
-                <h3 className={styles.statValue}>
-                  {loading
-                    ? "..."
-                    : stats.toplam_hasta}
-                </h3>
-              </div>
-
-              <div
-                className={`${styles.iconWrapper} ${styles.iconBlue}`}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M17 20h5v-2a4 4 0 00-5-4M9 20H4v-2a4 4 0 015-4m6-5a3 3 0 11-6 0 3 3 0 016 0zm6 1a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className={styles.statFooter}>
-              Sisteme bağlı hastalar
-            </div>
-          </div>
-
-          {/* TOPLAM ANALİZ */}
-
-          <div
-            className={`${styles.statCard} ${styles.cardCyan}`}
-          >
-            <div
-              className={`${styles.cardGlow} ${styles.bgGlowCyan}`}
-            ></div>
-
-            <div className={styles.statHeader}>
-              <div>
-                <p className={styles.statTitle}>
-                  Toplam Analiz
-                </p>
-
-                <h3 className={styles.statValue}>
-                  {loading
-                    ? "..."
-                    : stats.toplam_analiz}
-                </h3>
-              </div>
-
-              <div
-                className={`${styles.iconWrapper} ${styles.iconCyan}`}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className={styles.statFooter}>
-              Tüm AI analiz kayıtları
-            </div>
-          </div>
-
-          {/* TAMAMLANAN */}
-
-          <div
-            className={`${styles.statCard} ${styles.cardEmerald}`}
-          >
-            <div
-              className={`${styles.cardGlow} ${styles.bgGlowEmerald}`}
-            ></div>
-
-            <div className={styles.statHeader}>
-              <div>
-                <p className={styles.statTitle}>
-                  Tamamlanan
-                </p>
-
-                <h3 className={styles.statValue}>
-                  {loading
-                    ? "..."
-                    : stats.tamamlanan_analiz}
-                </h3>
-              </div>
-
-              <div
-                className={`${styles.iconWrapper} ${styles.iconEmerald}`}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className={styles.statFooter}>
-              İşlemi tamamlanan analizler
-            </div>
-          </div>
-
-          {/* BEKLEYEN */}
-
-          <div
-            className={`${styles.statCard} ${styles.cardAmber}`}
-          >
-            <div
-              className={`${styles.cardGlow} ${styles.bgGlowAmber}`}
-            ></div>
-
-            <div className={styles.statHeader}>
-              <div>
-                <p className={styles.statTitle}>
-                  Bekleyen İşlem
-                </p>
-
-                <h3 className={styles.statValue}>
-                  {loading
-                    ? "..."
-                    : stats.bekleyen_analiz}
-                </h3>
-              </div>
-
-              <div
-                className={`${styles.iconWrapper} ${styles.iconAmber}`}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className={styles.statFooter}>
-              İşlem bekleyen analizler
-            </div>
-          </div>
-
-        </div>
-
-        {/* SON ANALİZLER */}
-
-        <div className={styles.tableCard}>
-
-          <div className={styles.tableHeaderArea}>
-
-            <div className={styles.tableTitleWrapper}>
-
-              <div
-                className={`${styles.iconWrapper} ${styles.iconCyan}`}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                  />
-                </svg>
-              </div>
-
-              <div>
-                <h2 className={styles.tableTitle}>
-                  Son Analizler
-                </h2>
-
-                <p className={styles.tableSubtitle}>
-                  Son oluşturulan 6 analiz kaydı
-                </p>
-              </div>
-
-            </div>
-
-            <button
-              className={styles.actionBtn}
-              onClick={() =>
-                navigate("/analyze")
+              className={
+                styles.tableWrapper
               }
             >
-              + Yeni Analiz
-            </button>
-
-          </div>
-
-          <div className={styles.tableContainer}>
-
-            {loading ? (
-              <div className={styles.tableMessage}>
-                Analizler yükleniyor...
-              </div>
-            ) : recentAnalyses.length === 0 ? (
-              <div className={styles.emptyState}>
-
-                <h3>
-                  Henüz analiz bulunmuyor
-                </h3>
-
-                <p>
-                  İlk yapay zeka analizini oluşturarak
-                  başlayabilirsiniz.
-                </p>
-
-                <button
-                  className={styles.primaryAction}
-                  onClick={() =>
-                    navigate("/analyze")
-                  }
-                >
-                  Yeni Analiz Başlat
-                </button>
-
-              </div>
-            ) : (
-              <table className={styles.dataTable}>
-
+              <table
+                className={
+                  styles.table
+                }
+              >
                 <thead>
                   <tr>
-                    <th>Analiz</th>
-                    <th>Hasta</th>
-                    <th>Organ / Model</th>
-                    <th>Tarih</th>
-                    <th>Durum</th>
-                    <th>İşlem</th>
+                    <th>
+                      Analiz
+                    </th>
+
+                    <th>
+                      Hasta
+                    </th>
+
+                    <th>
+                      Organ
+                    </th>
+
+                    <th>
+                      Model
+                    </th>
+
+                    <th>
+                      Tarih
+                    </th>
+
+                    <th>
+                      Durum
+                    </th>
+
+                    <th />
                   </tr>
                 </thead>
 
                 <tbody>
-                  {recentAnalyses.map(
+                  {analyses.map(
                     (analysis) => (
-                      <tr key={analysis.id}>
-
-                        {/* ANALİZ */}
-
+                      <tr
+                        key={
+                          analysis.id
+                        }
+                      >
                         <td>
                           <div
                             className={
@@ -508,37 +642,40 @@ const Dashboard = () => {
                             }
                           >
                             <strong>
-                              {analysis.analiz_adi ||
-                                `Analiz #${analysis.id}`}
+                              {
+                                analysis.analiz_adi
+                              }
                             </strong>
 
                             <span>
-                              #{analysis.id}
+                              #
+                              {
+                                analysis.id
+                              }
                             </span>
                           </div>
                         </td>
-
-                        {/* HASTA */}
 
                         <td>
                           <div
                             className={
-                              styles.patientCell
+                              styles.patientInfo
                             }
                           >
                             <strong>
-                              {analysis.hasta ||
-                                "-"}
+                              {
+                                analysis.hasta_adi
+                              }
                             </strong>
 
                             <span>
-                              {analysis.tc_kimlik ||
-                                "-"}
+                              TC:{" "}
+                              {
+                                analysis.tc_kimlik
+                              }
                             </span>
                           </div>
                         </td>
-
-                        {/* ORGAN MODEL */}
 
                         <td>
                           <span
@@ -546,70 +683,41 @@ const Dashboard = () => {
                               styles.organBadge
                             }
                           >
-                            {getOrganLabel(
+                            {
                               analysis.organ
-                            )}
-                          </span>
-
-                          <span
-                            className={
-                              styles.modelBadge
                             }
-                          >
-                            {getModelLabel(
-                              analysis.model
-                            )}
                           </span>
                         </td>
 
-                        {/* TARİH */}
-
-                        <td
-                          className={
-                            styles.dateCell
+                        <td>
+                          {
+                            analysis.model
                           }
-                        >
-                          {analysis.tarih
-                            ? new Date(
-                                analysis.tarih
-                              ).toLocaleString(
-                                "tr-TR"
-                              )
-                            : "-"}
                         </td>
 
-                        {/* DURUM */}
+                        <td>
+                          {formatDate(
+                            analysis.tarih
+                          )}
+                        </td>
 
                         <td>
                           <span
-                            className={`${styles.statusBadge} ${
-                              analysis.durum ===
-                              "bekliyor"
-                                ? styles.statusPending
-                                : styles.statusCompleted
-                            }`}
+                            className={`${styles.statusBadge} ${getStatusClass(
+                              analysis.durum
+                            )}`}
                           >
-                            <span
-                              className={`${styles.dot} ${
-                                analysis.durum ===
-                                "bekliyor"
-                                  ? styles.dotPending
-                                  : styles.dotCompleted
-                              }`}
-                            ></span>
-
                             {getStatusLabel(
                               analysis.durum
                             )}
                           </span>
                         </td>
 
-                        {/* İŞLEM */}
-
                         <td>
                           <button
+                            type="button"
                             className={
-                              styles.detailBtn
+                              styles.detailButton
                             }
                             onClick={() =>
                               navigate(
@@ -620,43 +728,70 @@ const Dashboard = () => {
                             Görüntüle
                           </button>
                         </td>
-
                       </tr>
                     )
                   )}
                 </tbody>
-
               </table>
-            )}
-
-          </div>
-
-          {/* ALT DURUM */}
-
-          <div className={styles.systemStatusFooter}>
-
-            <span>
-              <span
-                className={`${styles.dot} ${styles.dotOnline}`}
-              ></span>
-
-              AI Analiz Sistemi
-            </span>
-
-            <span>
-              <span
-                className={`${styles.dot} ${styles.dotOnline}`}
-              ></span>
-
-              Veriler Senkronize
-            </span>
-
-          </div>
-
+            </div>
+          )}
         </div>
 
       </div>
     </DashboardLayout>
+  );
+};
+
+// =====================================================
+// STAT CARD
+// =====================================================
+
+const StatCard = ({
+  title,
+  value,
+  description,
+  icon,
+  onClick,
+}) => {
+  return (
+    <div
+      className={`${styles.statCard} ${
+        onClick
+          ? styles.clickableCard
+          : ""
+      }`}
+      onClick={onClick}
+    >
+      <div
+        className={
+          styles.statTop
+        }
+      >
+        <div
+          className={
+            styles.statIcon
+          }
+        >
+          {icon}
+        </div>
+
+        <span>
+          {title}
+        </span>
+      </div>
+
+      <strong
+        className={
+          styles.statValue
+        }
+      >
+        {value}
+      </strong>
+
+      <p>
+        {description}
+      </p>
+    </div>
   );
 };
 

@@ -5,7 +5,6 @@
 }
 
 /* HEADER */
-
 .header {
   display: flex;
   align-items: center;
@@ -15,44 +14,43 @@
 }
 
 .breadcrumb {
-  font-size: 13px;
-  color: #64748b;
+  font-size: var(--font-size-md);
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 
 .pageTitle {
   margin: 0;
   font-size: 30px;
-  font-weight: 800;
+  font-weight: var(--font-extrabold);
   color: #0f172a;
 }
 
 .pageDescription {
   margin: 6px 0 0;
-  color: #64748b;
-  font-size: 14px;
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
 }
 
 .newAnalysisButton,
 .primaryButton {
   border: none;
   background: #2563eb;
-  color: white;
-  font-weight: 700;
+  color: var(--text-white);
+  font-weight: var(--font-bold);
   padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background var(--transition-normal), transform var(--transition-normal);
 }
 
 .newAnalysisButton:hover,
 .primaryButton:hover {
-  background: #1d4ed8;
+  background: var(--info);
   transform: translateY(-1px);
 }
 
 /* INFO */
-
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -61,7 +59,7 @@
 }
 
 .infoCard {
-  background: white;
+  background: var(--surface-white);
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 18px;
@@ -69,23 +67,22 @@
 
 .infoLabel {
   display: block;
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
   margin-bottom: 7px;
 }
 
 .infoValue {
   color: #0f172a;
-  font-size: 16px;
+  font-size: var(--font-size-lg);
 }
 
 /* SECTION */
-
 .sectionCard {
-  background: white;
+  background: var(--surface-white);
   border: 1px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: var(--radius-2xl);
   padding: 24px;
   margin-bottom: 24px;
 }
@@ -105,12 +102,11 @@
 
 .sectionHeader p {
   margin: 5px 0 0;
-  font-size: 13px;
-  color: #64748b;
+  font-size: var(--font-size-md);
+  color: var(--text-muted);
 }
 
 /* IMAGES */
-
 .imageGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -121,15 +117,15 @@
   overflow: hidden;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
-  background: #f8fafc;
+  background: var(--input-bg);
 }
 
 .imageCardHeader {
   padding: 13px 15px;
-  background: white;
+  background: var(--surface-white);
   border-bottom: 1px solid #e2e8f0;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-bold);
   color: #334155;
 }
 
@@ -149,7 +145,6 @@
 }
 
 /* METRICS */
-
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -157,7 +152,7 @@
 }
 
 .metricCard {
-  background: #f8fafc;
+  background: var(--input-bg);
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 18px;
@@ -165,8 +160,8 @@
 
 .metricLabel {
   display: block;
-  font-size: 12px;
-  color: #64748b;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
   margin-bottom: 8px;
 }
 
@@ -174,8 +169,8 @@
 .metricDanger,
 .metricSuccess {
   display: block;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-extrabold);
 }
 
 .metricValue {
@@ -191,11 +186,10 @@
 }
 
 /* NOTE */
-
 .doctorNote {
-  background: #f8fafc;
+  background: var(--input-bg);
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 18px;
   min-height: 100px;
 }
@@ -212,11 +206,10 @@
 }
 
 /* EMPTY */
-
 .emptyCard {
-  background: white;
+  background: var(--surface-white);
   border: 1px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: var(--radius-2xl);
   text-align: center;
   padding: 70px 30px;
 }
@@ -228,13 +221,11 @@
   color: #2563eb;
   border-radius: 50%;
   margin: 0 auto 16px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 24px;
-  font-weight: 800;
+  font-weight: var(--font-extrabold);
 }
 
 .emptyCard h2 {
@@ -242,9 +233,10 @@
 }
 
 .emptyCard p {
-  color: #64748b;
+  color: var(--text-muted);
   margin-bottom: 22px;
 }
+
 .loadingSpinner {
   width: 42px;
   height: 42px;
@@ -260,8 +252,8 @@
     transform: rotate(360deg);
   }
 }
-/* RESPONSIVE */
 
+/* RESPONSIVE */
 @media (max-width: 1100px) {
   .infoGrid,
   .metricsGrid {

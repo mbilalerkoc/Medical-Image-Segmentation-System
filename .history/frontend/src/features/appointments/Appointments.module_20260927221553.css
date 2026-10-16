@@ -1,0 +1,494 @@
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* HEADER */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.pageLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  color: var(--text-heading);
+  font-size: 28px;
+  font-weight: var(--font-extrabold);
+}
+
+.pageHeader p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+}
+
+.newAppointmentButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 11px;
+  background: var(--primary);
+  color: var(--text-white);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-normal),
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.newAppointmentButton:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.newAppointmentButton span {
+  font-size: 19px;
+  line-height: 1;
+}
+
+/* MESSAGES */
+.successMessage,
+.errorMessage {
+  margin-bottom: 18px;
+  padding: 12px 15px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-bold);
+}
+
+.successMessage {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success);
+}
+
+.errorMessage {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger);
+}
+
+/* TOOLBAR */
+.toolbarCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+/* FILTERS */
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filterButton {
+  padding: 8px 13px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.filterButton:hover {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+}
+
+.filterActive {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.filterActive:hover {
+  background: var(--primary-soft-hover);
+  color: var(--primary-hover);
+}
+
+/* SEARCH */
+.searchWrapper {
+  position: relative;
+  width: 370px;
+  display: flex;
+  align-items: center;
+}
+
+.searchWrapper input {
+  width: 100%;
+  height: 40px;
+  padding: 0 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--input-bg);
+  color: var(--text-heading);
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition: background var(--transition-normal),
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.searchWrapper input:focus {
+  background: var(--surface-white);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.searchWrapper input::placeholder {
+  color: var(--text-subtle);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 13px;
+  width: 17px;
+  height: 17px;
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.clearSearch {
+  position: absolute;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: var(--border-light);
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.clearSearch:hover {
+  background: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* RESULT INFO */
+.resultInfo {
+  display: flex;
+  justify-content: flex-end;
+  padding: 11px 3px;
+  color: var(--text-subtle);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+}
+
+/* CARD */
+.appointmentCard {
+  overflow: hidden;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* TABLE */
+.tableContainer {
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 13px 18px;
+  background: var(--surface-secondary);
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: var(--font-extrabold);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background var(--transition-normal);
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* PATIENT */
+.patientCell {
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.patientCell button {
+  width: fit-content;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-extrabold);
+  cursor: pointer;
+  transition: color var(--transition-normal);
+}
+
+.patientCell button:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.patientCell span {
+  color: var(--text-subtle);
+  font-size: 10px;
+}
+
+/* DATE */
+.dateCell {
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dateCell strong {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.dateCell span {
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-extrabold);
+}
+
+/* DURATION */
+.durationBadge {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: var(--radius-full);
+  background: var(--surface-secondary);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+}
+
+/* REASON */
+.reasonCell {
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reasonCell strong {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.reasonCell span {
+  overflow: hidden;
+  color: var(--text-subtle);
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* STATUS */
+.statusBadge {
+  display: inline-flex;
+  padding: 6px 9px;
+  border: 1px solid;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-extrabold);
+  white-space: nowrap;
+}
+
+.statusPending {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning);
+}
+
+.statusApproved {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info);
+}
+
+.statusCompleted {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.statusCancelled {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+.statusNoShow {
+  background: var(--surface-secondary);
+  border-color: var(--border-strong);
+  color: var(--text-secondary);
+}
+
+/* STATUS SELECT */
+.statusSelect {
+  min-width: 125px;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-white);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.statusSelect:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.statusSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* LOADING / EMPTY */
+.loadingArea,
+.emptyState {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.loadingArea p,
+.emptyState p {
+  color: var(--text-subtle);
+  font-size: var(--font-size-sm);
+}
+
+.emptyState h3 {
+  margin: 10px 0 5px;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+}
+
+.emptyIcon {
+  font-size: 38px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 15px;
+  border: 4px solid var(--border-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* SCROLL */
+.tableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .newAppointmentButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .toolbarCard {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .searchWrapper {
+    width: 100%;
+  }
+}

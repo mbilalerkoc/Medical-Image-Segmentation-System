@@ -1,7 +1,7 @@
-/* Ana Kart ve Liste Stilleri */
+/* CARD */
 .card {
-  background: white;
-  border-radius: 1rem;
+  background: var(--surface-white);
+  border-radius: var(--radius-xl);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   border-top: 4px solid #2563eb;
@@ -16,27 +16,27 @@
 
 .title {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: var(--font-bold);
   color: #1e293b;
 }
 
 .addBtn {
   background-color: #2563eb;
-  color: white;
+  color: var(--text-white);
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-medium);
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all var(--transition-normal);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .addBtn:hover {
-  background-color: #1d4ed8;
+  background-color: var(--info);
 }
 
-/* Tablo Stilleri */
+/* TABLE */
 .tableContainer {
   overflow-x: auto;
 }
@@ -49,49 +49,49 @@
 
 .th {
   padding: 0.75rem;
-  font-weight: 600;
-  color: #475569;
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
   border-bottom: 1px solid #e2e8f0;
-  background: #f8fafc;
-  font-size: 0.875rem;
+  background: var(--input-bg);
+  font-size: var(--font-size-base);
 }
 
 .td {
   padding: 0.75rem;
   color: #334155;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--input-disabled-bg);
 }
 
 .tr:hover {
-  background-color: #f8fafc;
-  transition: background-color 0.2s ease;
+  background-color: var(--input-bg);
+  transition: background-color var(--transition-normal);
 }
 
-/* Durum Etiketleri (Badges) */
+/* BADGES */
 .badgeActive {
   background: #dcfce7;
   color: #15803d;
   padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
 }
 
 .badgePending {
   background: #fef3c7;
   color: #b45309;
   padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
 }
 
 .detailBtn {
   color: #2563eb;
   background: none;
   border: none;
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: var(--font-semibold);
+  font-size: var(--font-size-base);
   cursor: pointer;
 }
 
@@ -99,7 +99,7 @@
   color: #1e40af;
 }
 
-/* MODAL STİLLERİ */
+/* MODAL */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -113,8 +113,8 @@
 }
 
 .modalContent {
-  background: white;
-  border-radius: 1rem;
+  background: var(--surface-white);
+  border-radius: var(--radius-xl);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 42rem;
@@ -125,16 +125,16 @@
 
 .modalHeader {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #f1f5f9;
-  background: #f8fafc;
+  border-bottom: 1px solid var(--input-disabled-bg);
+  background: var(--input-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .modalTitle {
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
   color: #1e293b;
 }
 
@@ -145,11 +145,11 @@
   border: none;
   cursor: pointer;
   line-height: 1;
-  transition: color 0.2s;
+  transition: color var(--transition-normal);
 }
 
 .closeBtn:hover {
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .modalBody {
@@ -177,8 +177,8 @@
 
 .label {
   display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-semibold);
   color: #334155;
   margin-bottom: 0.375rem;
 }
@@ -187,10 +187,10 @@
   width: 100%;
   padding: 0.625rem;
   border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   outline: none;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-normal);
 }
 
 .input:focus {
@@ -203,39 +203,39 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--input-disabled-bg);
   margin-top: 0.5rem;
 }
 
 .cancelBtn {
   padding: 0.5rem 1rem;
-  color: #475569;
+  color: var(--text-secondary);
   background: none;
   border: none;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-normal);
 }
 
 .cancelBtn:hover {
-  background-color: #f1f5f9;
+  background-color: var(--input-disabled-bg);
 }
 
 .submitBtn {
   padding: 0.5rem 1.25rem;
-  color: white;
+  color: var(--text-white);
   background-color: #2563eb;
   border: none;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--info);
   transform: translateY(-1px);
 }
 
@@ -243,4 +243,22 @@
   background-color: #93c5fd;
   cursor: not-allowed;
   transform: none;
+}
+
+.patientName {
+  font-weight: var(--font-semibold);
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textRight {
+  text-align: right;
+}
+
+.tableMessage {
+  padding: 2rem;
+  color: var(--text-subtle);
+  text-align: center;
 }

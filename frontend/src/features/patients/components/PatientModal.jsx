@@ -1,35 +1,58 @@
-import React, { useState } from 'react';
-import { addPatient } from '../../../services/patientService';
-import styles from '../PatientList.module.css';
+import React, { useState } from "react";
+import { addPatient } from "../../../services/patientService";
+import useToast from "../../../hooks/useToast";
+import styles from "../PatientList.module.css";
+
+const initialFormData = {
+  ad: "",
+  soyad: "",
+  tc_kimlik: "",
+  email: "",
+  telefon: "",
+  dogum_tarihi: "",
+  kan_grubu: "",
+  adres: "",
+};
 
 const PatientModal = ({ isOpen, onClose, onSuccess }) => {
+  const toast = useToast();
+
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    ad: '', soyad: '', tc_kimlik: '', email: '', 
-    telefon: '', dogum_tarihi: '', kan_grubu: '', adres: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   if (!isOpen) return null;
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    
+
     try {
+      setLoading(true);
+
       const data = await addPatient(formData);
 
-      if (data.basarili) {
-        alert("Hasta başarıyla eklendi ve davet maili gönderildi!");
-        // Formu temizle ve üst bileşene haber ver
-        setFormData({ ad: '', soyad: '', tc_kimlik: '', email: '', telefon: '', dogum_tarihi: '', kan_grubu: '', adres: '' });
-        onSuccess(); 
+      if (!data.basarili) {
+        toast.error(data.mesaj || data.detay || "Hasta eklenemedi.");
+        return;
+      }
+
+      setFormData(initialFormData);
+
+      if (onSuccess) {
+        await onSuccess(data.hasta);
       }
     } catch (error) {
-      alert(error.response?.data?.mesaj || error.response?.data?.detay || "Hasta eklenirken bir hata oluştu.");
+      console.error("Hasta ekleme hatası:", error);
+
+      toast.error(
+        error.response?.data?.mesaj ||
+          error.response?.data?.detay ||
+          "Hasta eklenirken bir hata oluştu.",
+      );
     } finally {
       setLoading(false);
     }
@@ -38,41 +61,101 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        
+        {/* HEADER */}
         <div className={styles.modalHeader}>
           <h3 className={styles.modalTitle}>Yeni Hasta Kaydı Oluştur</h3>
-          <button onClick={onClose} className={styles.closeBtn}>&times;</button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className={styles.closeBtn}
+            disabled={loading}
+          >
+            &times;
+          </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className={styles.modalBody}>
           <div className={styles.formGrid}>
             <div>
               <label className={styles.label}>Ad</label>
-              <input type="text" name="ad" required value={formData.ad} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="text"
+                name="ad"
+                required
+                value={formData.ad}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>Soyad</label>
-              <input type="text" name="soyad" required value={formData.soyad} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="text"
+                name="soyad"
+                required
+                value={formData.soyad}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>TC Kimlik No</label>
-              <input type="text" name="tc_kimlik" required maxLength="11" value={formData.tc_kimlik} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="text"
+                name="tc_kimlik"
+                required
+                maxLength="11"
+                value={formData.tc_kimlik}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>E-posta</label>
-              <input type="email" name="email" required value={formData.email} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>Telefon</label>
-              <input type="text" name="telefon" value={formData.telefon} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="text"
+                name="telefon"
+                value={formData.telefon}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>Doğum Tarihi</label>
-              <input type="date" name="dogum_tarihi" value={formData.dogum_tarihi} onChange={handleInputChange} className={styles.input} />
+              <input
+                type="date"
+                name="dogum_tarihi"
+                value={formData.dogum_tarihi}
+                onChange={handleInputChange}
+                className={styles.input}
+              />
             </div>
+
             <div>
               <label className={styles.label}>Kan Grubu</label>
-              <select name="kan_grubu" value={formData.kan_grubu} onChange={handleInputChange} className={styles.input}>
+              <select
+                name="kan_grubu"
+                value={formData.kan_grubu}
+                onChange={handleInputChange}
+                className={styles.input}
+              >
                 <option value="">Seçiniz (opsiyonel)</option>
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
@@ -84,20 +167,39 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
                 <option value="0-">0-</option>
               </select>
             </div>
+
             <div className={styles.fullWidth}>
               <label className={styles.label}>Adres</label>
-              <textarea name="adres" value={formData.adres} onChange={handleInputChange} rows="2" className={styles.input} />
+              <textarea
+                name="adres"
+                value={formData.adres}
+                onChange={handleInputChange}
+                rows="2"
+                className={styles.input}
+              />
             </div>
           </div>
 
+          {/* FOOTER */}
           <div className={styles.modalFooter}>
-            <button type="button" onClick={onClose} className={styles.cancelBtn}>İptal</button>
-            <button type="submit" disabled={loading} className={styles.submitBtn}>
-              {loading ? 'Kaydediliyor...' : 'Kaydet ve Davet Gönder'}
+            <button
+              type="button"
+              onClick={onClose}
+              className={styles.cancelBtn}
+              disabled={loading}
+            >
+              İptal
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={styles.submitBtn}
+            >
+              {loading ? "Kaydediliyor..." : "Kaydet ve Davet Gönder"}
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );

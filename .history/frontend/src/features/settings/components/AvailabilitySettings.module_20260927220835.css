@@ -1,0 +1,318 @@
+/* CONTAINER */
+.availabilitySection {
+  padding: 24px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* HEADER */
+.availabilityHeader {
+  margin-bottom: 22px;
+}
+
+.availabilityHeader h2 {
+  margin: 0;
+  color: var(--text-heading);
+  font-size: 20px;
+  font-weight: var(--font-extrabold);
+}
+
+.availabilityHeader p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.settingsLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: var(--font-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* DAYS */
+.weekSchedule {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.dayCard {
+  padding: 15px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--input-bg);
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dayHeader > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dayHeader strong {
+  min-width: 80px;
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-extrabold);
+}
+
+.workingBadge,
+.closedBadge {
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  font-size: 9px;
+  font-weight: var(--font-extrabold);
+}
+
+.workingBadge {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.closedBadge {
+  background: var(--surface-secondary);
+  color: var(--text-muted);
+}
+
+.addTimeButton {
+  border: none;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: var(--font-extrabold);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.addTimeButton:hover {
+  background: var(--primary-soft-hover);
+  color: var(--primary-hover);
+}
+
+/* TIME INTERVALS */
+.timeIntervals {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.timeInterval {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
+}
+
+.timeField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.timeField label {
+  color: var(--text-subtle);
+  font-size: 9px;
+  font-weight: var(--font-bold);
+}
+
+.timeField input {
+  height: 35px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-white);
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  outline: none;
+  transition: border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.timeField input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.timeSeparator {
+  padding-bottom: 9px;
+  color: var(--text-subtle);
+  font-size: var(--font-size-base);
+}
+
+.removeTimeButton {
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 17px;
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.removeTimeButton:hover {
+  background: var(--danger-hover-bg);
+  color: var(--danger-hover);
+}
+
+.closedDay {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-primary);
+  color: var(--text-subtle);
+  font-size: 10px;
+}
+
+/* INFO */
+.availabilityInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid var(--info-border);
+  border-radius: var(--radius-md);
+  background: var(--info-bg);
+}
+
+.availabilityInfo > div {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--info);
+  color: var(--text-white);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-extrabold);
+}
+
+.availabilityInfo p {
+  margin: 1px 0 0;
+  color: var(--info);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* MESSAGES */
+.availabilitySuccess,
+.availabilityError {
+  margin-bottom: 16px;
+  padding: 11px 13px;
+  border-radius: 9px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-bold);
+}
+
+.availabilitySuccess {
+  border: 1px solid var(--success-border);
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.availabilityError {
+  border: 1px solid var(--danger-border);
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.availabilityLoading {
+  padding: 35px;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+/* FOOTER */
+.availabilityFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.saveAvailabilityButton {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 9px;
+  background: var(--primary);
+  color: var(--text-white);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-extrabold);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.saveAvailabilityButton:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.saveAvailabilityButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 650px) {
+  .availabilitySection {
+    padding: 17px;
+  }
+
+  .dayHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .timeInterval {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .timeField input {
+    width: 100%;
+  }
+
+  .timeSeparator {
+    display: none;
+  }
+
+  .removeTimeButton {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .saveAvailabilityButton {
+    width: 100%;
+  }
+}
