@@ -1,17 +1,42 @@
-# Datasetleri Github'a atmamak için
+# Dataset ve büyük model dosyaları
 dataset/
+processed_data/
 *.nii.gz
 *.h5
+
+# Kullanılan modeli Github'a dahil et
 !ai_engine/saved_models/beyin_v1.h5
-*.jpg
-!docs/results/*.png
 
+# Kullanıcı tarafından yüklenen dosyalar
+backend/uploads/*
+!backend/uploads/.gitkeep
+!backend/uploads/profile/
+backend/uploads/profile/*
+!backend/uploads/profile/.gitkeep
 
-# Node ve Python gereksiz dosyaları
+# Node
 node_modules/
-processed_data/
-__pycache__/
-.env
-.idea/
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Ortam değişkenleri
+.env
+.env.*
+!.env.example
+
+# IDE ve editör geçmişi
+.idea/
+.vscode/
+.history/
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
+
+# Projeye özel kullanılmayan dosya
 demo/en_iyileri_kaydet.py

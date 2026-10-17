@@ -17,7 +17,7 @@ const AnalysisDetail = () => {
   const [transparentMask, setTransparentMask] = useState(null);
   const [generatedOverlay, setGeneratedOverlay] = useState(null);
 
-  // ANALİZİ GETİR
+  /* ANALİZİ GETİR */
   useEffect(() => {
     if (routerAnalysis) return;
 
@@ -47,7 +47,7 @@ const AnalysisDetail = () => {
     loadAnalysis();
   }, [id, routerAnalysis]);
 
-  // MASKENİN SİYAH ARKA PLANINI ŞEFFAF YAP
+  /* MASKENİN SİYAH ARKA PLANINI ŞEFFAF YAP */
   useEffect(() => {
     if (!analysis) {
       setTransparentMask(null);
@@ -55,6 +55,7 @@ const AnalysisDetail = () => {
     }
 
     const result = analysis.result;
+
     const maskSource =
       analysis.processedMask ||
       analysis.mask_image ||
@@ -120,7 +121,7 @@ const AnalysisDetail = () => {
     img.src = maskSource;
   }, [analysis]);
 
-  // ORİJİNAL MR + ŞEFFAF MASKE OVERLAY
+  /* ORİJİNAL MR + MASKE */
   useEffect(() => {
     if (!analysis || !transparentMask) {
       setGeneratedOverlay(null);
@@ -228,6 +229,7 @@ const AnalysisDetail = () => {
             <div className={styles.emptyIcon}>!</div>
             <h2>Analiz bilgisi bulunamadı</h2>
             <p>{error || `Analiz #${id} bilgileri bulunamadı.`}</p>
+
             <button
               type="button"
               className={styles.primaryButton}
@@ -298,6 +300,7 @@ const AnalysisDetail = () => {
         : model || "-";
 
   const dateValue = tarih || created_at || null;
+
   const analizTarihi = dateValue
     ? new Date(dateValue).toLocaleString("tr-TR")
     : "-";
@@ -307,17 +310,7 @@ const AnalysisDetail = () => {
       <div className={styles.container}>
         {/* HEADER */}
         <div className={styles.header}>
-          <div>
-            <div className={styles.breadcrumb}>
-              Analizler / Analiz #{id}
-            </div>
-
-            <h1 className={styles.pageTitle}>Analiz #{id}</h1>
-
-            <p className={styles.pageDescription}>
-              Yapay zeka destekli medikal görüntü analizinin detayları
-            </p>
-          </div>
+          <h1 className={styles.pageTitle}>Analiz #{id}</h1>
 
           <button
             type="button"
@@ -351,16 +344,10 @@ const AnalysisDetail = () => {
           </div>
         </div>
 
-        {/* GÖRÜNTÜLEME SONUÇLARI */}
+        {/* GÖRÜNTÜLEME */}
         <div className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
-            <div>
-              <h2>Görüntüleme Sonuçları</h2>
-              <p>
-                Orijinal görüntü, AI segmentasyonu ve birleştirilmiş analiz
-                sonucu
-              </p>
-            </div>
+            <h2>Görüntüleme Sonuçları</h2>
           </div>
 
           <div className={styles.imageGrid}>
@@ -385,7 +372,10 @@ const AnalysisDetail = () => {
 
               <div className={styles.imageWrapper}>
                 {segmentationImage ? (
-                  <img src={segmentationImage} alt="AI Segmentasyonu" />
+                  <img
+                    src={segmentationImage}
+                    alt="AI Segmentasyonu"
+                  />
                 ) : (
                   <span>Segmentasyon görüntüsü bulunamadı</span>
                 )}
@@ -399,7 +389,10 @@ const AnalysisDetail = () => {
 
               <div className={styles.imageWrapper}>
                 {combinedImage ? (
-                  <img src={combinedImage} alt="MR ve AI Örtüşmesi" />
+                  <img
+                    src={combinedImage}
+                    alt="MR ve AI Örtüşmesi"
+                  />
                 ) : (
                   <span>Örtüşme görüntüsü hazırlanıyor...</span>
                 )}
@@ -408,15 +401,10 @@ const AnalysisDetail = () => {
           </div>
         </div>
 
-        {/* ANALİZ METRİKLERİ */}
+        {/* METRİKLER */}
         <div className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
-            <div>
-              <h2>Analiz Metrikleri</h2>
-              <p>
-                Yapay zeka modeli tarafından hesaplanan sayısal bulgular
-              </p>
-            </div>
+            <h2>Analiz Metrikleri</h2>
           </div>
 
           <div className={styles.metricsGrid}>
@@ -453,12 +441,7 @@ const AnalysisDetail = () => {
         {/* DOKTOR DEĞERLENDİRMESİ */}
         <div className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
-            <div>
-              <h2>Doktor Değerlendirmesi</h2>
-              <p>
-                Analiz sonucuna ilişkin klinik değerlendirme ve doktor notu
-              </p>
-            </div>
+            <h2>Doktor Değerlendirmesi</h2>
           </div>
 
           <div className={styles.doctorNote}>

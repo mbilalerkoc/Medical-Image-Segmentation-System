@@ -160,9 +160,7 @@ const Appointments = () => {
         {/* HEADER */}
         <div className={styles.pageHeader}>
           <div>
-            <span className={styles.pageLabel}>Randevu Yönetimi</span>
             <h1>Randevularım</h1>
-            <p>Hastalarınıza ait randevuları görüntüleyin ve yönetin.</p>
           </div>
 
           <button
@@ -211,7 +209,6 @@ const Appointments = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Hasta, TC veya randevu nedeni ara..."
             />
 
             {searchTerm && (
@@ -227,7 +224,7 @@ const Appointments = () => {
         </div>
 
         <div className={styles.resultInfo}>
-          <span>{filteredAppointments.length} randevu gösteriliyor</span>
+          <span>{filteredAppointments.length} randevu</span>
         </div>
 
         {/* TABLO */}
@@ -241,7 +238,6 @@ const Appointments = () => {
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>📅</div>
               <h3>Randevu bulunamadı</h3>
-              <p>Seçilen filtreye uygun bir randevu bulunmuyor.</p>
             </div>
           ) : (
             <div className={styles.tableContainer}>
@@ -249,8 +245,7 @@ const Appointments = () => {
                 <thead>
                   <tr>
                     <th>Hasta</th>
-                    <th>Tarih / Saat</th>
-                    <th>Süre</th>
+                    <th>Randevu</th>
                     <th>Randevu Nedeni</th>
                     <th>Durum</th>
                     <th>İşlem</th>
@@ -273,24 +268,21 @@ const Appointments = () => {
                             >
                               {appointment.hasta_adi}
                             </button>
+
                             <span>TC: {appointment.tc_kimlik}</span>
-                            {appointment.telefon && (
-                              <span>{appointment.telefon}</span>
-                            )}
                           </div>
                         </td>
 
                         <td>
                           <div className={styles.dateCell}>
                             <strong>{date}</strong>
-                            <span>{time}</span>
-                          </div>
-                        </td>
 
-                        <td>
-                          <span className={styles.durationBadge}>
-                            {appointment.sure_dakika} dk
-                          </span>
+                            <div className={styles.appointmentMeta}>
+                              <span>{time}</span>
+                              <span className={styles.metaDot}>•</span>
+                              <span>{appointment.sure_dakika} dk</span>
+                            </div>
+                          </div>
                         </td>
 
                         <td>
@@ -298,8 +290,11 @@ const Appointments = () => {
                             <strong>
                               {appointment.randevu_nedeni || "Genel Muayene"}
                             </strong>
+
                             {appointment.notlar && (
-                              <span>{appointment.notlar}</span>
+                              <span title={appointment.notlar}>
+                                {appointment.notlar}
+                              </span>
                             )}
                           </div>
                         </td>
@@ -319,10 +314,7 @@ const Appointments = () => {
                             value={appointment.durum}
                             disabled={updatingId === appointment.id}
                             onChange={(e) =>
-                              handleStatusChange(
-                                appointment.id,
-                                e.target.value,
-                              )
+                              handleStatusChange(appointment.id, e.target.value)
                             }
                             className={styles.statusSelect}
                           >

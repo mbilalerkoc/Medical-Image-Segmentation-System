@@ -7,6 +7,7 @@ const AnalysisSlice = require("../models/AnalysisSlice");
 const Patient = require("../models/Patient");
 const Doctor = require("../models/Doctor");
 const Report = require("../models/Report");
+const notificationService = require("../services/notificationService");
 
 // =====================================================
 // ANALİZ YAP VE KAYDET
@@ -17,13 +18,7 @@ exports.predictAndSave = async (req, res) => {
     const modelAdi = req.params.model_adi;
     const file = req.file;
 
-    const {
-      tc_kimlik,
-      analiz_adi,
-      organ,
-      sira_no,
-      klinik_id,
-    } = req.body;
+    const { tc_kimlik, analiz_adi, organ, sira_no, klinik_id } = req.body;
 
     // =====================================================
     // 1. TEMEL KONTROLLER
@@ -131,15 +126,11 @@ exports.predictAndSave = async (req, res) => {
     // 7. FASTAPI'YE İSTEK
     // =====================================================
 
-    const response = await axios.post(
-      pythonUrl,
-      formData,
-      {
-        headers: {
-          ...formData.getHeaders(),
-        },
-      }
-    );
+    const response = await axios.post(pythonUrl, formData, {
+      headers: {
+        ...formData.getHeaders(),
+      },
+    });
 
     const aiResult = response.data;
 
@@ -152,22 +143,15 @@ exports.predictAndSave = async (req, res) => {
 
       doktor_id: doctor.id,
 
-      klinik_id:
-        doctor.klinik_id ||
-        klinik_id ||
-        null,
+      klinik_id: doctor.klinik_id || klinik_id || null,
 
-      analiz_adi:
-        finalAnalizAdi,
+      analiz_adi: finalAnalizAdi,
 
-      organ:
-        organ,
+      organ: organ,
 
-      model:
-        modelAdi,
+      model: modelAdi,
 
-      durum:
-        "tamamlandi",
+      durum: "tamamlandi",
     });
 
     // =====================================================
@@ -175,40 +159,71 @@ exports.predictAndSave = async (req, res) => {
     // =====================================================
 
     await AnalysisSlice.create({
-      analiz_id:
-        analysis.id,
+      analiz_id: analysis.id,
 
-      goruntu_yolu:
-        file.filename ||
-        file.originalname ||
-        "",
+      goruntu_yolu: file.filename || file.originalname || "",
 
-      maske_yolu:
-        aiResult.maske_base64 ||
-        "",
+      maske_yolu: aiResult.maske_base64 || "",
 
-      patoloji_yuzdesi:
-        aiResult.metrikler?.patoloji_yuzdesi ?? 0,
+      patoloji_yuzdesi: aiResult.metrikler?.patoloji_yuzdesi ?? 0,
 
-      alan_mm2:
-        aiResult.metrikler?.alan_mm2 ?? 0,
+      alan_mm2: aiResult.metrikler?.alan_mm2 ?? 0,
 
-      cevre_mm:
-        aiResult.metrikler?.cevre_mm ?? 0,
+      cevre_mm: aiResult.metrikler?.cevre_mm ?? 0,
 
-      guven_skoru:
-        aiResult.metrikler?.guven_skoru ?? 0,
+      guven_skoru: aiResult.metrikler?.guven_skoru ?? 0,
 
-      dice_skoru:
-        aiResult.metrikler?.dice_skoru ?? null,
+      dice_skoru: aiResult.metrikler?.dice_skoru ?? null,
 
-      iou_skoru:
-        aiResult.metrikler?.iou_skoru ?? null,
+      iou_skoru: aiResult.metrikler?.iou_skoru ?? null,
 
-      sira_no:
-        sira_no || 1,
+      sira_no: sira_no || 1,
     });
+    // DOKTORA ANALİZ TAMAMLANDI BİLDİRİMİ
+    try {
+      await notificationService.createFromEvent({
+        kullaniciId: req.user.id,
+        tip: "analysis_completed",
+        data: {
+          analizId: analysis.id,
+        },
+        link: `/analyses/${analysis.id}`,
+        metadata: {
+          analysis_id: analysis.id,
+          patient_id: hasta.id,
+          organ,
+          model: modelAdi,
+        },
+      });
+    } catch (error) {
+      try {
+        if (req.user?.id) {
+          await notificationService.createFromEvent({
+            kullaniciId: req.user.id,
+            tip: "analysis_failed",
+            data: {},
+            link: "/analyze",
+            metadata: {
+              organ: req.body?.organ || null,
+              model: req.params?.model_adi || null,
+            },
+          });
+        }
+      } catch (notificationError) {
+        console.error(
+          "Analiz hata bildirimi oluşturulamadı:",
+          notificationError.message,
+        );
+      }
 
+      console.error("❌ Detaylı Hata:", error.response?.data || error.message);
+
+      return res.status(500).json({
+        basarili: false,
+        mesaj: "Analiz işlemi sırasında hata oluştu.",
+        hata: error.response?.data || error.message,
+      });
+    }
     // =====================================================
     // 10. RESPONSE
     // =====================================================
@@ -216,34 +231,23 @@ exports.predictAndSave = async (req, res) => {
     return res.status(200).json({
       basarili: true,
 
-      mesaj:
-        "Analiz başarıyla tamamlandı ve kaydedildi.",
+      mesaj: "Analiz başarıyla tamamlandı ve kaydedildi.",
 
-      analiz_id:
-        analysis.id,
+      analiz_id: analysis.id,
 
-      analiz_adi:
-        analysis.analiz_adi,
+      analiz_adi: analysis.analiz_adi,
 
-      sonuclar:
-        aiResult,
+      sonuclar: aiResult,
     });
   } catch (error) {
-    console.error(
-      "❌ Detaylı Hata:",
-      error.response?.data ||
-        error.message
-    );
+    console.error("❌ Detaylı Hata:", error.response?.data || error.message);
 
     return res.status(500).json({
       basarili: false,
 
-      mesaj:
-        "Analiz işlemi sırasında hata oluştu.",
+      mesaj: "Analiz işlemi sırasında hata oluştu.",
 
-      hata:
-        error.response?.data ||
-        error.message,
+      hata: error.response?.data || error.message,
     });
   }
 };
@@ -257,10 +261,7 @@ exports.getAnalysisById = async (req, res) => {
   try {
     const analizId = req.params.id;
 
-    const analysis =
-      await Analysis.findByPk(
-        analizId
-      );
+    const analysis = await Analysis.findByPk(analizId);
 
     if (!analysis) {
       return res.status(404).json({
@@ -269,51 +270,36 @@ exports.getAnalysisById = async (req, res) => {
       });
     }
 
-    const hasta =
-      await Patient.findByPk(
-        analysis.hasta_id
-      );
+    const hasta = await Patient.findByPk(analysis.hasta_id);
 
-    const slice =
-      await AnalysisSlice.findOne({
-        where: {
-          analiz_id:
-            analysis.id,
-        },
-      });
+    const slice = await AnalysisSlice.findOne({
+      where: {
+        analiz_id: analysis.id,
+      },
+    });
 
     // Bu analize ait en son raporu getir
-    const report =
-      await Report.findOne({
-        where: {
-          analiz_id:
-            analysis.id,
-        },
+    const report = await Report.findOne({
+      where: {
+        analiz_id: analysis.id,
+      },
 
-        order: [
-          ["id", "DESC"],
-        ],
-      });
+      order: [["id", "DESC"]],
+    });
 
     const metrikler = slice
       ? {
-          patoloji_yuzdesi:
-            slice.patoloji_yuzdesi,
+          patoloji_yuzdesi: slice.patoloji_yuzdesi,
 
-          alan_mm2:
-            slice.alan_mm2,
+          alan_mm2: slice.alan_mm2,
 
-          cevre_mm:
-            slice.cevre_mm,
+          cevre_mm: slice.cevre_mm,
 
-          guven_skoru:
-            slice.guven_skoru,
+          guven_skoru: slice.guven_skoru,
 
-          dice_skoru:
-            slice.dice_skoru,
+          dice_skoru: slice.dice_skoru,
 
-          iou_skoru:
-            slice.iou_skoru,
+          iou_skoru: slice.iou_skoru,
         }
       : {};
 
@@ -324,16 +310,10 @@ exports.getAnalysisById = async (req, res) => {
     let maskImage = null;
 
     if (slice?.maske_yolu) {
-      if (
-        slice.maske_yolu.startsWith(
-          "data:image"
-        )
-      ) {
-        maskImage =
-          slice.maske_yolu;
+      if (slice.maske_yolu.startsWith("data:image")) {
+        maskImage = slice.maske_yolu;
       } else {
-        maskImage =
-          `data:image/png;base64,${slice.maske_yolu}`;
+        maskImage = `data:image/png;base64,${slice.maske_yolu}`;
       }
     }
 
@@ -344,8 +324,7 @@ exports.getAnalysisById = async (req, res) => {
     let originalImage = null;
 
     if (slice?.goruntu_yolu) {
-      originalImage =
-        `${req.protocol}://${req.get("host")}/uploads/${slice.goruntu_yolu}`;
+      originalImage = `${req.protocol}://${req.get("host")}/uploads/${slice.goruntu_yolu}`;
     }
 
     // =====================================================
@@ -356,70 +335,46 @@ exports.getAnalysisById = async (req, res) => {
       basarili: true,
 
       analiz: {
-        id:
-          analysis.id,
+        id: analysis.id,
 
-        analiz_adi:
-          analysis.analiz_adi ||
-          `Analiz #${analysis.id}`,
+        analiz_adi: analysis.analiz_adi || `Analiz #${analysis.id}`,
 
-        tc_kimlik:
-          hasta?.tc_kimlik ||
-          null,
+        tc_kimlik: hasta?.tc_kimlik || null,
 
-        organ:
-          analysis.organ,
+        organ: analysis.organ,
 
-        model:
-          analysis.model,
+        model: analysis.model,
 
-        durum:
-          analysis.durum,
+        durum: analysis.durum,
 
-        hasta_id:
-          analysis.hasta_id,
+        hasta_id: analysis.hasta_id,
 
-        doktor_id:
-          analysis.doktor_id,
+        doktor_id: analysis.doktor_id,
 
-        klinik_id:
-          analysis.klinik_id,
+        klinik_id: analysis.klinik_id,
 
-        metrikler:
-          metrikler,
+        metrikler: metrikler,
 
-        mask_image:
-          maskImage,
+        mask_image: maskImage,
 
-        original_image:
-          originalImage,
+        original_image: originalImage,
 
-        overlay_image:
-          null,
+        overlay_image: null,
 
-        doktor_notu:
-          report?.doktor_notu ||
-          null,
+        doktor_notu: report?.doktor_notu || null,
 
-        created_at:
-          report?.olusturulma_tarihi ||
-          null,
+        created_at: report?.olusturulma_tarihi || null,
       },
     });
   } catch (error) {
-    console.error(
-      "❌ Analiz detay hatası:",
-      error.message
-    );
+    console.error("❌ Analiz detay hatası:", error.message);
 
     return res.status(500).json({
       basarili: false,
 
-      mesaj:
-        "Analiz bilgileri alınırken bir hata oluştu.",
+      mesaj: "Analiz bilgileri alınırken bir hata oluştu.",
 
-      hata:
-        error.message,
+      hata: error.message,
     });
   }
 };

@@ -33,7 +33,7 @@ const AvailabilitySettings = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // MEVCUT ÇALIŞMA SAATLERİNİ GETİR
+  /* ÇALIŞMA SAATLERİNİ GETİR */
   useEffect(() => {
     const loadAvailability = async () => {
       try {
@@ -52,14 +52,17 @@ const AvailabilitySettings = () => {
           if (!newSchedule[item.gun]) return;
 
           newSchedule[item.gun].push({
-            baslangic_saati: item.baslangic_saati?.slice(0, 5) || "09:00",
-            bitis_saati: item.bitis_saati?.slice(0, 5) || "17:00",
+            baslangic_saati:
+              item.baslangic_saati?.slice(0, 5) || "09:00",
+            bitis_saati:
+              item.bitis_saati?.slice(0, 5) || "17:00",
           });
         });
 
         setSchedule(newSchedule);
       } catch (error) {
         console.error("Müsaitlik yükleme hatası:", error);
+
         toast.error(
           error.response?.data?.mesaj ||
             "Çalışma saatleri yüklenirken bir hata oluştu.",
@@ -72,18 +75,21 @@ const AvailabilitySettings = () => {
     loadAvailability();
   }, [toast]);
 
-  // ÇALIŞMA ARALIĞI EKLE
+  /* ARALIK EKLE */
   const addInterval = (day) => {
     setSchedule((prev) => ({
       ...prev,
       [day]: [
         ...prev[day],
-        { baslangic_saati: "09:00", bitis_saati: "17:00" },
+        {
+          baslangic_saati: "09:00",
+          bitis_saati: "17:00",
+        },
       ],
     }));
   };
 
-  // ÇALIŞMA ARALIĞI SİL
+  /* ARALIK SİL */
   const removeInterval = (day, index) => {
     setSchedule((prev) => ({
       ...prev,
@@ -91,11 +97,15 @@ const AvailabilitySettings = () => {
     }));
   };
 
-  // SAAT DEĞİŞTİR
+  /* SAAT DEĞİŞTİR */
   const updateInterval = (day, index, field, value) => {
     setSchedule((prev) => {
       const updated = [...prev[day]];
-      updated[index] = { ...updated[index], [field]: value };
+
+      updated[index] = {
+        ...updated[index],
+        [field]: value,
+      };
 
       return {
         ...prev,
@@ -104,7 +114,7 @@ const AvailabilitySettings = () => {
     });
   };
 
-  // KAYDET
+  /* KAYDET */
   const handleSave = async () => {
     const musaitlikler = [];
 
@@ -112,14 +122,20 @@ const AvailabilitySettings = () => {
       const intervals = schedule[day.key];
 
       for (const interval of intervals) {
-        if (!interval.baslangic_saati || !interval.bitis_saati) {
+        if (
+          !interval.baslangic_saati ||
+          !interval.bitis_saati
+        ) {
           toast.warning(
             `${day.label} için başlangıç ve bitiş saati zorunludur.`,
           );
           return;
         }
 
-        if (interval.baslangic_saati >= interval.bitis_saati) {
+        if (
+          interval.baslangic_saati >=
+          interval.bitis_saati
+        ) {
           toast.warning(
             `${day.label} için bitiş saati başlangıç saatinden sonra olmalıdır.`,
           );
@@ -128,8 +144,10 @@ const AvailabilitySettings = () => {
 
         musaitlikler.push({
           gun: day.key,
-          baslangic_saati: interval.baslangic_saati,
-          bitis_saati: interval.bitis_saati,
+          baslangic_saati:
+            interval.baslangic_saati,
+          bitis_saati:
+            interval.bitis_saati,
         });
       }
     }
@@ -137,16 +155,26 @@ const AvailabilitySettings = () => {
     try {
       setSaving(true);
 
-      const data = await saveAvailability(musaitlikler);
+      const data =
+        await saveAvailability(musaitlikler);
 
       if (!data.basarili) {
-        toast.error(data.mesaj || "Çalışma saatleri kaydedilemedi.");
+        toast.error(
+          data.mesaj ||
+            "Çalışma saatleri kaydedilemedi.",
+        );
         return;
       }
 
-      toast.success("Çalışma saatleri başarıyla güncellendi.");
+      toast.success(
+        "Çalışma saatleri başarıyla güncellendi.",
+      );
     } catch (error) {
-      console.error("Müsaitlik kaydetme hatası:", error);
+      console.error(
+        "Müsaitlik kaydetme hatası:",
+        error,
+      );
+
       toast.error(
         error.response?.data?.mesaj ||
           "Çalışma saatleri kaydedilirken bir hata oluştu.",
@@ -158,131 +186,156 @@ const AvailabilitySettings = () => {
 
   if (loading) {
     return (
-      <div className={styles.availabilityLoading}>
-        Çalışma saatleri yükleniyor...
+      <div className={styles.availabilitySection}>
+        <div className={styles.availabilityLoading}>
+          <div className={styles.spinner} />
+          <span>Çalışma saatleri yükleniyor...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={styles.availabilitySection}>
-      {/* HEADER */}
       <div className={styles.availabilityHeader}>
-        <span className={styles.settingsLabel}>Randevu Ayarları</span>
         <h2>Çalışma Saatlerim</h2>
-        <p>
-          Hastaların randevu oluşturabileceği çalışma günlerinizi ve saat
-          aralıklarınızı belirleyin.
-        </p>
       </div>
 
-      {/* GÜNLER */}
-      <div className={styles.weekSchedule}>
+      <div className={styles.scheduleTable}>
+        <div className={styles.tableHeader}>
+          <span>Gün</span>
+          <span>Durum</span>
+          <span>Çalışma Saatleri</span>
+          <span />
+        </div>
+
         {DAYS.map((day) => {
           const intervals = schedule[day.key];
           const isWorking = intervals.length > 0;
 
           return (
-            <div key={day.key} className={styles.dayCard}>
-              <div className={styles.dayHeader}>
-                <div>
-                  <strong>{day.label}</strong>
-                  <span
-                    className={
-                      isWorking ? styles.workingBadge : styles.closedBadge
-                    }
-                  >
-                    {isWorking ? "Çalışıyor" : "Kapalı"}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  className={styles.addTimeButton}
-                  onClick={() => addInterval(day.key)}
-                >
-                  + Saat Ekle
-                </button>
+            <div
+              key={day.key}
+              className={styles.dayRow}
+            >
+              <div className={styles.dayName}>
+                {day.label}
               </div>
 
-              {intervals.length === 0 ? (
-                <div className={styles.closedDay}>
-                  Bu gün için çalışma saati tanımlanmadı.
-                </div>
-              ) : (
-                <div className={styles.timeIntervals}>
-                  {intervals.map((interval, index) => (
-                    <div key={index} className={styles.timeInterval}>
-                      <div className={styles.timeField}>
-                        <label>Başlangıç</label>
-                        <input
-                          type="time"
-                          value={interval.baslangic_saati}
-                          onChange={(e) =>
-                            updateInterval(
-                              day.key,
-                              index,
-                              "baslangic_saati",
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
+              <div>
+                <span
+                  className={
+                    isWorking
+                      ? styles.workingBadge
+                      : styles.closedBadge
+                  }
+                >
+                  {isWorking
+                    ? "Çalışıyor"
+                    : "Kapalı"}
+                </span>
+              </div>
 
-                      <span className={styles.timeSeparator}>—</span>
+              <div className={styles.intervalsColumn}>
+                {isWorking ? (
+                  intervals.map((interval, index) => (
+                    <div
+                      key={index}
+                      className={styles.timeInterval}
+                    >
+                      <input
+                        type="time"
+                        value={
+                          interval.baslangic_saati
+                        }
+                        onChange={(e) =>
+                          updateInterval(
+                            day.key,
+                            index,
+                            "baslangic_saati",
+                            e.target.value,
+                          )
+                        }
+                        aria-label={`${day.label} başlangıç saati`}
+                      />
 
-                      <div className={styles.timeField}>
-                        <label>Bitiş</label>
-                        <input
-                          type="time"
-                          value={interval.bitis_saati}
-                          onChange={(e) =>
-                            updateInterval(
-                              day.key,
-                              index,
-                              "bitis_saati",
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
+                      <span
+                        className={
+                          styles.timeSeparator
+                        }
+                      >
+                        —
+                      </span>
+
+                      <input
+                        type="time"
+                        value={
+                          interval.bitis_saati
+                        }
+                        onChange={(e) =>
+                          updateInterval(
+                            day.key,
+                            index,
+                            "bitis_saati",
+                            e.target.value,
+                          )
+                        }
+                        aria-label={`${day.label} bitiş saati`}
+                      />
 
                       <button
                         type="button"
-                        className={styles.removeTimeButton}
-                        onClick={() => removeInterval(day.key, index)}
+                        className={
+                          styles.removeTimeButton
+                        }
+                        onClick={() =>
+                          removeInterval(
+                            day.key,
+                            index,
+                          )
+                        }
+                        aria-label="Saat aralığını kaldır"
                         title="Saat aralığını kaldır"
                       >
                         ×
                       </button>
                     </div>
-                  ))}
-                </div>
-              )}
+                  ))
+                ) : (
+                  <span className={styles.closedText}>
+                    Çalışma saati yok
+                  </span>
+                )}
+              </div>
+
+              <div className={styles.rowAction}>
+                <button
+                  type="button"
+                  className={styles.addTimeButton}
+                  onClick={() =>
+                    addInterval(day.key)
+                  }
+                >
+                  + Aralık Ekle
+                </button>
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* BİLGİ */}
-      <div className={styles.availabilityInfo}>
-        <div>i</div>
-        <p>
-          Aynı güne birden fazla çalışma aralığı ekleyebilirsiniz. Örneğin{" "}
-          <strong>09:00–12:00</strong> ve <strong>13:00–17:00</strong>{" "}
-          tanımlayarak öğle arasını randevuya kapatabilirsiniz.
-        </p>
-      </div>
-
-      {/* FOOTER */}
       <div className={styles.availabilityFooter}>
         <button
           type="button"
-          className={styles.saveAvailabilityButton}
+          className={
+            styles.saveAvailabilityButton
+          }
           onClick={handleSave}
           disabled={saving}
         >
-          {saving ? "Kaydediliyor..." : "Çalışma Saatlerini Kaydet"}
+          {saving
+            ? "Kaydediliyor..."
+            : "Çalışma Saatlerini Kaydet"}
         </button>
       </div>
     </div>

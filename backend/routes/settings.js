@@ -8,32 +8,48 @@ const {
 } = require("../controllers/settingsController");
 
 const {
+  uploadProfilePhoto,
+  deleteProfilePhoto,
+} = require("../controllers/profilePhotoController");
+
+const {
   protect,
   authorize,
 } = require("../middlewares/authMiddleware");
 
-// =====================================================
-// PROFİL GÜNCELLE
-// PUT /api/settings/profile
-// =====================================================
+const profileUpload = require("../middlewares/profileUpload");
 
+/* PROFİL */
 router.put(
   "/profile",
   protect,
   authorize("doktor", "superadmin"),
-  updateProfile
+  updateProfile,
 );
 
-// =====================================================
-// ŞİFRE DEĞİŞTİR
-// PUT /api/settings/password
-// =====================================================
+/* PROFİL FOTOĞRAFI */
+router.put(
+  "/profile/photo",
+  protect,
+  authorize("doktor", "superadmin"),
+  profileUpload.single("profil_resmi"),
+  uploadProfilePhoto,
+);
 
+/* PROFİL FOTOĞRAFI SİL */
+router.delete(
+  "/profile/photo",
+  protect,
+  authorize("doktor", "superadmin"),
+  deleteProfilePhoto,
+);
+
+/* ŞİFRE */
 router.put(
   "/password",
   protect,
   authorize("doktor", "superadmin"),
-  changePassword
+  changePassword,
 );
 
 module.exports = router;

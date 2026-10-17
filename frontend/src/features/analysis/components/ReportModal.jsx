@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { createReport } from "../../../services/analysisService";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  createReport,
+} from "../../../services/analysisService";
+
 import useToast from "../../../hooks/useToast";
 import styles from "./ReportModal.module.css";
 
@@ -17,11 +24,15 @@ const ReportModal = ({
 }) => {
   const toast = useToast();
 
-  const [doktorNotu, setDoktorNotu] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [doktorNotu, setDoktorNotu] =
+    useState("");
 
-  // YENİ ANALİZDE RAPORU SIFIRLA
+  const [isSaving, setIsSaving] =
+    useState(false);
+
+  const [saved, setSaved] =
+    useState(false);
+
   useEffect(() => {
     setSaved(false);
     setDoktorNotu("");
@@ -33,25 +44,38 @@ const ReportModal = ({
     window.print();
   };
 
-  // RAPORU KAYDET
   const handleSaveAndShare = async () => {
     if (!analizId) {
-      toast.error("Analiz ID bulunamadı. Lütfen önce analiz işlemini tamamlayın.");
+      toast.error(
+        "Analiz ID bulunamadı. Lütfen önce analiz işlemini tamamlayın.",
+      );
+
       return;
     }
 
     let doktorId = null;
 
     try {
-      const userStr = localStorage.getItem("user");
-      const userObj = userStr ? JSON.parse(userStr) : null;
+      const userStr =
+        localStorage.getItem("user");
+
+      const userObj = userStr
+        ? JSON.parse(userStr)
+        : null;
+
       doktorId = userObj?.id;
     } catch (error) {
-      console.error("Kullanıcı bilgisi okunamadı:", error);
+      console.error(
+        "Kullanıcı bilgisi okunamadı:",
+        error,
+      );
     }
 
     if (!doktorId) {
-      toast.error("Doktor bilgisi bulunamadı. Lütfen tekrar giriş yapın.");
+      toast.error(
+        "Doktor bilgisi bulunamadı. Lütfen tekrar giriş yapın.",
+      );
+
       return;
     }
 
@@ -62,21 +86,34 @@ const ReportModal = ({
         tc_kimlik: tcKimlik,
         analiz_id: analizId,
         doktor_id: doktorId,
-        pdf_yolu: "Sistem üzerinden PDF alınabilir",
+        pdf_yolu:
+          "Sistem üzerinden PDF alınabilir",
         doktor_notu: doktorNotu,
       };
 
-      const data = await createReport(payload);
+      const data =
+        await createReport(payload);
 
       if (!data.basarili) {
-        toast.error(data.mesaj || "Rapor kaydedilirken bir hata oluştu.");
+        toast.error(
+          data.mesaj ||
+            "Rapor kaydedilirken bir hata oluştu.",
+        );
+
         return;
       }
 
       setSaved(true);
-      toast.success("Rapor başarıyla kaydedildi.");
+
+      toast.success(
+        "Rapor başarıyla kaydedildi.",
+      );
     } catch (error) {
-      console.error("Rapor kayıt hatası:", error);
+      console.error(
+        "Rapor kayıt hatası:",
+        error,
+      );
+
       toast.error(
         error.response?.data?.mesaj ||
           "Rapor kaydı sırasında bir hata oluştu.",
@@ -87,33 +124,53 @@ const ReportModal = ({
   };
 
   const handleViewAnalysis = () => {
-    if (onViewAnalysis) onViewAnalysis(doktorNotu);
+    if (onViewAnalysis) {
+      onViewAnalysis(doktorNotu);
+    }
   };
 
   const organLabel =
-    organ === "beyin" ? "Beyin" : organ === "bobrek" ? "Böbrek" : organ || "-";
+    organ === "beyin"
+      ? "Beyin"
+      : organ === "bobrek"
+        ? "Böbrek"
+        : organ || "-";
 
   return (
     <div
       className={styles.modalOverlay}
-      onMouseDown={() => !isSaving && onClose()}
+      onMouseDown={() =>
+        !isSaving && onClose()
+      }
     >
-      <div className={styles.modalCard} onMouseDown={(e) => e.stopPropagation()}>
+      <div
+        className={styles.modalCard}
+        onMouseDown={(e) =>
+          e.stopPropagation()
+        }
+      >
         {/* HEADER */}
-        <div className={styles.modalHeader}>
-          <div>
-            <h2>PathoVision Tıbbi Analiz Raporu</h2>
-            <p>Analiz sonuçlarını değerlendirin ve raporu kaydedin.</p>
-          </div>
+        <div
+          className={styles.modalHeader}
+        >
+          <h2>
+            PathoVision Tıbbi Analiz Raporu
+          </h2>
 
           <button
             type="button"
-            className={styles.closeButton}
+            className={
+              styles.closeButton
+            }
             onClick={onClose}
             disabled={isSaving}
             aria-label="Kapat"
           >
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -125,73 +182,163 @@ const ReportModal = ({
         </div>
 
         {/* RAPOR */}
-        <div className={styles.reportContent}>
-          {/* RAPOR BAŞLIĞI */}
-          <div className={styles.reportHeader}>
+        <div
+          className={
+            styles.reportContent
+          }
+        >
+          <div
+            className={
+              styles.reportHeader
+            }
+          >
             <div>
               <h1>PathoVision</h1>
-              <p>Yapay Zeka Destekli Tıbbi Görüntüleme Raporu</p>
             </div>
 
-            <div className={styles.reportMeta}>
+            <div
+              className={
+                styles.reportMeta
+              }
+            >
               <p>
-                Analiz No: <span>#{analizId}</span>
+                Analiz No:{" "}
+                <span>
+                  #{analizId}
+                </span>
               </p>
+
               <p>
-                Hasta TC: <span>{tcKimlik}</span>
+                Hasta TC:{" "}
+                <span>
+                  {tcKimlik}
+                </span>
               </p>
+
               <p>
-                Tarih: <span>{new Date().toLocaleDateString("tr-TR")}</span>
+                Tarih:{" "}
+                <span>
+                  {new Date().toLocaleDateString(
+                    "tr-TR",
+                  )}
+                </span>
               </p>
+
               <p>
-                İncelenen Organ: <span>{organLabel}</span>
+                İncelenen Organ:{" "}
+                <span>
+                  {organLabel}
+                </span>
               </p>
             </div>
           </div>
 
           {/* GÖRÜNTÜLER */}
-          <div className={styles.reportSection}>
-            <h3>Görüntüleme Sonuçları</h3>
+          <div
+            className={
+              styles.reportSection
+            }
+          >
+            <h3>
+              Görüntüleme Sonuçları
+            </h3>
 
-            <div className={styles.imageGrid}>
-              <div className={styles.imageItem}>
-                <p>Orijinal Tarama</p>
+            <div
+              className={
+                styles.imageGrid
+              }
+            >
+              <div
+                className={
+                  styles.imageItem
+                }
+              >
+                <p>
+                  Orijinal Tarama
+                </p>
 
                 {preview ? (
-                  <img src={preview} alt="Orijinal MR" className={styles.originalImage} />
+                  <img
+                    src={preview}
+                    alt="Orijinal MR"
+                    className={
+                      styles.originalImage
+                    }
+                  />
                 ) : (
-                  <div className={styles.imageEmpty}>Görüntü bulunamadı</div>
+                  <div
+                    className={
+                      styles.imageEmpty
+                    }
+                  >
+                    Görüntü bulunamadı
+                  </div>
                 )}
               </div>
 
-              <div className={styles.imageItem}>
-                <p className={styles.maskLabel}>AI Segmentasyon</p>
+              <div
+                className={
+                  styles.imageItem
+                }
+              >
+                <p
+                  className={
+                    styles.maskLabel
+                  }
+                >
+                  AI Segmentasyon
+                </p>
 
-                {processedMask || result?.maske_base64 ? (
+                {processedMask ||
+                result?.maske_base64 ? (
                   <img
                     src={
                       processedMask ||
                       `data:image/png;base64,${result?.maske_base64}`
                     }
                     alt="AI Segmentasyon Maskesi"
-                    className={styles.maskImage}
+                    className={
+                      styles.maskImage
+                    }
                   />
                 ) : (
-                  <div className={styles.imageEmpty}>Maske bulunamadı</div>
+                  <div
+                    className={
+                      styles.imageEmpty
+                    }
+                  >
+                    Maske bulunamadı
+                  </div>
                 )}
               </div>
 
-              <div className={styles.imageItem}>
-                <p className={styles.overlayLabel}>MR + AI Örtüşmesi</p>
+              <div
+                className={
+                  styles.imageItem
+                }
+              >
+                <p
+                  className={
+                    styles.overlayLabel
+                  }
+                >
+                  MR + AI Örtüşmesi
+                </p>
 
                 {overlayImage ? (
                   <img
                     src={overlayImage}
                     alt="MR ve AI Segmentasyon Örtüşmesi"
-                    className={styles.overlayImage}
+                    className={
+                      styles.overlayImage
+                    }
                   />
                 ) : (
-                  <div className={styles.imageEmpty}>
+                  <div
+                    className={
+                      styles.imageEmpty
+                    }
+                  >
                     Örtüşme görüntüsü hazırlanıyor...
                   </div>
                 )}
@@ -199,77 +346,186 @@ const ReportModal = ({
             </div>
           </div>
 
-          {/* SAYISAL BULGULAR */}
-          <div className={styles.reportSection}>
-            <h3>Sayısal Bulgular</h3>
+          {/* BULGULAR */}
+          <div
+            className={
+              styles.reportSection
+            }
+          >
+            <h3>
+              Sayısal Bulgular
+            </h3>
 
-            <div className={styles.metricsGrid}>
-              <div className={styles.metricCard}>
-                <span>Patoloji / Tümör</span>
-                <strong className={styles.metricDanger}>
-                  %{result?.metrikler?.patoloji_yuzdesi ?? 0}
+            <div
+              className={
+                styles.metricsGrid
+              }
+            >
+              <div
+                className={
+                  styles.metricCard
+                }
+              >
+                <span>
+                  Patoloji / Tümör
+                </span>
+
+                <strong
+                  className={
+                    styles.metricDanger
+                  }
+                >
+                  %
+                  {result?.metrikler
+                    ?.patoloji_yuzdesi ??
+                    0}
                 </strong>
               </div>
 
-              <div className={styles.metricCard}>
-                <span>AI Güven Skoru</span>
-                <strong className={styles.metricSuccess}>
-                  %{result?.metrikler?.guven_skoru ?? 0}
+              <div
+                className={
+                  styles.metricCard
+                }
+              >
+                <span>
+                  AI Güven Skoru
+                </span>
+
+                <strong
+                  className={
+                    styles.metricSuccess
+                  }
+                >
+                  %
+                  {result?.metrikler
+                    ?.guven_skoru ??
+                    0}
                 </strong>
               </div>
 
-              <div className={styles.metricCard}>
-                <span>Fiziksel Alan</span>
-                <strong>{result?.metrikler?.alan_mm2 ?? 0} mm²</strong>
+              <div
+                className={
+                  styles.metricCard
+                }
+              >
+                <span>
+                  Fiziksel Alan
+                </span>
+
+                <strong>
+                  {result?.metrikler
+                    ?.alan_mm2 ??
+                    0}{" "}
+                  mm²
+                </strong>
               </div>
 
-              <div className={styles.metricCard}>
-                <span>Çevre Uzunluğu</span>
-                <strong>{result?.metrikler?.cevre_mm ?? 0} mm</strong>
+              <div
+                className={
+                  styles.metricCard
+                }
+              >
+                <span>
+                  Çevre Uzunluğu
+                </span>
+
+                <strong>
+                  {result?.metrikler
+                    ?.cevre_mm ??
+                    0}{" "}
+                  mm
+                </strong>
               </div>
             </div>
           </div>
 
           {/* DOKTOR NOTU */}
-          <div className={styles.reportSection}>
-            <h3>Doktor Değerlendirmesi ve Teşhis</h3>
+          <div
+            className={
+              styles.reportSection
+            }
+          >
+            <h3>
+              Doktor Değerlendirmesi
+            </h3>
 
             <textarea
               value={doktorNotu}
-              onChange={(e) => setDoktorNotu(e.target.value)}
+              onChange={(e) =>
+                setDoktorNotu(
+                  e.target.value,
+                )
+              }
               disabled={saved}
-              placeholder="Tıbbi değerlendirmenizi ve notlarınızı buraya giriniz..."
-              className={styles.doctorNote}
+              placeholder="Tıbbi değerlendirmenizi giriniz..."
+              className={
+                styles.doctorNote
+              }
             />
 
-            <p className={styles.printDoctorNote}>
-              {doktorNotu || "Doktor tarafından henüz not girilmemiştir."}
+            <p
+              className={
+                styles.printDoctorNote
+              }
+            >
+              {doktorNotu ||
+                "Doktor tarafından henüz not girilmemiştir."}
             </p>
           </div>
         </div>
 
         {/* FOOTER */}
-        <div className={styles.modalFooter}>
-          <button type="button" onClick={handlePrintPDF} className={styles.printButton}>
+        <div
+          className={
+            styles.modalFooter
+          }
+        >
+          <button
+            type="button"
+            onClick={handlePrintPDF}
+            className={
+              styles.printButton
+            }
+          >
             PDF Olarak İndir / Yazdır
           </button>
 
           {!saved ? (
             <button
               type="button"
-              onClick={handleSaveAndShare}
+              onClick={
+                handleSaveAndShare
+              }
               disabled={isSaving}
-              className={styles.saveButton}
+              className={
+                styles.saveButton
+              }
             >
-              {isSaving ? "Kaydediliyor..." : "Veritabanına Kaydet"}
+              {isSaving
+                ? "Kaydediliyor..."
+                : "Kaydet"}
             </button>
           ) : (
             <>
-              <button type="button" onClick={handleViewAnalysis} className={styles.viewButton}>
+              <button
+                type="button"
+                onClick={
+                  handleViewAnalysis
+                }
+                className={
+                  styles.viewButton
+                }
+              >
                 Analizi Görüntüle →
               </button>
 
-              <button type="button" onClick={onClose} className={styles.closeFooterButton}>
+              <button
+                type="button"
+                onClick={onClose}
+                className={
+                  styles.closeFooterButton
+                }
+              >
                 Kapat
               </button>
             </>

@@ -34,20 +34,23 @@ const NewAnalysis = () => {
   const [isOverlayModalOpen, setIsOverlayModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
-  // KULLANICI KLİNİK BİLGİSİ
+  /* KULLANICI KLİNİK BİLGİSİ */
   useEffect(() => {
     try {
       const userStr = localStorage.getItem("user");
       if (!userStr) return;
 
       const userObj = JSON.parse(userStr);
-      if (userObj.klinik_id) setDoktorKlinikId(userObj.klinik_id);
+
+      if (userObj.klinik_id) {
+        setDoktorKlinikId(userObj.klinik_id);
+      }
     } catch (error) {
       console.error("Kullanıcı bilgisi okunamadı:", error);
     }
   }, []);
 
-  // MASKENİN SİYAH ARKA PLANINI ŞEFFAF YAP
+  /* MASKENİN SİYAH ARKA PLANINI ŞEFFAF YAP */
   useEffect(() => {
     if (!result?.maske_base64) {
       setProcessedMask(null);
@@ -63,13 +66,24 @@ const NewAnalysis = () => {
 
         canvas.width = img.width;
         canvas.height = img.height;
+
         ctx.drawImage(img, 0, 0);
 
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+
         const data = imageData.data;
 
         for (let i = 0; i < data.length; i += 4) {
-          if (data[i] < 30 && data[i + 1] < 30 && data[i + 2] < 30) {
+          if (
+            data[i] < 30 &&
+            data[i + 1] < 30 &&
+            data[i + 2] < 30
+          ) {
             data[i + 3] = 0;
           }
         }
@@ -78,19 +92,25 @@ const NewAnalysis = () => {
         setProcessedMask(canvas.toDataURL("image/png"));
       } catch (error) {
         console.error("Maske işleme hatası:", error);
-        setProcessedMask(`data:image/png;base64,${result.maske_base64}`);
+
+        setProcessedMask(
+          `data:image/png;base64,${result.maske_base64}`,
+        );
       }
     };
 
     img.onerror = () => {
       console.error("Maske görüntüsü yüklenemedi.");
-      setProcessedMask(`data:image/png;base64,${result.maske_base64}`);
+
+      setProcessedMask(
+        `data:image/png;base64,${result.maske_base64}`,
+      );
     };
 
     img.src = `data:image/png;base64,${result.maske_base64}`;
   }, [result]);
 
-  // MR + AI OVERLAY OLUŞTUR
+  /* MR + AI OVERLAY */
   useEffect(() => {
     if (!preview || !processedMask) {
       setOverlayImage(null);
@@ -109,8 +129,21 @@ const NewAnalysis = () => {
           canvas.width = baseImage.naturalWidth;
           canvas.height = baseImage.naturalHeight;
 
-          ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-          ctx.drawImage(maskImage, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(
+            baseImage,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+          );
+
+          ctx.drawImage(
+            maskImage,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+          );
 
           setOverlayImage(canvas.toDataURL("image/png"));
         } catch (error) {
@@ -123,7 +156,10 @@ const NewAnalysis = () => {
     };
 
     baseImage.onerror = () => {
-      console.error("Orijinal görüntü overlay için yüklenemedi.");
+      console.error(
+        "Orijinal görüntü overlay için yüklenemedi.",
+      );
+
       setOverlayImage(null);
     };
 
@@ -135,7 +171,7 @@ const NewAnalysis = () => {
     baseImage.src = preview;
   }, [preview, processedMask]);
 
-  // DOSYA İŞLEME
+  /* DOSYA */
   const processFile = (selectedFile) => {
     setFile(selectedFile);
     setValidationError(null);
@@ -147,7 +183,10 @@ const NewAnalysis = () => {
 
     const fileName = selectedFile.name.toLowerCase();
 
-    if (fileName.endsWith(".tif") || fileName.endsWith(".tiff")) {
+    if (
+      fileName.endsWith(".tif") ||
+      fileName.endsWith(".tiff")
+    ) {
       const reader = new FileReader();
 
       reader.onload = (event) => {
@@ -164,7 +203,10 @@ const NewAnalysis = () => {
           canvas.height = ifds[0].height;
 
           const ctx = canvas.getContext("2d");
-          const imageData = ctx.createImageData(canvas.width, canvas.height);
+          const imageData = ctx.createImageData(
+            canvas.width,
+            canvas.height,
+          );
 
           imageData.data.set(rgba);
           ctx.putImageData(imageData, 0, 0);
@@ -173,6 +215,7 @@ const NewAnalysis = () => {
         } catch (error) {
           console.error("TIFF önizleme hatası:", error);
           setPreview(null);
+
           toast.warning(
             "TIFF dosyası önizlenemedi, ancak analiz için gönderilebilir.",
           );
@@ -186,7 +229,7 @@ const NewAnalysis = () => {
     setPreview(URL.createObjectURL(selectedFile));
   };
 
-  // ANALİZİ BAŞLAT
+  /* ANALİZ */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setValidationError(null);
@@ -195,11 +238,15 @@ const NewAnalysis = () => {
       setValidationError(
         "Lütfen 11 haneli Hasta TC Kimlik numarasını giriniz.",
       );
+
       return;
     }
 
     if (!file) {
-      setValidationError("Lütfen analiz edilecek bir resim seçin.");
+      setValidationError(
+        "Lütfen analiz edilecek bir resim seçin.",
+      );
+
       return;
     }
 
@@ -220,6 +267,7 @@ const NewAnalysis = () => {
       } Analizi`;
 
     const formData = new FormData();
+
     formData.append("tc_kimlik", tcKimlik);
     formData.append("analiz_adi", finalAnalizAdi);
     formData.append("klinik_id", doktorKlinikId);
@@ -228,10 +276,17 @@ const NewAnalysis = () => {
     formData.append("file", file);
 
     try {
-      const data = await predictAnalysis(model, formData);
+      const data = await predictAnalysis(
+        model,
+        formData,
+      );
 
       if (!data.basarili) {
-        toast.error(data.mesaj || "Analiz işlemi tamamlanamadı.");
+        toast.error(
+          data.mesaj ||
+            "Analiz işlemi tamamlanamadı.",
+        );
+
         return;
       }
 
@@ -242,6 +297,7 @@ const NewAnalysis = () => {
       toast.success("Analiz başarıyla tamamlandı.");
     } catch (error) {
       console.error("Analiz hatası:", error);
+
       toast.error(
         error.response?.data?.mesaj ||
           "Analiz sırasında bir hata oluştu.",
@@ -251,7 +307,7 @@ const NewAnalysis = () => {
     }
   };
 
-  // ANALİZ DETAYINA GİT
+  /* ANALİZ DETAYI */
   const handleViewAnalysis = (doktorNotu = "") => {
     if (!analizId) return;
 
@@ -276,7 +332,7 @@ const NewAnalysis = () => {
   };
 
   return (
-    <DashboardLayout title="Yeni Analiz Başlat">
+    <DashboardLayout title="Yeni Analiz">
       <div className={styles.container}>
         <AnalysisForm
           tcKimlik={tcKimlik}
@@ -299,21 +355,29 @@ const NewAnalysis = () => {
           preview={preview}
           loading={loading}
           processedMask={processedMask}
-          onOpenOverlay={() => setIsOverlayModalOpen(true)}
-          onOpenReport={() => setIsReportModalOpen(true)}
+          onOpenOverlay={() =>
+            setIsOverlayModalOpen(true)
+          }
+          onOpenReport={() =>
+            setIsReportModalOpen(true)
+          }
         />
       </div>
 
       <OverlayModal
         isOpen={isOverlayModalOpen}
-        onClose={() => setIsOverlayModalOpen(false)}
+        onClose={() =>
+          setIsOverlayModalOpen(false)
+        }
         preview={preview}
         processedMask={processedMask}
       />
 
       <ReportModal
         isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
+        onClose={() =>
+          setIsReportModalOpen(false)
+        }
         tcKimlik={tcKimlik}
         organ={organ}
         preview={preview}

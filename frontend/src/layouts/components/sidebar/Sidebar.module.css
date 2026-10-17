@@ -9,6 +9,12 @@
   color: var(--text-white);
   border-right: 1px solid var(--sidebar-border);
   box-shadow: var(--sidebar-shadow);
+  transition: width var(--transition-normal), min-width var(--transition-normal);
+}
+
+.sidebarCollapsed {
+  width: 76px;
+  min-width: 76px;
 }
 
 /* LOGO */
@@ -40,6 +46,7 @@
 
 .logoText {
   min-width: 0;
+  overflow: hidden;
 }
 
 .logoText h1 {
@@ -49,6 +56,7 @@
   font-weight: var(--font-extrabold);
   line-height: 1.2;
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .logoText p {
@@ -59,6 +67,23 @@
   text-transform: uppercase;
   letter-spacing: 0.15em;
   white-space: nowrap;
+}
+
+.sidebarCollapsed .logoSection {
+  padding: 22px 14px;
+}
+
+.sidebarCollapsed .logoWrapper {
+  justify-content: center;
+}
+
+.sidebarCollapsed .logoImage {
+  width: 44px;
+  height: 44px;
+}
+
+.sidebarCollapsed .logoText {
+  display: none;
 }
 
 /* NAVIGATION */
@@ -86,7 +111,15 @@
   gap: 7px;
 }
 
-/* MENU BUTTON */
+.sidebarCollapsed .navigation {
+  padding: 24px 10px;
+}
+
+.sidebarCollapsed .menuTitle {
+  display: none;
+}
+
+/* MENU */
 .menuButton {
   position: relative;
   width: 100%;
@@ -104,8 +137,7 @@
   font-weight: var(--font-semibold);
   text-align: left;
   cursor: pointer;
-  transition: background var(--transition-normal),
-    color var(--transition-normal);
+  transition: background var(--transition-normal), color var(--transition-normal);
 }
 
 .menuButton:hover {
@@ -129,7 +161,18 @@
   text-overflow: ellipsis;
 }
 
-/* ACTIVE LINE */
+.sidebarCollapsed .menuButton {
+  justify-content: center;
+  gap: 0;
+  padding: 7px;
+}
+
+.sidebarCollapsed .menuText,
+.sidebarCollapsed .activeDot {
+  display: none;
+}
+
+/* ACTIVE */
 .activeLine {
   position: absolute;
   left: 0;
@@ -140,6 +183,16 @@
   background: var(--sidebar-accent);
 }
 
+.activeDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--sidebar-accent);
+  box-shadow: 0 0 9px var(--sidebar-accent-glow);
+}
+
 /* ICON */
 .menuIcon {
   width: 38px;
@@ -148,11 +201,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   background: var(--sidebar-surface);
   color: var(--sidebar-text-muted);
-  transition: background var(--transition-normal),
-    color var(--transition-normal);
+  transition: background var(--transition-normal), color var(--transition-normal);
 }
 
 .menuButton:hover .menuIcon {
@@ -164,109 +216,31 @@
   color: var(--sidebar-accent);
 }
 
-/* ACTIVE DOT */
-.activeDot {
-  width: 7px;
-  height: 7px;
-  flex-shrink: 0;
-  margin-left: auto;
-  border-radius: 50%;
-  background: var(--sidebar-accent);
-  box-shadow: 0 0 9px var(--sidebar-accent-glow);
-}
-
-/* BOTTOM */
-.bottomSection {
-  padding: 0 12px 15px;
-}
-
-/* DOCTOR CARD */
-.doctorCard {
-  margin-bottom: 9px;
-  padding: 11px;
+/* TOOLTIP */
+.sidebarCollapsed .menuButton::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  z-index: 100;
+  padding: 7px 10px;
   border: 1px solid var(--sidebar-border);
-  border-radius: var(--radius-lg);
-  background: var(--sidebar-card-bg);
-}
-
-.doctorContent {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.avatar {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--sidebar-accent), #2563eb);
-  color: var(--text-white);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-extrabold);
-}
-
-.doctorInfo {
-  min-width: 0;
-  flex: 1;
-}
-
-.doctorName {
-  margin: 0;
-  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--sidebar-surface);
+  box-shadow: var(--shadow-md);
   color: var(--sidebar-text);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-bold);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.doctorEmail {
-  margin: 4px 0 0;
-  overflow: hidden;
-  color: var(--sidebar-text-secondary);
-  font-size: var(--font-size-xs);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* LOGOUT */
-.logoutButton {
-  width: 100%;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 12px;
-  border: none;
-  border-radius: 11px;
-  background: transparent;
-  color: var(--sidebar-text-secondary);
-  font-family: inherit;
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-semibold);
-  cursor: pointer;
-  transition: background var(--transition-normal),
-    color var(--transition-normal);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
-.logoutButton:hover {
-  background: var(--sidebar-danger-bg);
-  color: var(--sidebar-danger);
-}
-
-/* VERSION */
-.version {
-  padding-top: 12px;
-  color: var(--sidebar-version);
-  font-size: 10px;
-  font-weight: var(--font-semibold);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+.sidebarCollapsed .menuButton:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 /* RESPONSIVE */
@@ -276,9 +250,9 @@
     min-width: 230px;
   }
 
-  .logoSection {
-    padding-left: 15px;
-    padding-right: 15px;
+  .sidebarCollapsed {
+    width: 76px;
+    min-width: 76px;
   }
 
   .menuButton {

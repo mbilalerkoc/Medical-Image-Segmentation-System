@@ -63,6 +63,8 @@
   right: 0;
   width: 390px;
   max-height: 480px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   z-index: 1000;
   border: 1px solid var(--border-light);
@@ -73,6 +75,7 @@
 
 /* HEADER */
 .header {
+  flex-shrink: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -111,7 +114,8 @@
 
 /* LIST */
 .list {
-  max-height: 390px;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -206,8 +210,10 @@
   border-radius: var(--radius-full);
   background: var(--primary);
 }
+
 /* FOOTER */
 .footer {
+  flex-shrink: 0;
   padding: 10px 12px;
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-primary);
@@ -241,6 +247,7 @@
   font-size: var(--font-size-lg);
   line-height: 1;
 }
+
 /* RESPONSIVE */
 @media (max-width: 700px) {
   .bellButton {
@@ -255,10 +262,6 @@
     left: 12px;
     width: auto;
     max-height: calc(100vh - 90px);
-  }
-
-  .list {
-    max-height: calc(100vh - 170px);
   }
 
   .header {
