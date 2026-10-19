@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout";
+
+import DashboardLayout from "../../../layouts/DashboardLayout";
 import NewAppointmentModal from "./components/NewAppointmentModal";
-import useToast from "../../hooks/useToast";
+import useToast from "../../../hooks/useToast";
 import {
   getAppointments,
   updateAppointmentStatus,
-} from "../../services/appointmentService";
+} from "../../../services/appointmentService";
+
 import styles from "./Appointments.module.css";
 
 const FILTERS = [

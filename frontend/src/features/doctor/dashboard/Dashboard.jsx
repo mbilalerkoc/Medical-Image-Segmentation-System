@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { getDashboard } from "../../services/dashboardService";
+import DashboardLayout from "../../../layouts/DashboardLayout";
+import { getDashboard } from "../../../services/dashboardService";
 
 import styles from "./Dashboard.module.css";
 

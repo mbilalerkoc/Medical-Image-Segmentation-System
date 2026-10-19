@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { getPatients } from "../../../services/patientService";
+
+import { getPatients } from "../../../../services/patientService";
 import {
   createAppointment,
   getAvailableSlots,
-} from "../../../services/appointmentService";
-import useToast from "../../../hooks/useToast";
+} from "../../../../services/appointmentService";
+import useToast from "../../../../hooks/useToast";
+
 import styles from "./NewAppointmentModal.module.css";
 
 const NewAppointmentModal = ({ isOpen, onClose, onCreated }) => {
@@ -224,11 +226,7 @@ const NewAppointmentModal = ({ isOpen, onClose, onCreated }) => {
             <p>Hastanız için uygun tarih ve saati seçerek randevu oluşturun.</p>
           </div>
 
-          <button
-            type="button"
-            className={styles.modalClose}
-            onClick={onClose}
-          >
+          <button type="button" className={styles.modalClose} onClick={onClose}>
             ×
           </button>
         </div>
@@ -396,9 +394,7 @@ const NewAppointmentModal = ({ isOpen, onClose, onCreated }) => {
             <button
               type="submit"
               className={styles.createButton}
-              disabled={
-                saving || loadingPatients || loadingSlots || !form.saat
-              }
+              disabled={saving || loadingPatients || loadingSlots || !form.saat}
             >
               {saving ? "Randevu Oluşturuluyor..." : "Randevu Oluştur"}
             </button>

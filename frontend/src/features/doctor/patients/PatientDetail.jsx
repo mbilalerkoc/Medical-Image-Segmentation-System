@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { getPatientById } from "../../services/patientService";
+import DashboardLayout from "../../../layouts/DashboardLayout";
+import { getPatientById } from "../../../services/patientService";
 import styles from "./PatientDetail.module.css";
 
 const PatientDetail = () => {
@@ -66,7 +66,11 @@ const PatientDetail = () => {
             <div className={styles.emptyIcon}>!</div>
             <h2>Hasta bilgisi bulunamadı</h2>
             <p>{error || `Hasta #${id} bilgileri bulunamadı.`}</p>
-            <button type="button" className={styles.primaryButton} onClick={() => navigate("/patients")}>
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => navigate("/patients")}
+            >
               Hastalara Dön
             </button>
           </div>
@@ -117,14 +121,24 @@ const PatientDetail = () => {
           <div>
             <div className={styles.breadcrumb}>Hastalarım / {fullName}</div>
             <h1 className={styles.pageTitle}>{fullName}</h1>
-            <p className={styles.pageDescription}>Hasta bilgileri ve geçmiş analiz kayıtları</p>
+            <p className={styles.pageDescription}>
+              Hasta bilgileri ve geçmiş analiz kayıtları
+            </p>
           </div>
 
           <div className={styles.headerActions}>
-            <button type="button" className={styles.secondaryButton} onClick={() => navigate("/patients")}>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => navigate("/patients")}
+            >
               ← Hastalara Dön
             </button>
-            <button type="button" className={styles.primaryButton} onClick={() => navigate("/analyze")}>
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => navigate("/analyze")}
+            >
               + Yeni Analiz
             </button>
           </div>
@@ -138,7 +152,11 @@ const PatientDetail = () => {
               <p>Sistemde kayıtlı temel hasta bilgileri</p>
             </div>
 
-            <span className={patient.aktif ? styles.badgeActive : styles.badgePending}>
+            <span
+              className={
+                patient.aktif ? styles.badgeActive : styles.badgePending
+              }
+            >
               {patient.aktif ? "Aktif" : "Şifre Bekliyor"}
             </span>
           </div>
@@ -146,7 +164,9 @@ const PatientDetail = () => {
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
               <span className={styles.infoLabel}>TC Kimlik</span>
-              <strong className={styles.infoValue}>{patient.tc_kimlik || "-"}</strong>
+              <strong className={styles.infoValue}>
+                {patient.tc_kimlik || "-"}
+              </strong>
             </div>
 
             <div className={styles.infoCard}>
@@ -156,12 +176,16 @@ const PatientDetail = () => {
 
             <div className={styles.infoCard}>
               <span className={styles.infoLabel}>E-posta</span>
-              <strong className={styles.infoValue}>{patient.email || "-"}</strong>
+              <strong className={styles.infoValue}>
+                {patient.email || "-"}
+              </strong>
             </div>
 
             <div className={styles.infoCard}>
               <span className={styles.infoLabel}>Telefon</span>
-              <strong className={styles.infoValue}>{patient.telefon || "-"}</strong>
+              <strong className={styles.infoValue}>
+                {patient.telefon || "-"}
+              </strong>
             </div>
 
             <div className={styles.infoCard}>
@@ -171,13 +195,19 @@ const PatientDetail = () => {
 
             <div className={styles.infoCard}>
               <span className={styles.infoLabel}>Kan Grubu</span>
-              <strong className={styles.infoValue}>{patient.kan_grubu || "-"}</strong>
+              <strong className={styles.infoValue}>
+                {patient.kan_grubu || "-"}
+              </strong>
             </div>
           </div>
 
           <div className={styles.addressBox}>
             <span className={styles.infoLabel}>Adres</span>
-            <p>{patient.adres?.trim() ? patient.adres : "Adres bilgisi bulunmuyor."}</p>
+            <p>
+              {patient.adres?.trim()
+                ? patient.adres
+                : "Adres bilgisi bulunmuyor."}
+            </p>
           </div>
         </div>
 
@@ -188,12 +218,19 @@ const PatientDetail = () => {
               <h2>Geçmiş Analizler</h2>
               <p>Hastaya ait yapay zeka destekli analiz kayıtları</p>
             </div>
-            <span className={styles.analysisCount}>{analyses.length} Analiz</span>
+            <span className={styles.analysisCount}>
+              {analyses.length} Analiz
+            </span>
           </div>
 
           {analyses.length > 0 && (
             <div className={styles.searchWrapper}>
-              <svg className={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className={styles.searchIcon}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -211,7 +248,11 @@ const PatientDetail = () => {
               />
 
               {searchTerm && (
-                <button type="button" className={styles.clearSearch} onClick={() => setSearchTerm("")}>
+                <button
+                  type="button"
+                  className={styles.clearSearch}
+                  onClick={() => setSearchTerm("")}
+                >
                   ×
                 </button>
               )}
@@ -223,7 +264,11 @@ const PatientDetail = () => {
               <div className={styles.emptyIcon}>!</div>
               <h3>Henüz analiz bulunmuyor</h3>
               <p>Bu hasta için henüz bir analiz kaydı oluşturulmamış.</p>
-              <button type="button" className={styles.primaryButton} onClick={() => navigate("/analyze")}>
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={() => navigate("/analyze")}
+              >
                 Yeni Analiz Başlat
               </button>
             </div>
@@ -231,7 +276,11 @@ const PatientDetail = () => {
             <div className={styles.noAnalysis}>
               <h3>Analiz bulunamadı</h3>
               <p>"{searchTerm}" aramasına uygun bir analiz bulunamadı.</p>
-              <button type="button" className={styles.secondaryButton} onClick={() => setSearchTerm("")}>
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={() => setSearchTerm("")}
+              >
                 Aramayı Temizle
               </button>
             </div>
@@ -266,7 +315,8 @@ const PatientDetail = () => {
                         : analysis.model === "unet_plus"
                           ? "U-Net++"
                           : analysis.model || "-";
-                    const analizAdi = analysis.analiz_adi || `Analiz #${analysis.id}`;
+                    const analizAdi =
+                      analysis.analiz_adi || `Analiz #${analysis.id}`;
 
                     return (
                       <tr key={analysis.id}>

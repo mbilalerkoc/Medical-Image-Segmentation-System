@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { addPatient } from "../../../services/patientService";
-import useToast from "../../../hooks/useToast";
+import { addPatient } from "../../../../services/patientService";
+import useToast from "../../../../hooks/useToast";
 import styles from "../PatientList.module.css";
 
 const initialFormData = {

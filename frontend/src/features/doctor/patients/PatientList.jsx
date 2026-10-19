@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { getPatients } from "../../services/patientService";
+import DashboardLayout from "../../../layouts/DashboardLayout";
+import { getPatients } from "../../../services/patientService";
 import PatientModal from "./components/PatientModal";
-import useToast from "../../hooks/useToast";
+import useToast from "../../../hooks/useToast";
 import styles from "./PatientList.module.css";
 
 const PatientList = () => {

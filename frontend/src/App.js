@@ -2,16 +2,19 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./features/auth/Login";
-import Dashboard from "./features/dashboard/Dashboard";
-import PatientList from "./features/patients/PatientList";
-import NewAnalysis from "./features/analysis/NewAnalysis";
-import AnalysisDetail from "./features/analysis/AnalysisDetail";
-import PatientDetail from "./features/patients/PatientDetail";
-import Settings from "./features/settings/Settings";
-import Appointments from "./features/appointments/Appointments";
+
+import Dashboard from "./features/doctor/dashboard/Dashboard";
+import Appointments from "./features/doctor/appointments/Appointments";
+import PatientList from "./features/doctor/patients/PatientList";
+import PatientDetail from "./features/doctor/patients/PatientDetail";
+import NewAnalysis from "./features/doctor/analysis/NewAnalysis";
+import AnalysisDetail from "./features/doctor/analysis/AnalysisDetail";
+
+import Settings from "./features/doctor/settings/Settings";
 import Notifications from "./features/notifications/Notifications";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import RoleRoute from "./routes/RoleRoute";
 
 const App = () => {
   return (
@@ -30,14 +33,17 @@ const App = () => {
       <Route path="/login" element={<Login />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/analyze" element={<NewAnalysis />} />
-        <Route path="/patients" element={<PatientList />} />
-        <Route path="/patients/:id" element={<PatientDetail />} />
-        <Route path="/analyses/:id" element={<AnalysisDetail />} />
-        <Route path="/appointments" element={<Appointments />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/settings" element={<Settings />} />
+
+        <Route element={<RoleRoute allowedRoles={["doktor"]} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/analyze" element={<NewAnalysis />} />
+          <Route path="/patients" element={<PatientList />} />
+          <Route path="/patients/:id" element={<PatientDetail />} />
+          <Route path="/analyses/:id" element={<AnalysisDetail />} />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

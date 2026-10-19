@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../../layouts/DashboardLayout";
+import DashboardLayout from "../../../layouts/DashboardLayout";
 import AvailabilitySettings from "./components/AvailabilitySettings";
 import {
   updateProfile,
@@ -7,8 +7,8 @@ import {
   deleteProfilePhoto,
   changePassword,
   getProfilePhotoUrl,
-} from "../../services/settingsService";
-import useToast from "../../hooks/useToast";
+} from "../../../services/settingsService";
+import useToast from "../../../hooks/useToast";
 import styles from "./Settings.module.css";
 
 const Settings = () => {

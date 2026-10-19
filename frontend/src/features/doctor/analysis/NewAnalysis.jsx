@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import UTIF from "utif";
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { predictAnalysis } from "../../services/analysisService";
-import useToast from "../../hooks/useToast";
+import { useNavigate } from "react-router-dom";
+
+import DashboardLayout from "../../../layouts/DashboardLayout";
+import { predictAnalysis } from "../../../services/analysisService";
+import useToast from "../../../hooks/useToast";
 import styles from "./NewAnalysis.module.css";
 
 import AnalysisForm from "./components/AnalysisForm";

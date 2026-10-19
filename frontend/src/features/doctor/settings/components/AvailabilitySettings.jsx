@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   getAvailability,
   saveAvailability,
-} from "../../../services/appointmentService";
-import useToast from "../../../hooks/useToast";
+} from "../../../../services/appointmentService";
+import useToast from "../../../../hooks/useToast";
 import styles from "./AvailabilitySettings.module.css";
 
 const DAYS = [

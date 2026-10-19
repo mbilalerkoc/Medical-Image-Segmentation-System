@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { getAnalysisById } from "../../services/analysisService";
+import DashboardLayout from "../../../layouts/DashboardLayout";
+import { getAnalysisById } from "../../../services/analysisService";
 import styles from "./AnalysisDetail.module.css";
 
 const AnalysisDetail = () => {
