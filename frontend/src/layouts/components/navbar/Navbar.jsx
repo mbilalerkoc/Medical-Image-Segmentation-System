@@ -10,7 +10,6 @@ const getStoredUser = () => {
     return JSON.parse(localStorage.getItem("user")) || {};
   } catch (error) {
     console.error("Kullanıcı bilgisi okunamadı:", error);
-
     return {};
   }
 };
@@ -22,7 +21,6 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
   const profileRef = useRef(null);
 
   const [profileOpen, setProfileOpen] = useState(false);
-
   const [user, setUser] = useState(getStoredUser);
 
   /* KULLANICI DEĞİŞİKLİKLERİNİ DİNLE */
@@ -32,12 +30,10 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
     };
 
     window.addEventListener("userUpdated", syncUser);
-
     window.addEventListener("storage", syncUser);
 
     return () => {
       window.removeEventListener("userUpdated", syncUser);
-
       window.removeEventListener("storage", syncUser);
     };
   }, []);
@@ -55,14 +51,39 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const fullName = `${user.ad || ""} ${user.soyad || ""}`.trim() || "Doktor";
-
-  const doctorTitle = user.unvan || "Dr.";
+  const fullName = `${user.ad || ""} ${user.soyad || ""}`.trim() || "Kullanıcı";
 
   const initials =
-    `${user.ad?.[0] || ""}${user.soyad?.[0] || ""}`.toUpperCase() || "DR";
+    `${user.ad?.[0] || ""}${user.soyad?.[0] || ""}`.toUpperCase() || "PV";
 
-  const clinicName = user.klinik_adi || "Doktor hesabı";
+  /* ROLE GÖRE KULLANICI BİLGİSİ */
+  const getDisplayName = () => {
+    if (user.rol === "doktor") {
+      const doctorTitle = user.unvan || "Dr.";
+      return `${doctorTitle} ${fullName}`;
+    }
+
+    return fullName;
+  };
+
+  const getAccountLabel = () => {
+    if (user.rol === "doktor") {
+      return user.klinik_adi || "Doktor hesabı";
+    }
+
+    if (user.rol === "hasta") {
+      return "Hasta hesabı";
+    }
+
+    if (user.rol === "superadmin") {
+      return "Yönetici hesabı";
+    }
+
+    return "Kullanıcı hesabı";
+  };
+
+  const displayName = getDisplayName();
+  const accountLabel = getAccountLabel();
 
   const profilePhoto = getProfilePhotoUrl(user.profil_resmi);
 
@@ -129,11 +150,8 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
             </span>
 
             <span className={styles.profileMeta}>
-              <strong>
-                {doctorTitle} {fullName}
-              </strong>
-
-              <small>{clinicName}</small>
+              <strong>{displayName}</strong>
+              <small>{accountLabel}</small>
             </span>
 
             <svg
@@ -171,11 +189,9 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
                 </span>
 
                 <div>
-                  <strong>
-                    {doctorTitle} {fullName}
-                  </strong>
+                  <strong>{displayName}</strong>
 
-                  <span>{user.email || "Doktor hesabı"}</span>
+                  <span>{user.email || accountLabel}</span>
                 </div>
               </div>
 
@@ -186,6 +202,12 @@ const Navbar = ({ title, sidebarCollapsed, onToggleSidebar }) => {
                 className={styles.dropdownItem}
                 onClick={() => {
                   setProfileOpen(false);
+
+                  if (user.rol === "hasta") {
+                    navigate("/patient/settings");
+                    return;
+                  }
+
                   navigate("/settings");
                 }}
               >

@@ -9,6 +9,7 @@ const dashboardRoutes = require("./routes/dashboard");
 const settingsRoutes = require("./routes/settings");
 const appointmentRoutes = require("./routes/appointment");
 const notificationRoutes = require("./routes/notification");
+const reportRoutes = require("./routes/report");
 const {
   sendAppointmentReminders,
 } = require("./services/appointmentReminderService");
@@ -40,6 +41,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/reports", reportRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 PathоVision Backend ${PORT} portunda çalışıyor.`);

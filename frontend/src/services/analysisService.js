@@ -1,16 +1,18 @@
-import api from './api';
+import api from "./api";
 
 export const predictAnalysis = async (model, formData) => {
   const response = await api.post(`/analyze/predict/${model}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
 };
 
-export const createReport = async (payload) => {
-  const response = await api.post('/reports/create', payload);
+export const createReport = async (reportData) => {
+  const response = await api.post("/analyze/reports/create", reportData);
+
   return response.data;
 };
+
 export const getAnalysisById = async (analizId) => {
   const token = localStorage.getItem("token");
 
@@ -22,15 +24,13 @@ export const getAnalysisById = async (analizId) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(
-      data.mesaj || "Analiz bilgileri alınırken hata oluştu."
-    );
+    throw new Error(data.mesaj || "Analiz bilgileri alınırken hata oluştu.");
   }
 
   return data;

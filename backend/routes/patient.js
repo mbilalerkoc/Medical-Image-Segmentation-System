@@ -5,33 +5,33 @@ const router = express.Router();
 const {
   addPatient,
   getPatients,
+  getMyDashboard,
+  getMyAnalyses,
   getPatientById,
 } = require("../controllers/patientController");
 
-const {
-  protect,
-  authorize,
-} = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 
-router.post(
-  "/add",
-  protect,
-  authorize("doktor", "superadmin"),
-  addPatient
-);
+// =====================================================
+// DOKTOR
+// =====================================================
 
-router.get(
-  "/",
-  protect,
-  authorize("doktor", "superadmin"),
-  getPatients
-);
+router.post("/add", protect, authorize("doktor", "superadmin"), addPatient);
 
-router.get(
-  "/:id",
-  protect,
-  authorize("doktor", "superadmin"),
-  getPatientById
-);
+router.get("/", protect, authorize("doktor", "superadmin"), getPatients);
+
+// =====================================================
+// HASTA
+// =====================================================
+
+router.get("/me/dashboard", protect, authorize("hasta"), getMyDashboard);
+
+router.get("/me/analyses", protect, authorize("hasta"), getMyAnalyses);
+
+// =====================================================
+// DOKTOR - HASTA DETAYI
+// =====================================================
+
+router.get("/:id", protect, authorize("doktor", "superadmin"), getPatientById);
 
 module.exports = router;

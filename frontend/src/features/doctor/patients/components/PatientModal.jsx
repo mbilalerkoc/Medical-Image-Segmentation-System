@@ -10,6 +10,7 @@ const initialFormData = {
   email: "",
   telefon: "",
   dogum_tarihi: "",
+  cinsiyet: "",
   kan_grubu: "",
   adres: "",
 };
@@ -24,7 +25,11 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -61,7 +66,6 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        {/* HEADER */}
         <div className={styles.modalHeader}>
           <h3 className={styles.modalTitle}>Yeni Hasta Kaydı Oluştur</h3>
 
@@ -149,6 +153,20 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
             </div>
 
             <div>
+              <label className={styles.label}>Cinsiyet</label>
+              <select
+                name="cinsiyet"
+                value={formData.cinsiyet}
+                onChange={handleInputChange}
+                className={styles.input}
+              >
+                <option value="">Seçiniz</option>
+                <option value="erkek">Erkek</option>
+                <option value="kadin">Kadın</option>
+              </select>
+            </div>
+
+            <div>
               <label className={styles.label}>Kan Grubu</label>
               <select
                 name="kan_grubu"
@@ -156,7 +174,7 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
                 onChange={handleInputChange}
                 className={styles.input}
               >
-                <option value="">Seçiniz (opsiyonel)</option>
+                <option value="">Seçiniz</option>
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
                 <option value="B+">B+</option>
@@ -180,7 +198,6 @@ const PatientModal = ({ isOpen, onClose, onSuccess }) => {
             </div>
           </div>
 
-          {/* FOOTER */}
           <div className={styles.modalFooter}>
             <button
               type="button"

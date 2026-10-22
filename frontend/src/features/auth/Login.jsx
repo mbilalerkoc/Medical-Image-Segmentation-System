@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
 import useToast from "../../hooks/useToast";
-import styles from "./Login.module.css";
 import useNotifications from "../../hooks/useNotifications";
+import styles from "./Login.module.css";
 
 const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { refreshUnreadCount } = useNotifications();
+
   const [email, setEmail] = useState("");
   const [sifre, setSifre] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,15 +35,20 @@ const Login = () => {
 
       const role = data.kullanici?.rol;
 
-      if (role === "doktor" || role === "superadmin") {
+      if (role === "doktor") {
         toast.success("Giriş başarılı.");
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
         return;
       }
 
       if (role === "hasta") {
         toast.success("Giriş başarılı.");
-        navigate("/hasta-panel");
+        navigate("/patient/dashboard", { replace: true });
+        return;
+      }
+
+      if (role === "superadmin") {
+        toast.warning("Yönetici paneli henüz hazırlanmadı.");
         return;
       }
 
@@ -80,6 +86,7 @@ const Login = () => {
         {/* LOGIN */}
         <div className={styles.loginCard}>
           <h2 className={styles.cardTitle}>Oturum Aç</h2>
+
           <p className={styles.cardSubtitle}>
             Güvenli sisteme giriş yapmak için bilgilerinizi girin.
           </p>

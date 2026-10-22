@@ -1,7 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const FormData = require("form-data");
-
+const path = require("path");
 const Analysis = require("../models/Analysis");
 const AnalysisSlice = require("../models/AnalysisSlice");
 const Patient = require("../models/Patient");
@@ -9,16 +9,15 @@ const Doctor = require("../models/Doctor");
 const Report = require("../models/Report");
 const notificationService = require("../services/notificationService");
 
-// =====================================================
 // ANALİZ YAP VE KAYDET
-// =====================================================
 
 exports.predictAndSave = async (req, res) => {
   try {
     const modelAdi = req.params.model_adi;
     const file = req.file;
 
-    const { tc_kimlik, analiz_adi, organ, sira_no, klinik_id } = req.body;
+    const { tc_kimlik, analiz_adi, organ, sira_no, klinik_id, preview_base64 } =
+      req.body;
 
     // =====================================================
     // 1. TEMEL KONTROLLER
@@ -154,29 +153,43 @@ exports.predictAndSave = async (req, res) => {
       durum: "tamamlandi",
     });
 
+    let browserImageName = file.filename || file.originalname || "";
+
+    if (preview_base64?.startsWith("data:image/")) {
+      const match = preview_base64.match(
+        /^data:image\/(png|jpeg|jpg);base64,(.+)$/,
+      );
+
+      if (match) {
+        const extension = match[1] === "jpeg" ? "jpg" : match[1];
+        browserImageName = `preview-${Date.now()}.${extension}`;
+
+        const uploadsDir = path.join(__dirname, "../uploads");
+
+        fs.mkdirSync(uploadsDir, {
+          recursive: true,
+        });
+
+        fs.writeFileSync(
+          path.join(uploadsDir, browserImageName),
+          Buffer.from(match[2], "base64"),
+        );
+      }
+    }
     // =====================================================
     // 9. ANALYSIS SLICE KAYDI
     // =====================================================
 
     await AnalysisSlice.create({
       analiz_id: analysis.id,
-
-      goruntu_yolu: file.filename || file.originalname || "",
-
+      goruntu_yolu: browserImageName,
       maske_yolu: aiResult.maske_base64 || "",
-
       patoloji_yuzdesi: aiResult.metrikler?.patoloji_yuzdesi ?? 0,
-
       alan_mm2: aiResult.metrikler?.alan_mm2 ?? 0,
-
       cevre_mm: aiResult.metrikler?.cevre_mm ?? 0,
-
       guven_skoru: aiResult.metrikler?.guven_skoru ?? 0,
-
       dice_skoru: aiResult.metrikler?.dice_skoru ?? null,
-
       iou_skoru: aiResult.metrikler?.iou_skoru ?? null,
-
       sira_no: sira_no || 1,
     });
     // DOKTORA ANALİZ TAMAMLANDI BİLDİRİMİ

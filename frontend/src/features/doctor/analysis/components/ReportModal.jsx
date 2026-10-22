@@ -69,7 +69,6 @@ const ReportModal = ({
       const payload = {
         tc_kimlik: tcKimlik,
         analiz_id: analizId,
-        doktor_id: doktorId,
         pdf_yolu: "Sistem üzerinden PDF alınabilir",
         doktor_notu: doktorNotu,
       };
