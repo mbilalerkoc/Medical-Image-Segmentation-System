@@ -1,182 +1,52 @@
-const { Op } = require("sequelize");
-const bcrypt = require("bcryptjs");
+const settingsService = require("../services/settingsService");
 
-const User = require("../models/User");
-const Doctor = require("../models/Doctor");
-const notificationService = require("../services/notificationService");
+const handleError = (res, error, defaultMessage, logLabel) => {
+  console.error(`${logLabel}:`, error.message);
 
-/* PROFİL BİLGİLERİNİ GÜNCELLE */
+  return res.status(error.status || 500).json({
+    basarili: false,
+    mesaj: error.status ? error.message : defaultMessage,
+    ...(error.status
+      ? {}
+      : {
+          hata: error.message,
+        }),
+  });
+};
+
 exports.updateProfile = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { ad, soyad, email, telefon } = req.body;
-
-    if (!ad?.trim() || !soyad?.trim() || !email?.trim()) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Ad, soyad ve e-posta alanları zorunludur.",
-      });
-    }
-
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        basarili: false,
-        mesaj: "Kullanıcı bulunamadı.",
-      });
-    }
-
-    const existingEmail = await User.findOne({
-      where: {
-        email: email.trim(),
-        id: {
-          [Op.ne]: userId,
-        },
-      },
-    });
-
-    if (existingEmail) {
-      return res.status(409).json({
-        basarili: false,
-        mesaj: "Bu e-posta adresi başka bir kullanıcı tarafından kullanılıyor.",
-      });
-    }
-
-    user.ad = ad.trim();
-    user.soyad = soyad.trim();
-    user.email = email.trim();
-    user.telefon = telefon?.trim() || null;
-
-    await user.save();
-
-    const doctor = await Doctor.findOne({
-      where: {
-        user_id: userId,
-      },
-    });
+    const user = await settingsService.updateProfile(req.user.id, req.body);
 
     return res.status(200).json({
       basarili: true,
       mesaj: "Profil bilgileri başarıyla güncellendi.",
-      user: {
-        id: user.id,
-        ad: user.ad,
-        soyad: user.soyad,
-        email: user.email,
-        telefon: user.telefon,
-        profil_resmi: user.profil_resmi,
-        unvan: doctor?.unvan || null,
-        klinik_id: doctor?.klinik_id || null,
-      },
+      user,
     });
   } catch (error) {
-    console.error("Profil güncelleme hatası:", error.message);
-
-    return res.status(500).json({
-      basarili: false,
-      mesaj: "Profil bilgileri güncellenirken bir hata oluştu.",
-      hata: error.message,
-    });
+    return handleError(
+      res,
+      error,
+      "Profil bilgileri güncellenirken bir hata oluştu.",
+      "PROFİL GÜNCELLEME HATASI",
+    );
   }
 };
 
-/* ŞİFRE DEĞİŞTİR */
 exports.changePassword = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { mevcut_sifre, yeni_sifre, yeni_sifre_tekrar } = req.body;
-
-    if (!mevcut_sifre || !yeni_sifre || !yeni_sifre_tekrar) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Mevcut şifre, yeni şifre ve şifre tekrarı zorunludur.",
-      });
-    }
-
-    if (yeni_sifre !== yeni_sifre_tekrar) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Yeni şifreler birbiriyle eşleşmiyor.",
-      });
-    }
-
-    if (yeni_sifre.length < 6) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Yeni şifre en az 6 karakter olmalıdır.",
-      });
-    }
-
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        basarili: false,
-        mesaj: "Kullanıcı bulunamadı.",
-      });
-    }
-
-    if (!user.sifre) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Kullanıcının mevcut şifre kaydı bulunamadı.",
-      });
-    }
-
-    const mevcutSifreDogru = await bcrypt.compare(mevcut_sifre, user.sifre);
-
-    if (!mevcutSifreDogru) {
-      return res.status(401).json({
-        basarili: false,
-        mesaj: "Mevcut şifreniz yanlış.",
-      });
-    }
-
-    const eskiSifreyleAyni = await bcrypt.compare(yeni_sifre, user.sifre);
-
-    if (eskiSifreyleAyni) {
-      return res.status(400).json({
-        basarili: false,
-        mesaj: "Yeni şifreniz mevcut şifrenizden farklı olmalıdır.",
-      });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(yeni_sifre, salt);
-
-    user.sifre = hashedPassword;
-
-    await user.save();
-
-    /* ŞİFRE DEĞİŞİKLİĞİ BİLDİRİMİ */
-    try {
-      await notificationService.createFromEvent({
-        kullaniciId: userId,
-        tip: "password_changed",
-        link: "/settings",
-        metadata: {
-          user_id: userId,
-        },
-      });
-    } catch (notificationError) {
-      console.error(
-        "Şifre değişikliği bildirimi oluşturulamadı:",
-        notificationError.message,
-      );
-    }
+    await settingsService.changePassword(req.user.id, req.body);
 
     return res.status(200).json({
       basarili: true,
       mesaj: "Şifreniz başarıyla güncellendi.",
     });
   } catch (error) {
-    console.error("Şifre değiştirme hatası:", error.message);
-
-    return res.status(500).json({
-      basarili: false,
-      mesaj: "Şifre güncellenirken bir hata oluştu.",
-      hata: error.message,
-    });
+    return handleError(
+      res,
+      error,
+      "Şifre güncellenirken bir hata oluştu.",
+      "ŞİFRE DEĞİŞTİRME HATASI",
+    );
   }
 };

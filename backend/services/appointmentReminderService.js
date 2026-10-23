@@ -1,10 +1,7 @@
-const { Op } = require("sequelize");
-
-const Appointment = require("../models/Appointment");
-const Doctor = require("../models/Doctor");
-const Patient = require("../models/Patient");
-const User = require("../models/User");
-const Notification = require("../models/Notification");
+const appointmentRepository = require("../repositories/appointmentRepository");
+const doctorRepository = require("../repositories/doctorRepository");
+const patientRepository = require("../repositories/patientRepository");
+const notificationRepository = require("../repositories/notificationRepository");
 
 const notificationService = require("./notificationService");
 
@@ -13,52 +10,36 @@ const REMINDER_HOURS = 24;
 const sendAppointmentReminders = async () => {
   try {
     const now = new Date();
+
     const reminderLimit = new Date(
       now.getTime() + REMINDER_HOURS * 60 * 60 * 1000,
     );
 
-    const appointments = await Appointment.findAll({
-      where: {
-        durum: "onaylandi",
-        tarih_saat: {
-          [Op.gt]: now,
-          [Op.lte]: reminderLimit,
-        },
-      },
-    });
+    const appointments = await appointmentRepository.findApprovedBetween(
+      now,
+      reminderLimit,
+    );
 
     for (const appointment of appointments) {
       try {
-        const doctor = await Doctor.findByPk(
-          appointment.doktor_id,
-        );
+        const doctor = await doctorRepository.findById(appointment.doktor_id);
 
-        if (!doctor?.user_id) continue;
+        if (!doctor?.user_id) {
+          continue;
+        }
 
-        const alreadySent = await Notification.findOne({
-          where: {
-            kullanici_id: doctor.user_id,
-            tip: "appointment_reminder",
-            metadata: {
-              [Op.contains]: {
-                appointment_id: appointment.id,
-              },
-            },
-          },
-        });
+        const alreadySent =
+          await notificationRepository.findAppointmentReminder(
+            doctor.user_id,
+            appointment.id,
+          );
 
-        if (alreadySent) continue;
+        if (alreadySent) {
+          continue;
+        }
 
-        const patient = await Patient.findByPk(
+        const patient = await patientRepository.findByIdWithUser(
           appointment.hasta_id,
-          {
-            include: [
-              {
-                model: User,
-                attributes: ["ad", "soyad"],
-              },
-            ],
-          },
         );
 
         const hastaAdi = patient?.User
@@ -78,18 +59,15 @@ const sendAppointmentReminders = async () => {
             patient_id: appointment.hasta_id,
           },
         });
-      } catch (appointmentError) {
+      } catch (error) {
         console.error(
           `Randevu #${appointment.id} hatırlatıcısı oluşturulamadı:`,
-          appointmentError.message,
+          error.message,
         );
       }
     }
   } catch (error) {
-    console.error(
-      "Randevu hatırlatma işlemi başarısız:",
-      error.message,
-    );
+    console.error("Randevu hatırlatma işlemi başarısız:", error.message);
   }
 };
 

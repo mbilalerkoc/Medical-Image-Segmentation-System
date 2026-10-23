@@ -36,7 +36,6 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/analyze", analyzeRoutes);
 app.use("/api/patients", patientRoutes);
-app.use("/api/reports", require("./routes/report"));
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/appointments", appointmentRoutes);

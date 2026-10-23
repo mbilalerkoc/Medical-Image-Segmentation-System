@@ -12,14 +12,10 @@ const {
   deleteProfilePhoto,
 } = require("../controllers/profilePhotoController");
 
-const {
-  protect,
-  authorize,
-} = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 
 const profileUpload = require("../middlewares/profileUpload");
 
-/* PROFİL */
 router.put(
   "/profile",
   protect,
@@ -27,7 +23,6 @@ router.put(
   updateProfile,
 );
 
-/* PROFİL FOTOĞRAFI */
 router.put(
   "/profile/photo",
   protect,
@@ -36,7 +31,6 @@ router.put(
   uploadProfilePhoto,
 );
 
-/* PROFİL FOTOĞRAFI SİL */
 router.delete(
   "/profile/photo",
   protect,
@@ -44,7 +38,6 @@ router.delete(
   deleteProfilePhoto,
 );
 
-/* ŞİFRE */
 router.put(
   "/password",
   protect,
