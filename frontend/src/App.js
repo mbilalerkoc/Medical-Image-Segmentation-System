@@ -13,16 +13,13 @@ import AnalysisDetail from "./features/doctor/analysis/AnalysisDetail";
 import Settings from "./features/doctor/settings/Settings";
 
 import PatientDashboard from "./features/patient/dashboard/Dashboard";
+import PatientAnalyses from "./features/patient/analyses/Analyses";
+import PatientReports from "./features/patient/reports/Reports";
+import PatientReportDetail from "./features/patient/reports/ReportDetail";
 
 import Notifications from "./features/notifications/Notifications";
 
-import ProtectedRoute from "./components/ProtectedRoute";
 import RoleRoute from "./routes/RoleRoute";
-
-import PatientAnalyses from "./features/patient/analyses/Analyses";
-import PatientReports from "./features/patient/reports/Reports";
-
-import PatientReportDetail from "./features/patient/reports/ReportDetail";
 
 const getHomePath = () => {
   const token = localStorage.getItem("token");
@@ -44,7 +41,8 @@ const getHomePath = () => {
 
     return "/login";
   } catch (error) {
-    console.error("Kullanıcı bilgisi okunamadı:", error);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
     return "/login";
   }
@@ -55,16 +53,13 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Navigate to={getHomePath()} replace />} />
 
-      {/* PUBLIC */}
       <Route path="/login" element={<Login />} />
 
       <Route path="/set-password" element={<SetPassword />} />
 
-      {/* AUTHENTICATED */}
-      <Route element={<ProtectedRoute />}>
+      <Route element={<RoleRoute />}>
         <Route path="/notifications" element={<Notifications />} />
 
-        {/* DOKTOR */}
         <Route element={<RoleRoute allowedRoles={["doktor"]} />}>
           <Route path="/dashboard" element={<DoctorDashboard />} />
 
@@ -81,11 +76,11 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
         </Route>
 
-        {/* HASTA */}
         <Route element={<RoleRoute allowedRoles={["hasta"]} />}>
           <Route path="/patient/dashboard" element={<PatientDashboard />} />
 
           <Route path="/patient/analyses" element={<PatientAnalyses />} />
+
           <Route path="/patient/reports" element={<PatientReports />} />
 
           <Route

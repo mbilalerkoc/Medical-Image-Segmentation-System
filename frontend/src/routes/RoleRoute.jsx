@@ -2,19 +2,25 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const RoleRoute = ({ allowedRoles }) => {
-  let user = {};
+  const token = localStorage.getItem("token");
+  const userStr = localStorage.getItem("user");
+
+  let user = null;
 
   try {
-    user = JSON.parse(localStorage.getItem("user")) || {};
+    user = userStr ? JSON.parse(userStr) : null;
   } catch (error) {
-    console.error("Kullanıcı bilgisi okunamadı:", error);
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-  if (!user.rol) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!allowedRoles.includes(user.rol)) {
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.rol)) {
     return <Navigate to="/login" replace />;
   }
 

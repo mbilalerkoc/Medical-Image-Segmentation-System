@@ -1,6 +1,5 @@
 import api from "./api";
 
-// RANDEVULARI GETİR
 export const getAppointments = async (filter = "all") => {
   const response = await api.get("/appointments", {
     params: {
@@ -11,71 +10,41 @@ export const getAppointments = async (filter = "all") => {
   return response.data;
 };
 
-// RANDEVU DURUMUNU GÜNCELLE
-export const updateAppointmentStatus = async (
-  appointmentId,
-  durum
-) => {
-  const response = await api.patch(
-    `/appointments/${appointmentId}/status`,
-    {
-      durum,
-    }
-  );
+export const updateAppointmentStatus = async (appointmentId, durum) => {
+  const response = await api.patch(`/appointments/${appointmentId}/status`, {
+    durum,
+  });
 
   return response.data;
 };
 
-// DOKTOR MÜSAİTLİĞİNİ GETİR
 export const getAvailability = async () => {
-  const response = await api.get(
-    "/appointments/availability"
-  );
+  const response = await api.get("/appointments/availability");
 
   return response.data;
 };
 
-// DOKTOR MÜSAİTLİĞİNİ KAYDET
-export const saveAvailability = async (
-  musaitlikler
-) => {
-  const response = await api.put(
-    "/appointments/availability",
-    {
-      musaitlikler,
-    }
-  );
+export const saveAvailability = async (musaitlikler) => {
+  const response = await api.put("/appointments/availability", {
+    musaitlikler,
+  });
 
   return response.data;
 };
 
-// YENİ RANDEVU OLUŞTUR
-// 8. adımda kullanacağız
-export const createAppointment = async (
-  appointmentData
-) => {
-  const response = await api.post(
-    "/appointments",
-    appointmentData
-  );
+export const createAppointment = async (appointmentData) => {
+  const response = await api.post("/appointments", appointmentData);
 
   return response.data;
 };
 
-// SEÇİLEN TARİH İÇİN MÜSAİT SAATLERİ GETİR
-export const getAvailableSlots = async (
-  date,
-  duration = 30
-) => {
-  const response = await api.get(
-    "/appointments/availability/slots",
-    {
-      params: {
-        date,
-        duration,
-      },
-    }
-  );
+export const getAvailableSlots = async (date, duration = 30) => {
+  const response = await api.get("/appointments/availability/slots", {
+    params: {
+      date,
+      duration,
+    },
+  });
 
   return response.data;
 };

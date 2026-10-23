@@ -32,10 +32,12 @@ export const getMyAnalyses = async () => {
 
 export const getMyReports = async () => {
   const response = await api.get("/reports/me");
+
   return response.data;
 };
 
 export const getMyReportById = async (reportId) => {
   const response = await api.get(`/reports/me/${reportId}`);
+
   return response.data;
 };
