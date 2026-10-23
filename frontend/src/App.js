@@ -16,6 +16,8 @@ import PatientDashboard from "./features/patient/dashboard/Dashboard";
 import PatientAnalyses from "./features/patient/analyses/Analyses";
 import PatientReports from "./features/patient/reports/Reports";
 import PatientReportDetail from "./features/patient/reports/ReportDetail";
+import PatientAppointments from "./features/patient/appointments/Appointments";
+import PatientSettings from "./features/patient/settings/Settings";
 
 import Notifications from "./features/notifications/Notifications";
 
@@ -87,6 +89,11 @@ const App = () => {
             path="/patient/reports/:id"
             element={<PatientReportDetail />}
           />
+          <Route
+            path="/patient/appointments"
+            element={<PatientAppointments />}
+          />
+          <Route path="/patient/settings" element={<PatientSettings />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

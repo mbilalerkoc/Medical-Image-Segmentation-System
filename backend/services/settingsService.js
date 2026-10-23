@@ -44,7 +44,8 @@ const updateProfile = async (userId, data) => {
 
   await userRepository.save(user);
 
-  const doctor = await doctorRepository.findByUserId(userId);
+  const doctor =
+    user.rol === "doktor" ? await doctorRepository.findByUserId(userId) : null;
 
   return {
     id: user.id,
@@ -53,6 +54,7 @@ const updateProfile = async (userId, data) => {
     email: user.email,
     telefon: user.telefon,
     profil_resmi: user.profil_resmi,
+    rol: user.rol,
     unvan: doctor?.unvan || null,
     klinik_id: doctor?.klinik_id || null,
   };
@@ -111,7 +113,7 @@ const changePassword = async (userId, data) => {
     await notificationService.createFromEvent({
       kullaniciId: userId,
       tip: "password_changed",
-      link: "/settings",
+      link: user.rol === "hasta" ? "/patient/settings" : "/settings",
       metadata: {
         user_id: userId,
       },

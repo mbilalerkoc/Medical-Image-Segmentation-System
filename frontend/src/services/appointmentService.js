@@ -48,3 +48,13 @@ export const getAvailableSlots = async (date, duration = 30) => {
 
   return response.data;
 };
+
+export const getMyAppointments = async (filter = "all") => {
+  const response = await api.get("/appointments/me", {
+    params: {
+      filter,
+    },
+  });
+
+  return response.data;
+};

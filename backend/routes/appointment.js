@@ -4,6 +4,7 @@ const router = express.Router();
 
 const {
   getAppointments,
+  getMyAppointments,
   createAppointment,
   updateStatus,
   getAvailability,
@@ -13,18 +14,28 @@ const {
 
 const { protect, authorize } = require("../middlewares/authMiddleware");
 
-router.use(protect, authorize("doktor", "superadmin"));
+router.use(protect);
 
-router.get("/availability", getAvailability);
+router.get("/me", authorize("hasta"), getMyAppointments);
 
-router.get("/availability/slots", getAvailableSlots);
+router.get("/availability", authorize("doktor", "superadmin"), getAvailability);
 
-router.put("/availability", saveAvailability);
+router.get(
+  "/availability/slots",
+  authorize("doktor", "superadmin"),
+  getAvailableSlots,
+);
 
-router.get("/", getAppointments);
+router.put(
+  "/availability",
+  authorize("doktor", "superadmin"),
+  saveAvailability,
+);
 
-router.post("/", createAppointment);
+router.get("/", authorize("doktor", "superadmin"), getAppointments);
 
-router.patch("/:id/status", updateStatus);
+router.post("/", authorize("doktor", "superadmin"), createAppointment);
+
+router.patch("/:id/status", authorize("doktor", "superadmin"), updateStatus);
 
 module.exports = router;

@@ -19,14 +19,14 @@ const profileUpload = require("../middlewares/profileUpload");
 router.put(
   "/profile",
   protect,
-  authorize("doktor", "superadmin"),
+  authorize("doktor", "hasta", "superadmin"),
   updateProfile,
 );
 
 router.put(
   "/profile/photo",
   protect,
-  authorize("doktor", "superadmin"),
+  authorize("doktor", "hasta", "superadmin"),
   profileUpload.single("profil_resmi"),
   uploadProfilePhoto,
 );
@@ -34,14 +34,14 @@ router.put(
 router.delete(
   "/profile/photo",
   protect,
-  authorize("doktor", "superadmin"),
+  authorize("doktor", "hasta", "superadmin"),
   deleteProfilePhoto,
 );
 
 router.put(
   "/password",
   protect,
-  authorize("doktor", "superadmin"),
+  authorize("doktor", "hasta", "superadmin"),
   changePassword,
 );
 

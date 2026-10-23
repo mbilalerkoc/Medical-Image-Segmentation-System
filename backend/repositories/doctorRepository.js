@@ -1,6 +1,8 @@
-const Doctor = require("../models/Doctor");
-const Klinik = require("../models/Klinik");
+const { Op } = require("sequelize");
 
+const Doctor = require("../models/Doctor");
+const User = require("../models/User");
+const Klinik = require("../models/Klinik");
 const findByUserId = async (userId, transaction = null, lock = false) => {
   const options = {
     where: {
@@ -43,9 +45,34 @@ const create = async (data, transaction = null) => {
   });
 };
 
+const findByIdsWithUserAndClinic = async (doctorIds) => {
+  if (!doctorIds.length) {
+    return [];
+  }
+
+  return Doctor.findAll({
+    where: {
+      id: {
+        [Op.in]: doctorIds,
+      },
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["ad", "soyad"],
+      },
+      {
+        model: Klinik,
+        attributes: ["ad"],
+      },
+    ],
+  });
+};
+
 module.exports = {
   findByUserId,
   findByUserIdWithClinic,
   findById,
   create,
+  findByIdsWithUserAndClinic,
 };

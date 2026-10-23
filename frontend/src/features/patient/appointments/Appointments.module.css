@@ -1,0 +1,390 @@
+.container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 10px 10px 40px;
+}
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  margin-bottom: 16px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 5px;
+
+  background: var(--surface-secondary);
+
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+}
+
+.filterButton {
+  padding: 9px 14px;
+
+  border: none;
+  border-radius: var(--radius-lg);
+
+  background: transparent;
+  color: var(--text-secondary);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.filterButton:hover {
+  background: var(--surface-hover);
+  color: var(--text-heading);
+}
+
+.filterButtonActive {
+  background: var(--primary);
+  color: var(--text-white);
+}
+
+.filterButtonActive:hover {
+  background: var(--primary-hover);
+  color: var(--text-white);
+}
+
+.appointmentCard {
+  background: var(--surface-primary);
+
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+
+  box-shadow: var(--shadow-md);
+
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 22px;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.cardHeader h2 {
+  margin: 0;
+
+  color: var(--text-heading);
+
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-extrabold);
+}
+
+.cardHeader span {
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-semibold);
+}
+
+.tableWrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 14px 18px;
+
+  background: var(--surface-secondary);
+
+  color: var(--text-secondary);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-bold);
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 17px 18px;
+
+  color: var(--text-primary);
+
+  font-size: var(--font-size-sm);
+
+  border-bottom: 1px solid var(--border-light);
+
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr {
+  transition: background var(--transition-normal);
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.doctorInfo {
+  min-width: 190px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.doctorIcon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--primary-soft);
+  color: var(--primary);
+
+  border-radius: var(--radius-md);
+}
+
+.doctorInfo > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.doctorInfo strong {
+  color: var(--text-heading);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-bold);
+
+  white-space: nowrap;
+}
+
+.doctorInfo span {
+  color: var(--text-muted);
+
+  font-size: var(--font-size-xs);
+}
+
+.timeText {
+  color: var(--text-heading);
+
+  font-weight: var(--font-bold);
+
+  white-space: nowrap;
+}
+
+.reasonText {
+  display: inline-block;
+
+  max-width: 240px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 10px;
+
+  border: 1px solid;
+  border-radius: var(--radius-full);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-bold);
+
+  white-space: nowrap;
+}
+
+.statusSuccess {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.statusInfo {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info);
+}
+
+.statusWarning {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning);
+}
+
+.statusDanger {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+.emptyCard,
+.stateCard {
+  min-height: 320px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  padding: 32px;
+
+  background: var(--surface-primary);
+
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+
+  box-shadow: var(--shadow-sm);
+
+  text-align: center;
+}
+
+.emptyCard h2,
+.stateCard h2 {
+  margin: 0;
+
+  color: var(--text-heading);
+
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+}
+
+.emptyCard p,
+.stateCard p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+}
+
+.emptyIcon,
+.errorIcon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius-full);
+}
+
+.emptyIcon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.errorIcon {
+  background: var(--danger-bg);
+  color: var(--danger);
+
+  border: 1px solid var(--danger-border);
+
+  font-weight: var(--font-extrabold);
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+
+  border: 3px solid var(--border-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+.retryButton {
+  margin-top: 5px;
+
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: var(--radius-lg);
+
+  background: var(--primary);
+  color: var(--text-white);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-bold);
+
+  cursor: pointer;
+
+  transition: background var(--transition-normal);
+}
+
+.retryButton:hover {
+  background: var(--primary-hover);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 6px 4px 30px;
+  }
+
+  .filterBar {
+    justify-content: flex-start;
+
+    overflow-x: auto;
+  }
+
+  .filterGroup {
+    min-width: max-content;
+  }
+
+  .cardHeader {
+    padding: 18px;
+  }
+
+  .table th,
+  .table td {
+    padding: 14px;
+  }
+}

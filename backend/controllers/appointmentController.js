@@ -145,3 +145,31 @@ exports.getAvailableSlots = async (req, res) => {
     return handleError(res, error);
   }
 };
+
+exports.getMyAppointments = async (req, res) => {
+  try {
+    const filter = req.query.filter || "all";
+
+    const allowedFilters = ["all", "today", "upcoming", "past", "cancelled"];
+
+    if (!allowedFilters.includes(filter)) {
+      return res.status(400).json({
+        basarili: false,
+        mesaj: "Geçersiz randevu filtresi.",
+      });
+    }
+
+    const appointments = await appointmentService.getPatientAppointments(
+      req.user.id,
+      filter,
+    );
+
+    return res.status(200).json({
+      basarili: true,
+      toplam: appointments.length,
+      randevular: appointments,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};

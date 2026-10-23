@@ -204,6 +204,60 @@ const findApprovedBetween = async (start, end) => {
   });
 };
 
+const findPatientAppointments = async (
+  patientId,
+  filter = "all",
+  now = new Date(),
+) => {
+  const where = {
+    hasta_id: patientId,
+  };
+
+  let order = [["tarih_saat", "DESC"]];
+
+  if (filter === "today") {
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    where.tarih_saat = {
+      [Op.gte]: start,
+      [Op.lt]: end,
+    };
+
+    order = [["tarih_saat", "ASC"]];
+  }
+
+  if (filter === "upcoming") {
+    where.tarih_saat = {
+      [Op.gte]: now,
+    };
+
+    where.durum = {
+      [Op.ne]: "iptal_edildi",
+    };
+
+    order = [["tarih_saat", "ASC"]];
+  }
+
+  if (filter === "past") {
+    where.tarih_saat = {
+      [Op.lt]: now,
+    };
+  }
+
+  if (filter === "cancelled") {
+    where.durum = "iptal_edildi";
+  }
+
+  return Appointment.findAll({
+    where,
+    order,
+  });
+};
+
 module.exports = {
   countUpcomingByPatientId,
   findUpcomingByPatientId,
@@ -216,4 +270,5 @@ module.exports = {
   create,
   save,
   findApprovedBetween,
+  findPatientAppointments,
 };

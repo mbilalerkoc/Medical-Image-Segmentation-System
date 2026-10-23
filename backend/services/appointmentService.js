@@ -436,6 +436,69 @@ exports.saveDoctorAvailability = async (userId, musaitlikler) => {
   });
 };
 
+exports.getPatientAppointments = async (userId, filter = "all") => {
+  const patient = await patientRepository.findByUserId(userId);
+
+  if (!patient) {
+    throw serviceError(404, "Hasta profili bulunamadı.");
+  }
+
+  const appointments = await appointmentRepository.findPatientAppointments(
+    patient.id,
+    filter,
+    new Date(),
+  );
+
+  if (appointments.length === 0) {
+    return [];
+  }
+
+  const doctorIds = [
+    ...new Set(appointments.map((appointment) => appointment.doktor_id)),
+  ];
+
+  const doctors = await doctorRepository.findByIdsWithUserAndClinic(doctorIds);
+
+  const doctorMap = {};
+
+  doctors.forEach((doctor) => {
+    doctorMap[doctor.id] = doctor;
+  });
+
+  return appointments.map((appointment) => {
+    const doctor = doctorMap[appointment.doktor_id];
+
+    return {
+      id: appointment.id,
+      doktor_id: appointment.doktor_id,
+
+      doktor_adi: doctor?.User
+        ? `${doctor.User.ad || ""} ${doctor.User.soyad || ""}`.trim()
+        : "-",
+
+      doktor_unvan: doctor?.unvan || null,
+
+      uzmanlik: doctor?.uzmanlik || null,
+
+      klinik_id: appointment.klinik_id,
+
+      klinik_adi: doctor?.Klinik?.ad || "-",
+
+      tarih_saat: appointment.tarih_saat,
+
+      sure_dakika: appointment.sure_dakika,
+
+      randevu_nedeni: appointment.randevu_nedeni,
+
+      notlar: appointment.notlar,
+
+      durum: appointment.durum,
+
+      olusturulma_tarihi: appointment.olusturulma_tarihi,
+    };
+  });
+};
+
 exports.getAvailableSlots = async (userId, dateString, duration = 30) => {
   if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
     throw serviceError(400, "Geçerli bir tarih giriniz.");
